@@ -3,17 +3,18 @@ import java.sql.*;
 public class DatabaseManager {
    //TODO : mettre un constructeur avec tous les attributs plutot que des var globales
 	
-	static final String url = "jdbc:sqlite:src/test.db";
+	static final String urlusers = "jdbc:sqlite:src/testusers.db";
+	static final String urlmessage = "jdbc:sqlite:src/testmessage.db";
    Connection conn = null;
 	  
 
-   public void connection () {
+   private Connection connectionusers () {
 	   try{		
 	    	// create a connection to the database
 	    	  Class.forName("org.sqlite.JDBC");
-	          conn = DriverManager.getConnection(url);
+	          conn = DriverManager.getConnection(urlusers);
 	          
-	          System.out.println("Connection to SQLite has been established.");
+	          System.out.println("Connection to SQLite \"users\" has been established.");
 	          
 	      } catch (SQLException e) {
 	          System.out.println(e.getMessage());
@@ -21,10 +22,29 @@ public class DatabaseManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+	   return conn;
+   }
+   
+   private Connection connectionmessage () {
+	   try{		
+	    	// create a connection to the database
+	    	  Class.forName("org.sqlite.JDBC");
+	          conn = DriverManager.getConnection(urlmessage);
+	          
+	          System.out.println("Connection to SQLite \"message\" has been established.");
+	          
+	      } catch (SQLException e) {
+	          System.out.println(e.getMessage());
+	      } catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	   return conn;
    }
    
    
-   public void createtable () {
+   
+   public void createtablemessage () {
 	   try {
 		   Statement stmt = null;
 		   stmt = conn.createStatement();
@@ -40,12 +60,31 @@ public class DatabaseManager {
 	         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 	         System.exit(0);
 	   }
-	      System.out.println("Table created successfully");
+	      System.out.println("Tablemessage created successfully");
+   }
+   
+   
+   public void createtableusers() {
+	   //TODO by Patrick
+   }
+   
+   public void insertuser(String name, double capacity) {
+       String sql = "INSERT INTO warehouses(name,capacity) VALUES(?,?)";
+
+       try (Connection conn = this.connectionusers();
+               PreparedStatement pstmt = conn.prepareStatement(sql)) {
+           pstmt.setString(1, name);
+           pstmt.setDouble(2, capacity);
+           pstmt.executeUpdate();
+       } catch (SQLException e) {
+           System.out.println(e.getMessage());
+       }
    }
    
    public static void main(String[] args) {
-	   connection();
-	   createtable();
+	   DatabaseManager Db = new DatabaseManager();
+	   Db.connectionusers();
+	   Db.createtableusers();
       // Open a connection
 	    
 	   
