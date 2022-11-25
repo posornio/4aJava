@@ -79,9 +79,9 @@ public class DatabaseManager {
 		}
 		System.out.println("TableUsers created successfully");
 	}
-	}
 
-	public void insertuser(String login, int idUser) {
+
+	public void insertuser( int idUser,String login) {
 		String sql = "INSERT INTO Users(name,idUser) VALUES(?,?)";
 
 		try (Connection conn = this.connectionusers();
@@ -93,6 +93,60 @@ public class DatabaseManager {
 			System.out.println(e.getMessage());
 		}
 	}
+	public void changerPseudo(int idUser, String newlogin){
+		String sql = "UPDATE Users SET Login = ? , "
+				+ "WHERE idUsers = ?";
+
+		try (Connection conn = this.connect();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			// set the corresponding param
+			pstmt.setString(1, newlogin);
+			pstmt.setInt(2, idUser);
+			// update
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	public void getIdByLogin(String login){
+		String sql = "SELECT Login "
+				+ "FROM Users WHERE idUsers = ?";
+
+		try (Connection conn = this.connect();
+			 PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+			// set the value
+			pstmt.setString(1,login);
+			//
+			ResultSet rs  = pstmt.executeQuery();
+
+			// loop through the result set
+			while (rs.next()) {
+				System.out.println(rs.getInt("Login"));
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+
+	}}
+
+	public void getAnnuaire(){
+		String sql = "SELECT Login FROM Users";
+
+		try (Connection conn = this.connect();
+		Statement stmt  = conn.createStatement();
+		ResultSet rs    = stmt.executeQuery(sql)){
+
+		// loop through the result set
+		while (rs.next()) {
+		System.out.println(
+		rs.getString("Login") );
+		}
+		} catch (SQLException e) {
+		System.out.println(e.getMessage());
+		}
+		}
+
 
 	public static void main(String[] args) {
 		DatabaseManager Db = new DatabaseManager();
