@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 class testdatabase {
 
 	@Test
-	void test() {
+	void testcreatedatabaseandtables() {
+		try{
 			DatabaseManager Db = new DatabaseManager();
 		   //
 		   Db.connectionusers();
@@ -25,6 +26,13 @@ class testdatabase {
 		   Db.getAnnuaire();
 		   Db.getIdByLogin("xxMatthisxx");
 		   Db.getAnnuaire();
+		   assertEquals(1,1);
+		}
+		catch(Exception e){
+	        System.out.println(e.getMessage());
+			assertEquals(1,0);
+		}
+			
 	}
 
 }
