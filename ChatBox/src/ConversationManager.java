@@ -78,7 +78,8 @@ public class ConversationManager {
 	      
 	public String recvmessage() {
 		try {
-			return (String)in.readUTF();
+			String result = (String)in.readUTF();
+			return result;
 		}
 		catch(Exception e) {
 			System.out.println ("Error receiving message : " + e);

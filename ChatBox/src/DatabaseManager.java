@@ -162,7 +162,12 @@ public class DatabaseManager {
 	   else	System.out.println(getAnnuaireList());
 	}
    
-
+   public int getMaxIdmessage(int myId, int theirID) {
+	   String sql = "SELECT IDMESSAGE FROM message WHERE (IDSENDER = ? AND IDRECV = ?) OR (IDSENDER = ? AND IDRECV = ?)";
+	   /*pstmt.setInt(4, myId);;
+       pstmt.setInt(3, theirID);*/
+	   return 1;
+   }
    
    
    
@@ -176,12 +181,11 @@ public class DatabaseManager {
               // set the value
               pstmt.setInt(1, myId);;
               pstmt.setInt(2, theirID);
+          
               ResultSet rs  = pstmt.executeQuery();
               // loop through the result set
               while (rs.next()) {
-                  System.out.println(rs.getInt("IDMESSAGE") +  "\t" + 
-                                     rs.getString("CONTENU") + "\t" +
-                                     rs.getTimestamp("DATEMESSAGE"));
+                  System.out.println(rs.getInt("IDMESSAGE"));
               }
           } catch (SQLException e) {
               System.out.println(e.getMessage());
