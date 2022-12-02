@@ -25,6 +25,7 @@ public class ConversationManager {
 		            out.writeUTF(formatter.format(date));
 		            out.flush();
 	         }
+
 	        } catch (Exception e) {
 	            System.out.println ("Error");
 	        }
