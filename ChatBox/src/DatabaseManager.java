@@ -166,6 +166,7 @@ public class DatabaseManager {
 	   String sql = "SELECT IDMESSAGE FROM message WHERE (IDSENDER = ? AND IDRECV = ?) OR (IDSENDER = ? AND IDRECV = ?)";
 	   /*pstmt.setInt(4, myId);;
        pstmt.setInt(3, theirID);*/
+	   //tetst pour jenkins
 	   return 1;
    }
    
