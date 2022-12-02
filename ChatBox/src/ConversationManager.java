@@ -14,6 +14,10 @@ public class ConversationManager {
 	private int port_c;
 	
 	
+	
+	//baeldung udp in java 
+	//pour le broadcast des databases à la connexion/déconnexion 
+	
 	public void setports(int ps,int pc) {
 		this.port_s = ps;
 		this.port_c =pc;
