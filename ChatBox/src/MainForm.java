@@ -1,5 +1,7 @@
 import javax.swing.*;
+import java.awt.*;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 public class MainForm extends JFrame {
     private JScrollPane ContactScroll;
@@ -11,13 +13,18 @@ public class MainForm extends JFrame {
     private JPanel PaneCenter;
     private JPanel mainPanel;
     private JLabel nameLabel;
-    DatabaseManager Db = new DatabaseManager();
-    Connection connection = Db.conn;
+    private JLabel labelContacts;
+
 
     public MainForm(){
+        DatabaseManager Db = new DatabaseManager();
+        //Connection connection = Db.conn;
+        Db.dbinit();
         setContentPane(mainPanel);
         setTitle("ChatApp");
-
+        ArrayList<String> asAnnu = Db.getAnnuaireList();
+        JList<String> annuaireJL = new JList<>(asAnnu.toArray(new String[0]));
+        ContactScroll = new JScrollPane(annuaireJL);
         setSize(450,300);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
