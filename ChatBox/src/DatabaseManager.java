@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DatabaseManager {
    //TODO : mettre un constructeur avec tous les attributs plutot que des var globales
@@ -127,7 +128,17 @@ public class DatabaseManager {
 	}
    
    public void getIdByLogin(String login){
-		String sql = "SELECT IDUSERS "
+
+		int id = getIdbyLoginInt(login);
+		if (id <0 ) {
+			System.out.println("Ce login n'existe pas dans l'annuaire");
+		}
+		else System.out.println(id);
+	}
+
+   
+   public int getIdbyLoginInt(String login) {
+	   String sql = "SELECT IDUSERS "
 				+ "FROM users WHERE LOGIN = ?";
 
 		try (Connection conn = this.connectionusers();
@@ -140,30 +151,39 @@ public class DatabaseManager {
 
 			// loop through the result set
 			while (rs.next()) {
-				System.out.println(rs.getInt("IDUSERS"));
+				return rs.getInt("IDUSERS");
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-
-	}}
+			return -1;
+	}
+		return -1;
+   }
    
+   
+   public ArrayList<String> getAnnuaireList(){
+	   
+		String sql = "SELECT LOGIN FROM users";
+		ArrayList<String> result = new ArrayList<String>();
+		try (Connection conn = this.connectionusers();
+			Statement stmt  = conn.createStatement();
+			ResultSet rs    = stmt.executeQuery(sql)){
+
+			// loop through the result set
+		while (rs.next()) {
+			result.add(rs.getString("LOGIN"));
+			}
+		} 
+		catch (SQLException e) {
+		}
+		return result;
+   }
    
    public void getAnnuaire(){
-		String sql = "SELECT LOGIN FROM users";
-
-		try (Connection conn = this.connectionusers();
-		Statement stmt  = conn.createStatement();
-		ResultSet rs    = stmt.executeQuery(sql)){
-
-		// loop through the result set
-		while (rs.next()) {
-		System.out.println(
-		rs.getString("LOGIN") );
-		}
-		} catch (SQLException e) {
-		System.out.println(e.getMessage());
-		}
-		}
+	   if (getAnnuaireList().isEmpty()) {
+			System.out.println("Annuaire Vide.");
+	   }
+	   else	System.out.println(getAnnuaireList());
+	}
    
 
    
