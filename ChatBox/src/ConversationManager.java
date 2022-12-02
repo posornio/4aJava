@@ -25,11 +25,6 @@ public class ConversationManager {
 		            out.writeUTF(formatter.format(date));
 		            out.flush();
 	         }
-
-	            in.close();
-	            out.close();
-	            Sock.close();
-	            servSocket.close();
 	        } catch (Exception e) {
 	            System.out.println ("Error");
 	        }
