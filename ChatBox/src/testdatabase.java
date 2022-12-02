@@ -3,7 +3,7 @@
 //import org.junit.jupiter.api.Test;
 
 class testdatabase {
-
+/*
 	//@Test
 	void testcreatedatabaseandtables() {
 		try{
@@ -34,5 +34,5 @@ class testdatabase {
 		}
 			
 	}
-
+*/
 }
