@@ -23,7 +23,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="a64a0" class="javax.swing.JLabel">
+              <component id="a64a0" class="javax.swing.JLabel" binding="labelContacts">
                 <constraints/>
                 <properties>
                   <text value="Label"/>
