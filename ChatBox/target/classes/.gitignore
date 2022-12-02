@@ -2,3 +2,5 @@
 /META-INF/
 /NetworkManager.class
 /ConversationManager.class
+/testserver.class
+/testclient.class
