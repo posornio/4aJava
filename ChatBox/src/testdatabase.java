@@ -9,7 +9,7 @@ class testdatabase {
 		try{
 			DatabaseManager Db = new DatabaseManager();
 		   //
-		   Db.connectionusers();
+		   Db.dbinit();
 		   //Db.connectionmessage();  
 		   //Db.createtablemessage();
 		   Db.createtableusers();

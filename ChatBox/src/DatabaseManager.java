@@ -5,14 +5,14 @@ public class DatabaseManager {
    //TODO : mettre un constructeur avec tous les attributs plutot que des var globales
 	
 	static final String url = "jdbc:sqlite:src/test.db";
-   Connection conn = null;
+   private Connection conn = null;
 	  
 
-   public Connection connectionusers () {
+   public void dbinit () {
 	   try{		
 	    	// create a connection to the database
 	    	  Class.forName("org.sqlite.JDBC");
-	          conn = DriverManager.getConnection(url);
+	          this.conn = DriverManager.getConnection(url);
 	          
 	          System.out.println("Connection to SQLite \"users\" has been established.");
 	          
@@ -22,26 +22,8 @@ public class DatabaseManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-	   return conn;
    }
-   
-   public Connection connectionmessage () {
-	   try{		
-	    	// create a connection to the database
-	    	  Class.forName("org.sqlite.JDBC");
-	          conn = DriverManager.getConnection(url);
-	          
-	          System.out.println("Connection to SQLite \"message\" has been established.");
-	          
-	      } catch (SQLException e) {
-	          System.out.println(e.getMessage());
-	      } catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-	   return conn;
-   }
-   
+      
    
    
    public void createtablemessage () {
@@ -85,8 +67,7 @@ public class DatabaseManager {
    public void insertuser( int idUser,String login) {
 		String sql = "INSERT INTO users VALUES(?,?)";
 		//(IDUSERS,LOGIN)
-		try (Connection conn = this.connectionusers();
-			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try ( PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, idUser);
 			pstmt.setString(2, login);
 			pstmt.executeUpdate();
@@ -98,8 +79,7 @@ public class DatabaseManager {
    public void insertmessage(int idmessage, int idsender, int idreceiver, String contenu, Timestamp Datetimemessage) {
 	   String sql = "INSERT INTO message VALUES(?,?,?,?,?)";
 
-       try (Connection conn = this.connectionmessage();
-               PreparedStatement pstmt = conn.prepareStatement(sql)) {
+       try ( PreparedStatement pstmt = conn.prepareStatement(sql)) {
            pstmt.setInt(1,idmessage );
            pstmt.setInt(2,idsender );
            pstmt.setInt(3,idreceiver );
@@ -114,8 +94,7 @@ public class DatabaseManager {
    public void changerPseudo(int idUser, String newlogin){
 		String sql = "UPDATE users SET LOGIN = ? WHERE IDUSERS = ?";
 		//, WHERE IDUSERS = ?
-		try (Connection conn = this.connectionusers();
-			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try ( PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
 			// set the corresponding param
 			pstmt.setString(1, newlogin);
@@ -141,8 +120,7 @@ public class DatabaseManager {
 	   String sql = "SELECT IDUSERS "
 				+ "FROM users WHERE LOGIN = ?";
 
-		try (Connection conn = this.connectionusers();
-			 PreparedStatement pstmt  = conn.prepareStatement(sql)){
+		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
 
 			// set the value
 			pstmt.setString(1,login);
@@ -164,8 +142,7 @@ public class DatabaseManager {
 	   
 		String sql = "SELECT LOGIN FROM users";
 		ArrayList<String> result = new ArrayList<String>();
-		try (Connection conn = this.connectionusers();
-			Statement stmt  = conn.createStatement();
+		try (Statement stmt  = conn.createStatement();
 			ResultSet rs    = stmt.executeQuery(sql)){
 
 			// loop through the result set
@@ -194,8 +171,7 @@ public class DatabaseManager {
        String sql = "SELECT IDMESSAGE, CONTENU, DATEMESSAGE FROM message WHERE IDSENDER = ? AND IDRECV = ?";
        //idmessage, idsender, idreceiver, contenu, Datetimemessage
        
-       try (Connection conn = this.connectionmessage();
-               PreparedStatement pstmt  = conn.prepareStatement(sql)){
+       try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
     	   
               // set the value
               pstmt.setInt(1, myId);;
@@ -216,24 +192,21 @@ public class DatabaseManager {
    public static void main(String[] args) {
 	   DatabaseManager Db = new DatabaseManager();
 	   //
-	   Db.connectionusers();
-	   Db.connectionmessage();  
+	   Db.dbinit();  
 	   Db.createtableusers();
 	   Db.createtablemessage();
-	   //Db.createtableusers();
 	   //System.out.println("Table message created successfully");
 	   Timestamp D = new Timestamp(System.currentTimeMillis());
-	   System.out.println(D);
-	   Db.insertmessage(1, 1, 2, "Coucou premier message", D);
-	   //Db.insertuser(3, "xxRaveauxx");
-	   //Db.insertuser(4, "xxOsornioxx");
+	   Db.insertmessage(3, 1, 2, "Coucou premier message", D);
+	   Db.insertuser(5, "xxRaveauxx");
+	   Db.insertuser(6, "xxOsornioxx");
 
 	   //System.out.println("Datetime OK and message added to DB");
 	   Db.selectHistorywithX(1, 2);
 	   Db.getAnnuaire();
-	   Db.changerPseudo(1, "xxMatthosxx");
+	   Db.changerPseudo(5, "xxMatthosxx");
 	   Db.getAnnuaire();
-	   Db.getIdByLogin("xxMatthisxx");
+	   Db.getIdByLogin("xxMatthosxx");
 	   Db.getAnnuaire();
    }
 }
