@@ -52,7 +52,7 @@ public class DatabaseManager {
                    " 	IDSENDER integer NOT NULL,\n" + 
                    " 	IDRECV integer NOT NULL,\n" + 
                    " 	CONTENU  text,\n" + 
-                   " 	DATEMESSAGE  Date\n)"; 
+                   "	DATEMESSAGE Timestamp\n)"; 
 		   stmt.executeUpdate(sql);
 	   }
 	   catch ( Exception e ) {
@@ -94,7 +94,7 @@ public class DatabaseManager {
 		}
 	}
 
-   public void insertmessage(int idmessage, int idsender, int idreceiver, String contenu, Date datemessage) {
+   public void insertmessage(int idmessage, int idsender, int idreceiver, String contenu, Timestamp Datetimemessage) {
 	   String sql = "INSERT INTO message VALUES(?,?,?,?,?)";
 
        try (Connection conn = this.connectionmessage();
@@ -103,7 +103,7 @@ public class DatabaseManager {
            pstmt.setInt(2,idsender );
            pstmt.setInt(3,idreceiver );
            pstmt.setString(4, contenu);
-           pstmt.setDate(5,datemessage);
+           pstmt.setTimestamp(5,Datetimemessage);
            pstmt.executeUpdate();
        } catch (SQLException e) {
            System.out.println(e.getMessage());
@@ -119,7 +119,7 @@ public class DatabaseManager {
 			// set the corresponding param
 			pstmt.setString(1, newlogin);
 			pstmt.setInt(2, idUser);
-			// update
+			// upDatetime
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -170,8 +170,9 @@ public class DatabaseManager {
    
    
    public void selectHistorywithX(int myId, int theirID){
+	   
        String sql = "SELECT IDMESSAGE, CONTENU, DATEMESSAGE FROM message WHERE IDSENDER = ? AND IDRECV = ?";
-       //idmessage, idsender, idreceiver, contenu, datemessage
+       //idmessage, idsender, idreceiver, contenu, Datetimemessage
        
        try (Connection conn = this.connectionmessage();
                PreparedStatement pstmt  = conn.prepareStatement(sql)){
@@ -179,14 +180,12 @@ public class DatabaseManager {
               // set the value
               pstmt.setInt(1, myId);;
               pstmt.setInt(2, theirID);
-              
               ResultSet rs  = pstmt.executeQuery();
-              // loop through the result set
               // loop through the result set
               while (rs.next()) {
                   System.out.println(rs.getInt("IDMESSAGE") +  "\t" + 
                                      rs.getString("CONTENU") + "\t" +
-                                     rs.getDate("DATEMESSAGE"));
+                                     rs.getTimestamp("DATEMESSAGE"));
               }
           } catch (SQLException e) {
               System.out.println(e.getMessage());
@@ -198,17 +197,19 @@ public class DatabaseManager {
 	   DatabaseManager Db = new DatabaseManager();
 	   //
 	   Db.connectionusers();
-	   //Db.connectionmessage();  
-	   //Db.createtablemessage();
+	   Db.connectionmessage();  
 	   Db.createtableusers();
+	   Db.createtablemessage();
+	   //Db.createtableusers();
 	   //System.out.println("Table message created successfully");
-	   //Date D = new Date(System.currentTimeMillis());
-	   //Db.insertmessage(1, 1, 2, "Coucou premier message", D);
+	   Timestamp D = new Timestamp(System.currentTimeMillis());
+	   System.out.println(D);
+	   Db.insertmessage(1, 1, 2, "Coucou premier message", D);
 	   //Db.insertuser(3, "xxRaveauxx");
 	   //Db.insertuser(4, "xxOsornioxx");
 
-	   //System.out.println("Date OK and message added to DB");
-	   //Db.selectHistorywithX(1, 2);
+	   //System.out.println("Datetime OK and message added to DB");
+	   Db.selectHistorywithX(1, 2);
 	   Db.getAnnuaire();
 	   Db.changerPseudo(1, "xxMatthosxx");
 	   Db.getAnnuaire();
