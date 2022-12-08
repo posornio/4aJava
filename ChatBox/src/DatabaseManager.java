@@ -109,15 +109,35 @@ public class DatabaseManager {
    public boolean IdExists(String idUser) {
 	    String sql = "SELECT LOGIN "
 				+ "FROM users WHERE IDUSERS = ?";
-
+	    System.out.println(idUser);
 		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
 
 			// set the value
 			pstmt.setString(1,idUser);
 			//
 			ResultSet rs  = pstmt.executeQuery();
+    		System.out.println("we're here2");
 
 	   
+			return rs.next();
+		}
+	    catch (SQLException e) {
+			return false;
+	    }
+   }
+   
+   public boolean id_login_exists(String idUser,String Pseudo) {
+	   String sql = "SELECT LOGIN "
+				+ "FROM users WHERE IDUSERS = ? and LOGIN = ?";
+
+		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+			// set the value
+			pstmt.setString(1,idUser);
+			pstmt.setString(2, Pseudo);
+			//
+			ResultSet rs  = pstmt.executeQuery();
+
 			return rs.next();
 		}
 	    catch (SQLException e) {
