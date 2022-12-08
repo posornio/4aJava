@@ -249,7 +249,7 @@ public class DatabaseManager {
 		Db.createtablemessage();
 		//System.out.println("Table message created successfully");
 		Timestamp D = new Timestamp(System.currentTimeMillis());
-		Db.insertmessage(3, 1, 2, "Coucou premier message", D);
+		Db.insertmessage(3, 5, 4, "Coucou premier message", D);
 		Db.insertuser(5, "xxRaveauxx");
 		Db.insertuser(6, "xxOsornioxx");
 
@@ -259,6 +259,8 @@ public class DatabaseManager {
 		Db.changerPseudo(5, "xxMatthosxx");
 		Db.getAnnuaire();
 		Db.getIdByLogin("xxMatthosxx");
+		Db.getIdByLogin("xxOsornioxx");
+
 		Db.getAnnuaire();
 	}
 }
