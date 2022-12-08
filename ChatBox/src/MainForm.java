@@ -13,7 +13,6 @@ public class MainForm extends JFrame {
     private JPanel PaneCenter;
     private JPanel mainPanel;
     private JLabel nameLabel;
-    private JLabel labelContacts;
 
 
     public MainForm(){
@@ -32,5 +31,9 @@ public class MainForm extends JFrame {
 
     public static void main(String[] args) {
         MainForm myForm = new MainForm();
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }
