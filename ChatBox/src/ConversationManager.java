@@ -4,7 +4,7 @@
 	import java.net.Socket;
 
 
-public class ConversationManager {
+public class ConversationManager{
 
 	private ServerSocket servSocket;
 	private Socket Sock;

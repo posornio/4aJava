@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class DatabaseManager {
    //TODO : mettre un constructeur avec tous les attributs plutot que des var globales
-	
+	//TODO : ID est finalement le hash code int de l'adresse IP (hashCode() de InetAddress 
 	static final String url = "jdbc:sqlite:src/test.db";
    private Connection conn = null;
 	  
@@ -105,6 +105,26 @@ public class DatabaseManager {
 			System.out.println(e.getMessage());
 		}
 	}
+   
+   public boolean IdExists(int idUser) {
+	    String sql = "SELECT LOGIN "
+				+ "FROM users WHERE IDUSERS = ?";
+
+		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+			// set the value
+			pstmt.setInt(1,idUser);
+			//
+			ResultSet rs  = pstmt.executeQuery();
+
+	   
+			return rs.next();
+		}
+	    catch (SQLException e) {
+			return false;
+	    }
+   }
+   
    
    public void getIdByLogin(String login){
 
