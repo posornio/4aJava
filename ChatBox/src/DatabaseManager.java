@@ -62,6 +62,47 @@ public class DatabaseManager {
 		System.out.println("TableUsers created successfully");
 	}
 
+	public void createtableports() {
+		try {
+			Statement stmt = null;
+			stmt = conn.createStatement();
+			String sql = "CREATE TABLE IF NOT EXISTS ports" +
+					"(\n PORTUTILISEE integer PRIMARY KEY,\n)";
+			stmt.executeUpdate(sql);
+		}
+		catch ( Exception e ) {
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			System.exit(0);
+		}
+		System.out.println("TablePorts created successfully");
+	}
+	public int insertport() {
+		String getmaxportSql ="SELECT MAX(PORTUTILISEE) as max_ports\n" +
+				"FROM ports;";
+		int ret=0;
+		try ( PreparedStatement pstmt  = conn.prepareStatement(getmaxportSql)){
+
+			// set the value//
+			ResultSet rs  = pstmt.executeQuery();
+
+			// loop through the result set
+			while (rs.next()) {
+				ret = rs.getInt("PORTUTILISEE");
+			}
+		} catch (SQLException e) {
+
+		}
+		ret+=1;
+		String sql = "INSERT INTO port VALUES(?)";
+		//(IDUSERS,LOGIN)
+		try ( PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1, ret);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	return ret;}
+
 
 
 	public void insertuser( int idUser,String login) {
@@ -106,6 +147,45 @@ public class DatabaseManager {
 		}
 	}
 
+
+	public boolean IdExists(String idUser) {
+		String sql = "SELECT LOGIN "
+				+ "FROM users WHERE IDUSERS = ?";
+		System.out.println(idUser);
+		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+			// set the value
+			pstmt.setString(1,idUser);
+			//
+			ResultSet rs  = pstmt.executeQuery();
+			System.out.println("we're here2");
+
+
+			return rs.next();
+		}
+		catch (SQLException e) {
+			return false;
+		}
+	}
+	public boolean id_login_exists(String idUser,String Pseudo) {
+		String sql = "SELECT LOGIN "
+				+ "FROM users WHERE IDUSERS = ? and LOGIN = ?";
+
+		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+			// set the value
+			pstmt.setString(1,idUser);
+			pstmt.setString(2, Pseudo);
+			//
+			ResultSet rs  = pstmt.executeQuery();
+
+			return rs.next();
+		}
+		catch (SQLException e) {
+			return false;
+		}
+	}
+
 	public void getIdByLogin(String login){
 
 		int id = getIdbyLoginInt(login);
@@ -115,6 +195,26 @@ public class DatabaseManager {
 		else System.out.println(id);
 	}
 
+	public String getIdbyLoginString(String login) {
+		String sql = "SELECT IDUSERS "
+				+ "FROM users WHERE LOGIN = ?";
+
+		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+			// set the value
+			pstmt.setString(1,login);
+			//
+			ResultSet rs  = pstmt.executeQuery();
+
+			// loop through the result set
+			while (rs.next()) {
+				return rs.getString("IDUSERS");
+			}
+		} catch (SQLException e) {
+			return "";
+		}
+		return "";
+	}
 
 	public int getIdbyLoginInt(String login) {
 		String sql = "SELECT IDUSERS "
@@ -217,8 +317,9 @@ public class DatabaseManager {
 				String contenu=rs.getString("CONTENU");
 				int sender= rs.getInt("IDSENDER");
 				int recv = rs.getInt("IDRECV");
+
 				Timestamp tsI= rs.getTimestamp("DATEMESSAGE");
-				Message messI = new Message(contenu,sender,recv,tsI);
+				Message messI = new Message(contenu,sender,recv,tsI,0);
 				result.add(messI);
 			}
 		} catch (SQLException e) {
@@ -230,12 +331,14 @@ public class DatabaseManager {
 	public class Message{
 		String contenu;
 		int idSender;
+		int senderPort;
 		int idRecv;
 		Timestamp date;
 
-		public Message(String contenu, int idSender, int idRecv, Timestamp date) {
+		public Message(String contenu, int idSender, int idRecv, Timestamp date,int senderPort) {
 			this.contenu = contenu;
 			this.idSender = idSender;
+			this.senderPort=senderPort;
 			this.idRecv = idRecv;
 			this.date = date;
 		}

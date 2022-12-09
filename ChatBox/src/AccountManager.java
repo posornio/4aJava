@@ -7,7 +7,7 @@ public class AccountManager {
 		NetworkManager Nm = new NetworkManager();
 		//if unique dans network manager alors : 
 		if (Nm.checkunicitepseudo(login)) {
-			Db.changerPseudo(MyId,login);
+			Db.changerPseudo(Integer.parseInt(MyId),login);
 		}
 		//sinon pas de changement
 		else System.out.println("Pseudo deja pris, choisissez-en un nouveau");		
@@ -15,7 +15,7 @@ public class AccountManager {
 	
 	public void sedeconnecter(String MyId) {
 		DatabaseManager Db = new DatabaseManager();
-		Db.changerPseudo(MyId,"");
+		Db.changerPseudo(Integer.parseInt(MyId),"");
 	}
 	
 	public void createaccount(String MyId, String login) {
@@ -23,7 +23,7 @@ public class AccountManager {
 		NetworkManager Nm = new NetworkManager();
 		//if unique dans network manager alors : 
 		if (Nm.checkunicitepseudo(login)) {
-			Db.insertuser(MyId,login);
+			Db.insertuser(Integer.parseInt(MyId),login);
 		}
 		//sinon pas de changement
 		else System.out.println("Pseudo deja pris, choisissez-en un nouveau");
