@@ -2,7 +2,7 @@
 
 public class AccountManager {
 
-	public void seconnecter(int MyId, String login) {
+	public void seconnecter(String MyId, String login) {
 		DatabaseManager Db = new DatabaseManager();
 		NetworkManager Nm = new NetworkManager();
 		//if unique dans network manager alors : 
@@ -13,12 +13,12 @@ public class AccountManager {
 		else System.out.println("Pseudo deja pris, choisissez-en un nouveau");		
 	}
 	
-	public void sedeconnecter(int MyId) {
+	public void sedeconnecter(String MyId) {
 		DatabaseManager Db = new DatabaseManager();
 		Db.changerPseudo(MyId,"");
 	}
 	
-	public void createaccount(int MyId, String login) {
+	public void createaccount(String MyId, String login) {
 		DatabaseManager Db = new DatabaseManager();
 		NetworkManager Nm = new NetworkManager();
 		//if unique dans network manager alors : 
