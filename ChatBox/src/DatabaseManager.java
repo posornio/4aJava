@@ -107,16 +107,14 @@ public class DatabaseManager {
 	}
    
    public boolean IdExists(String idUser) {
-	    String sql = "SELECT LOGIN "
+	   String sql = "SELECT IDUSERS "
 				+ "FROM users WHERE IDUSERS = ?";
-	    System.out.println(idUser);
 		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
 
 			// set the value
 			pstmt.setString(1,idUser);
 			//
 			ResultSet rs  = pstmt.executeQuery();
-    		System.out.println("we're here2");
 
 	   
 			return rs.next();
@@ -180,7 +178,7 @@ public class DatabaseManager {
    
    public ArrayList<String> getAnnuaireList(){
 	   
-		String sql = "SELECT LOGIN FROM users";
+		String sql = "SELECT LOGIN FROM users WHERE LOGIN <> ''";
 		ArrayList<String> result = new ArrayList<String>();
 		try (Statement stmt  = conn.createStatement();
 			ResultSet rs    = stmt.executeQuery(sql)){
@@ -239,7 +237,7 @@ public class DatabaseManager {
    public ArrayList<Message> ArrayHistorywithX(String myId, String theirID){
 		ArrayList<Message> result = new ArrayList<Message>();
 
-		String sql = "SELECT IDSENDER, IDRECV, CONTENU, DATEMESSAGE FROM message WHERE (IDSENDER = ? AND IDRECV = ) OR (IDSENDER = ? AND IDRECV = ?)";
+		String sql = "SELECT IDSENDER, IDRECV, CONTENU, DATEMESSAGE FROM message WHERE (IDSENDER = ? AND IDRECV = ?) OR (IDSENDER = ? AND IDRECV = ?)";
 		//idmessage, idsender, idreceiver, contenu, Datetimemessage
 
 		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
@@ -278,26 +276,33 @@ public class DatabaseManager {
 			this.idRecv = idRecv;
 			this.date = date;
 		}
+		
+		public String toString() {
+			return this.idSender + " " + this.contenu + " " + this.idRecv + " " + this.date; 
+		}
 	}
    
    public static void main(String[] args) {
 	   DatabaseManager Db = new DatabaseManager();
 	   //
+	   AccountManager Am = new AccountManager();
+
 	   Db.dbinit();  
 	   Db.createtableusers();
 	   Db.createtablemessage();
 	   //System.out.println("Table message created successfully");
 	   Timestamp D = new Timestamp(System.currentTimeMillis());
-	   Db.insertmessage(3, "1", "2", "Coucou premier message", D);
+	   Db.insertmessage(1, "5", "6", "Coucou premier message", D);
 	   Db.insertuser("5", "xxRaveauxx");
 	   Db.insertuser("6", "xxOsornioxx");
+	   Db.insertuser("127.0.0.98","");
 
 	   //System.out.println("Datetime OK and message added to DB");
-	   Db.selectHistorywithX("1", "2");
+	   System.out.println(Db.ArrayHistorywithX("5", "6"));
 	   Db.getAnnuaire();
-	   Db.changerPseudo("5", "xxMatthosxx");
+	   Db.changerPseudo("5", "xxMatthisxx");
 	   Db.getAnnuaire();
-	   Db.getIdByLogin("xxMatthosxx");
+	   Am.changerpseudo("5", "zebicamarche la !");
 	   Db.getAnnuaire();
    }
 }

@@ -6,14 +6,15 @@ public class testclient {
 		ConversationUDP Cu = new ConversationUDP(false);
 
 		//allo
-		Cu.update_self("Cmwa");
+		System.out.println(Cu.getownIP());
+		Cu.update_self("all0oo");
 		Cu.send_annuaire();
-		cm.setports(1235,1234);
+		/*cm.setports(1235,1234);
 		cm.createconnectionclient();
 		cm.initstreamclient();
 		System.out.println("sending message");
 		cm.sendmessage("test1234");
-		cm.closeconnection();
+		cm.closeconnection();*/
 	}
 	
 }

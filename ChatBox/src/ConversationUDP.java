@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -32,46 +33,62 @@ public class ConversationUDP {
     }
 
     public void update_self(String login) {
-    	this.pseudo=login;
+    	DatabaseManager Db = new DatabaseManager();
+    	AccountManager am = new AccountManager();
+    	Db.dbinit();
+    	am.changerpseudo(getownIP(), login);
+    	Db.getAnnuaire();
+    	if (Db.id_login_exists(Db.getIdbyLoginString(login),login)) {
+        	this.pseudo=login;
+    	}
+    	else {
+    		am.createaccount(getownIP(), login);
+    		this.pseudo=login;
+    		Db.getAnnuaire();
+    	}
     }
     
     
     //Process va mettre à jour son annuaire avec le login et ip reçu et va renvoyer un boolean 
     //qui dit si oui ou non l'update a fonctionné
     public boolean process(String log,InetAddress addr) {
-    	System.out.println("we process");
+    	if (log.equals("all0oo")) {
+    		System.out.println("we process");
+    	}
     	String addr_s = addr.toString();
  	   	DatabaseManager Db = new DatabaseManager();
+ 	   	Db.dbinit();
  	   	AccountManager Am = new AccountManager();
-		System.out.println("we're here");
+ 	   	System.out.println(log + " est le log et ca c'est l'addr :");
+ 	   	System.out.println(addr);
     	if (Db.IdExists(addr_s)) {
-    		System.out.println("we're here");
 
     		//il s'agit d'une connecxion/changement pseudo c pareil
+    		System.out.println("on est dans le idexists de process ");
     		Am.seconnecter(addr_s, log);
     	}
     	else {
     		//il s'agit d'un nouveau compte
+    		System.out.println("test");
     		Am.createaccount(addr_s, log);
     	}
+    	Db.getAnnuaire();
     	return Db.id_login_exists(addr_s, log);
     }
     
     public void receive_annuraire() {
-    	
-    	running = true;
+
 
     	try {
-    	
-        while (running) {
-        	DatagramPacket packet  = new DatagramPacket(buf, buf.length);
+    		byte[] bufs= new byte[256];
+        	DatagramPacket packet  = new DatagramPacket(bufs, bufs.length);
         	socket.receive(packet);
         	InetAddress address = packet.getAddress();
             int port = packet.getPort();
-            packet = new DatagramPacket(buf, buf.length, address, port);
-            String login_to_process = new String(packet.getData(), 0, packet.getLength());
-            if (process(login_to_process,address)) {
-        		System.out.println("we're here");
+            packet = new DatagramPacket(bufs, bufs.length, address, port);
+            String str = new String(bufs, StandardCharsets.UTF_8);
+            System.out.println("le login a process est :" + str);
+            if (process(str,address)) {
                 socket.send(packet);
         		System.out.println("we sent");
 
@@ -84,51 +101,73 @@ public class ConversationUDP {
             
             //Si jamais on update bien dans l'annuaire on renvoie le même paquet que celui reçu
             //Sinon, on envoie un paquet vide signifiant que l'update n'était pas nécessaire ou mauvais
-        }
+        
     	}
     	catch (Exception e) {
     		System.out.println("Could not receive Annuary with " + e);
     	}
     }
     
+    public String getownIP() {
+    	try {
+    		Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
+        	while(e.hasMoreElements())
+        	{
+        	    NetworkInterface n = (NetworkInterface) e.nextElement();
+        	    Enumeration<InetAddress> ee = n.getInetAddresses();
+        	    int ii = 0;
+        	    while (ee.hasMoreElements())
+        	    {
+        	    	if (ii==1) {
+        	    		return ((InetAddress) ee.nextElement()).toString();
+        	    	}
+        	        InetAddress i = (InetAddress) ee.nextElement();
+        	        ii++;
+        	    }
+        	}
+    	}
+    	catch (Exception e )
+    	{
+    		return "Error with :" + e;
+    	}
+    	return "on a test";
+    }
     
     public static String getBroadcast(){
-    String found_bcast_address=null;
-     System.setProperty("java.net.preferIPv4Stack", "true"); 
-        try
-        {
-          Enumeration<NetworkInterface> niEnum = NetworkInterface.getNetworkInterfaces();
-          while (niEnum.hasMoreElements())
-          {
-            NetworkInterface ni = niEnum.nextElement();
-            if(!ni.isLoopback()){
-                for (InterfaceAddress interfaceAddress : ni.getInterfaceAddresses())
-                {
+        InetAddress found_bcast_address=null;
+         System.setProperty("java.net.preferIPv4Stack", "true"); 
+            try
+            {
+              Enumeration<NetworkInterface> niEnum = NetworkInterface.getNetworkInterfaces();
+              while (niEnum.hasMoreElements())
+              {
+                NetworkInterface ni = niEnum.nextElement();
+                if(!ni.isLoopback()){
+                    for (InterfaceAddress interfaceAddress : ni.getInterfaceAddresses())
+                    {
 
-                  found_bcast_address = interfaceAddress.getBroadcast().toString();
-                  found_bcast_address = found_bcast_address.substring(1);
+                      found_bcast_address = interfaceAddress.getBroadcast();
+                      //found_bcast_address = found_bcast_address.substring(1);
 
+                    }
                 }
+              }
+            }  
+            catch (SocketException e)
+            {
+              e.printStackTrace();
             }
-          }
-        }
-        catch (SocketException e)
-        {
-          e.printStackTrace();
-        }
-
-        return found_bcast_address;
+            String bcast = found_bcast_address.toString();
+            bcast = bcast.substring(1);
+            return bcast;
     }
     
     public void send_annuaire() {
     	try {
-    		System.out.println(getBroadcast());
+    		System.out.println("adresse de broadacast :" + getBroadcast());
     		InetAddress ia = InetAddress.getByName(getBroadcast());
-    		System.out.println("we're here2");
-        	buf = pseudo.getBytes();
-    		System.out.println("we're here3");
-        	DatagramPacket DpSend = new DatagramPacket(buf, buf.length, ia, 3456);
-    		System.out.println("we're here4");
+        	byte[] bufs = pseudo.getBytes(StandardCharsets.UTF_8);
+        	DatagramPacket DpSend = new DatagramPacket(bufs, bufs.length, ia, 3456);
         	socket.send(DpSend);
     	}
     	catch (Exception e)
