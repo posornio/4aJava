@@ -78,7 +78,7 @@ public class ConversationUDP {
     
     public void receive_annuraire() {
 
-
+    	while (true) {
     	try {
     		byte[] bufs= new byte[256];
         	DatagramPacket packet  = new DatagramPacket(bufs, bufs.length);
@@ -108,6 +108,7 @@ public class ConversationUDP {
     	}
     	catch (Exception e) {
     		System.out.println("Could not receive Annuary with " + e);
+    	}
     	}
     }
     
