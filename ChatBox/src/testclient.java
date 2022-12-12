@@ -7,7 +7,7 @@ public class testclient {
 
 		//allo
 		System.out.println(Cu.getownIP());
-		Cu.update_self("all0oo");
+		Cu.update_self("");
 		Cu.send_annuaire();
 		/*cm.setports(1235,1234);
 		cm.createconnectionclient();

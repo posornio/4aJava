@@ -85,11 +85,14 @@ public class ConversationUDP {
         	socket.receive(packet);
         	InetAddress address = packet.getAddress();
             int port = packet.getPort();
-            packet = new DatagramPacket(bufs, bufs.length, address, port);
-            String str = new String(bufs, StandardCharsets.UTF_8);
+            
+            DatagramPacket packet_ack = new DatagramPacket(packet.getData(), packet.getLength(), address, port);
+            System.out.println("Longueur de getlength est : " + packet.getLength());
+            String str = new String(packet.getData(), 0, packet.getLength());
+            System.out.println("Longueur est : " + str.length());
             System.out.println("le login a process est :" + str);
             if (process(str,address)) {
-                socket.send(packet);
+                socket.send(packet_ack);
         		System.out.println("we sent");
 
             }
@@ -166,7 +169,8 @@ public class ConversationUDP {
     	try {
     		System.out.println("adresse de broadacast :" + getBroadcast());
     		InetAddress ia = InetAddress.getByName(getBroadcast());
-        	byte[] bufs = pseudo.getBytes(StandardCharsets.UTF_8);
+        	byte[] bufs = pseudo.getBytes();
+        	System.out.println("la longueur est : " + bufs.length);
         	DatagramPacket DpSend = new DatagramPacket(bufs, bufs.length, ia, 3456);
         	socket.send(DpSend);
     	}
