@@ -52,40 +52,30 @@ class ThreadEcouteMessage extends Thread {
     }
 
 class ThreadEcouteConnexions extends Thread {
-    ConversationManager cm = new ConversationManager();
+    ConversationUDP cu = new ConversationUDP(true);
     DatabaseManager dbm = new DatabaseManager();
-    final DatagramPacket dis=null;
-    InetAddress addrSender=null;
-    final DatagramSocket s;
 
-    public ThreadEcouteConnexions(DatagramSocket s) throws IOException {
-        this.s = s;
-    }
     public void run(){
         dbm.dbinit();
-        while (true){
-                handlerRcepCon();
-                    //Handler reception
-        }
-        }
-
-    public void handlerRcepCon(){
-        try {
-            s.receive(dis);
-            addrSender=dis.getAddress();
-            String loginSender = "";
-            dbm.insertuser(Integer.parseInt(String.valueOf(addrSender)),loginSender);
-            String portDispo = String.valueOf(dbm.insertport());
-            DatagramPacket sendPacket = new DatagramPacket(portDispo.getBytes(), portDispo.length(),
-                    dis.getAddress(), dis.getPort());
-            s.send(sendPacket);
-            //Envoyer paquet TCP avec le port utilisee
-
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        cu.receive_annuaire();
     }
 
+    
+   
+
+}
+
+class ThreadEnvoiAnnuaire extends Thread {
+    ConversationUDP cu = new ConversationUDP(false);
+    DatabaseManager dbm = new DatabaseManager();
+    String login;
+    
+    public ThreadEnvoiAnnuaire(String log) {
+    	this.login = log;
+    }
+    
+    public void run(){
+        dbm.dbinit();
+        cu.send_annuaire(login);
+    }
 }

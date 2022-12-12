@@ -62,6 +62,12 @@ public class DatabaseManager {
 		System.out.println("TableUsers created successfully");
 	}
 
+   
+   
+   //pour la gestion des ports il faut se positionner en tant que serveur quand on initie une communication
+   //on a alors un port en écoute. coté des personnes qui écoutent sur les ports on envoie un paquet au serveur 
+   //le serveur check l'ip du packet recu, si il s'agit de la personne avec qui on veut discuter on accepte 
+   //sinon, on refuse
    public void createtableports() {
 		try {
 			Statement stmt = null;
@@ -242,12 +248,30 @@ public class DatabaseManager {
 	   else	System.out.println(getAnnuaireList());
 	}
    
+   
+  
    public int getMaxIdmessage(String myId, String theirID) {
-	   String sql = "SELECT IDMESSAGE FROM message WHERE (IDSENDER = ? AND IDRECV = ?) OR (IDSENDER = ? AND IDRECV = ?)";
+	   String sql = "SELECT MAX(IDMESSAGE) as max_id FROM message WHERE (IDSENDER = ? AND IDRECV = ?) OR (IDSENDER = ? AND IDRECV = ?)";
 	   /*pstmt.setInt(4, myId);;
        pstmt.setInt(3, theirID);*/
-	   //tetst pour jenkins
-	   return 1;
+	   int ret=-1;
+	   try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+		   pstmt.setString(1, myId);
+	       pstmt.setString(2, theirID);
+	       pstmt.setString(3, theirID);
+	       pstmt.setString(4, myId);
+			// set the value//
+			ResultSet rs  = pstmt.executeQuery();
+
+			// loop through the result set
+			while (rs.next()) {
+				ret = rs.getInt("IDMESSAGE");
+			}
+		} catch (SQLException e) {
+			System.out.println("getMaxIdmessage failed with " + e);
+		}
+	   return ret;
    }
    
    

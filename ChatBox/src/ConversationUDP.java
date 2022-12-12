@@ -76,7 +76,7 @@ public class ConversationUDP {
     	return Db.id_login_exists(addr_s, log);
     }
     
-    public void receive_annuraire() {
+    public void receive_annuaire() {
 
     	while (true) {
     	try {
@@ -92,14 +92,19 @@ public class ConversationUDP {
             System.out.println("Longueur est : " + str.length());
             System.out.println("le login a process est :" + str);
             if (process(str,address)) {
-                socket.send(packet_ack);
-        		System.out.println("we sent");
+            	//Si le process est bon on peut renvoyer un ack
+            	//ici on ne le fait pas par simplification du problème 
+            	// et supposotion de non pertes dans notre rézo
+                //socket.send(packet_ack);
+        		//System.out.println("we sent");
 
             }
             else {
-            	byte[] buf2=new byte[256];
-            	DatagramPacket packet2  = new DatagramPacket(buf2, buf2.length);
-                socket.send(packet2);
+            	//ici process pas bon pas de ack mais demande de renvoi 
+            	//ici pas traité
+            	//byte[] buf2=new byte[256];
+            	//DatagramPacket packet2  = new DatagramPacket(buf2, buf2.length);
+                //socket.send(packet2);
             }
             
             //Si jamais on update bien dans l'annuaire on renvoie le même paquet que celui reçu
@@ -181,6 +186,25 @@ public class ConversationUDP {
     	}
     }
     
+    public void send_annuaire(String logz) {
+    	try {
+    		System.out.println("adresse de broadacast :" + getBroadcast());
+    		InetAddress ia = InetAddress.getByName(getBroadcast());
+    		this.pseudo = logz;
+        	byte[] bufs = logz.getBytes();
+        	System.out.println("la longueur est : " + bufs.length);
+        	DatagramPacket DpSend = new DatagramPacket(bufs, bufs.length, ia, 3456);
+        	socket.send(DpSend);
+    	}
+    	catch (Exception e)
+    	{
+    		System.out.println("Could not send annuary with " + e);
+    	}
+    }
+    
+    public void process_ack() {
+    	//ici pas nécessaire finalement
+    }
        
     
     

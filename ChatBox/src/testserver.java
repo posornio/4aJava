@@ -14,7 +14,7 @@ public class testserver {
 		ConversationUDP Cu = new ConversationUDP(true);
 		//System.out.println(getBroadcast2());
 		Db.dbinit();
-		Cu.receive_annuraire();
+		Cu.receive_annuaire();
 		Db.getAnnuaire(); 
 		/*cm.setports(1234,1235);
 		cm.createconnectionserver();
