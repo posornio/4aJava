@@ -300,7 +300,7 @@ public class DatabaseManager {
 	public ArrayList<Message> ArrayHistorywithX(int myId, int theirID){
 		ArrayList<Message> result = new ArrayList<Message>();
 
-		String sql = "SELECT IDSENDER, IDRECV, CONTENU, DATEMESSAGE FROM message WHERE (IDSENDER = ? AND IDRECV = ) OR (IDSENDER = ? AND IDRECV = ?)";
+		String sql = "SELECT IDSENDER, IDRECV, CONTENU, DATEMESSAGE FROM message WHERE IDSENDER = ? AND IDRECV = ?  OR IDSENDER = ? AND IDRECV = ?";
 		//idmessage, idsender, idreceiver, contenu, Datetimemessage
 
 		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
