@@ -25,7 +25,7 @@ public class MainForm extends JFrame {
     private JScrollPane paneContact;
     private JScrollPane paneMessages;
     private JList list2;
-    private JButton button1;
+    private JButton buttonEnvoyer;
     private JTextArea textArea1;
     private DefaultListModel messageModel = new DefaultListModel();
 
@@ -58,7 +58,6 @@ public class MainForm extends JFrame {
         list2.setEnabled(true);
         paneContact.setEnabled(true);
         paneMessages.setEnabled(false);
-
         setVisible(true);
 
     }
@@ -70,55 +69,44 @@ public class MainForm extends JFrame {
 
     private void createUIComponents() {
         DatabaseManager Db = new DatabaseManager();
-
+        //JButton buttonEnvoyer = new JButton();
         Db.dbinit();
         ArrayList<String> asAnnu = Db.getAnnuaireList();
         setSize(800, 600);
         list1 = new JList<Object>(asAnnu.toArray());
 
         System.out.println("asAnnu!");
-        if (messageModel == null) {
-            messageModel = new DefaultListModel();
-        }
 
+        buttonEnvoyer = new JButton();
         list2 = new JList(messageModel);
 
 
         list1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-                //messageModel = initLM(Db.ArrayHistorywithX(4,6));
-                messageModel.addElement("HEEEEEEY");
+                //ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+                ArrayList<DatabaseManager.Message> histWX = Db.ArrayHistorywithX("xxOsornioxx", asAnnu.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]));
+                //messageModel = initLM(histWX);
+                System.out.println();
+                System.out.println("MM"+messageModel);
+                //messageModel = new DefaultListModel();
+                messageModel.removeAllElements();
 
-                System.out.println(asAnnu.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]));
-
-            }
-        });
-        list1.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                //super.mouseClicked(e);
-                if (e.getClickCount() == 2) {
-                    System.out.println(e.getID());
-                    ArrayList conv = Db.ArrayHistorywithX(4,e.getID());
-                    System.out.println("CLICK");
-                    messageModel = initLM(conv);
-
+                for ( int i = 0; i < histWX.toArray().length; i++ ){
+                    messageModel.addElement(histWX.get(i).toString());
                 }
+                list2= new JList(messageModel);
 
             }
         });
-        list1.addKeyListener(new KeyAdapter() {
+
+        this.buttonEnvoyer.addActionListener(new ActionListener() {
             @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    System.out.println("e.getSource()");
-                }
+            public void actionPerformed(ActionEvent e) {
+                String messageAEnv = textArea1.getText();
+                System.out.println("messageAEnv");
             }
         });
-
 
         //paneContact.add(list1);
 
@@ -152,9 +140,9 @@ public class MainForm extends JFrame {
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
         PaneCenter.add(panel1, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        button1 = new JButton();
-        button1.setText("Button");
-        panel1.add(button1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonEnvoyer = new JButton();
+        buttonEnvoyer.setText("Envoyer");
+        panel1.add(buttonEnvoyer, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         textArea1 = new JTextArea();
         panel1.add(textArea1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         PaneHead = new JPanel();
@@ -174,9 +162,9 @@ public class MainForm extends JFrame {
         PaneHead.add(DeconnexionButt, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
     public DefaultListModel initLM(ArrayList a){
-        DefaultListModel<String> model = new DefaultListModel<>();
+        DefaultListModel model = new DefaultListModel<>();
         for ( int i = 0; i < a.toArray().length; i++ ){
-            model.addElement((String) a.get(i));
+            model.addElement(a.get(i).toString());
         }
         return model;
     }

@@ -74,7 +74,7 @@ class ThreadEcouteConnexions extends Thread {
             s.receive(dis);
             addrSender=dis.getAddress();
             String loginSender = "";
-            dbm.insertuser(Integer.parseInt(String.valueOf(addrSender)),loginSender);
+            dbm.insertuser((String.valueOf(addrSender)),loginSender);
             String portDispo = String.valueOf(dbm.insertport());
             DatagramPacket sendPacket = new DatagramPacket(portDispo.getBytes(), portDispo.length(),
                     dis.getAddress(), dis.getPort());

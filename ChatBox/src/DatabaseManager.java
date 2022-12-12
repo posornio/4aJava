@@ -264,6 +264,50 @@ public class DatabaseManager {
 
 		return result;
 	}
+
+
+	public void createtableports() {
+		try {
+			Statement stmt = null;
+			stmt = conn.createStatement();
+			String sql = "CREATE TABLE IF NOT EXISTS ports" +
+					"(\n PORTUTILISEE integer PRIMARY KEY,\n)";
+			stmt.executeUpdate(sql);
+		}
+		catch ( Exception e ) {
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			System.exit(0);
+		}
+		System.out.println("TablePorts created successfully");
+	}
+	public int insertport() {
+		String getmaxportSql ="SELECT MAX(PORTUTILISEE) as max_ports\n" +
+				"FROM ports;";
+		int ret=0;
+		try ( PreparedStatement pstmt  = conn.prepareStatement(getmaxportSql)){
+
+			// set the value//
+			ResultSet rs  = pstmt.executeQuery();
+
+			// loop through the result set
+			while (rs.next()) {
+				ret = rs.getInt("PORTUTILISEE");
+			}
+		} catch (SQLException e) {
+
+		}
+		ret+=1;
+		String sql = "INSERT INTO port VALUES(?)";
+		//(IDUSERS,LOGIN)
+		try ( PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1, ret);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return ret;}
+
+
 	public class Message{
 		String contenu;
 		String idSender;
@@ -292,17 +336,18 @@ public class DatabaseManager {
 	   Db.createtablemessage();
 	   //System.out.println("Table message created successfully");
 	   Timestamp D = new Timestamp(System.currentTimeMillis());
-	   Db.insertmessage(1, "5", "6", "Coucou premier message", D);
 	   Db.insertuser("5", "xxRaveauxx");
-	   Db.insertuser("6", "xxOsornioxx");
+	   Db.insertuser("7", "xxOsornio2xx");
+	   Db.insertmessage(1, "xxRaveauxx", "xxOsornioxx", "Coucou premier message", D);
+	   Db.insertmessage(2, "xxOsornio2xx", "xxOsornioxx", "WAZAAAAA", D);
+
 	   Db.insertuser("127.0.0.98","");
 
 	   //System.out.println("Datetime OK and message added to DB");
 	   System.out.println(Db.ArrayHistorywithX("5", "6"));
 	   Db.getAnnuaire();
-	   Db.changerPseudo("5", "xxMatthisxx");
 	   Db.getAnnuaire();
-	   Am.changerpseudo("5", "zebicamarche la !");
 	   Db.getAnnuaire();
+	   System.out.println(Db.ArrayHistorywithX("xxOsornioxx","xxRaveauxx").toString());
    }
 }
