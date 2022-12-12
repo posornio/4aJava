@@ -56,6 +56,7 @@ public class MainForm extends JFrame {
         paneMessages.add(list2);
         list1.setEnabled(true);
         list2.setEnabled(true);
+
         paneContact.setEnabled(true);
         paneMessages.setEnabled(false);
         setVisible(true);
@@ -69,15 +70,20 @@ public class MainForm extends JFrame {
 
     private void createUIComponents() {
         DatabaseManager Db = new DatabaseManager();
-        //JButton buttonEnvoyer = new JButton();
+        buttonEnvoyer = new JButton("HAHAHAHAH");
+        buttonEnvoyer.setText("JIJI");
         Db.dbinit();
         ArrayList<String> asAnnu = Db.getAnnuaireList();
         setSize(800, 600);
         list1 = new JList<Object>(asAnnu.toArray());
+        buttonEnvoyer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String messageAEnv = textArea1.getText();
+                System.out.println("messageAEnv");
+            }
+        });
 
-        System.out.println("asAnnu!");
-
-        buttonEnvoyer = new JButton();
         list2 = new JList(messageModel);
 
 
@@ -100,13 +106,7 @@ public class MainForm extends JFrame {
             }
         });
 
-        this.buttonEnvoyer.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String messageAEnv = textArea1.getText();
-                System.out.println("messageAEnv");
-            }
-        });
+
 
         //paneContact.add(list1);
 
