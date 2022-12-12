@@ -4,13 +4,10 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.reflect.Array;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.zip.Deflater;
 
 public class MainForm extends JFrame {
     private JScrollPane ContactScroll;
@@ -28,6 +25,8 @@ public class MainForm extends JFrame {
     private JButton buttonEnvoyer;
     private JTextArea textArea1;
     private DefaultListModel messageModel = new DefaultListModel();
+
+    String selected;
 
     // private ArrayList<String> arrMsgStr = new ArrayList<>();
 
@@ -70,17 +69,24 @@ public class MainForm extends JFrame {
 
     private void createUIComponents() {
         DatabaseManager Db = new DatabaseManager();
-        buttonEnvoyer = new JButton("HAHAHAHAH");
-        buttonEnvoyer.setText("JIJI");
+        ConversationManager cm = new ConversationManager();
+        buttonEnvoyer = new JButton("Envoyer");
         Db.dbinit();
         ArrayList<String> asAnnu = Db.getAnnuaireList();
         setSize(800, 600);
         list1 = new JList<Object>(asAnnu.toArray());
+
         buttonEnvoyer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String messageAEnv = textArea1.getText();
-                System.out.println("messageAEnv");
+                System.out.println(selected);
+                int idM =Db.getMaxIdmessage("xxOsornioxx",selected)+1;
+                System.out.println(idM);
+                Db.insertmessage(idM,"xxOsornioxx",selected,messageAEnv,new Timestamp(System.currentTimeMillis()));
+                ArrayList<DatabaseManager.Message> ahwx =Db.ArrayHistorywithX("xxOsornioxx",selected);
+                messageModel.addElement(ahwx.get(ahwx.size()-1).toString());
+                textArea1.setText("");
             }
         });
 
@@ -91,7 +97,8 @@ public class MainForm extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 //ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-                ArrayList<DatabaseManager.Message> histWX = Db.ArrayHistorywithX("xxOsornioxx", asAnnu.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]));
+                selected = asAnnu.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
+                ArrayList<DatabaseManager.Message> histWX = Db.ArrayHistorywithX("xxOsornioxx", selected);
                 //messageModel = initLM(histWX);
                 System.out.println();
                 System.out.println("MM"+messageModel);
@@ -140,8 +147,7 @@ public class MainForm extends JFrame {
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
         PaneCenter.add(panel1, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        buttonEnvoyer = new JButton();
-        buttonEnvoyer.setText("Envoyer");
+
         panel1.add(buttonEnvoyer, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         textArea1 = new JTextArea();
         panel1.add(textArea1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
