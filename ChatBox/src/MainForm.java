@@ -75,6 +75,8 @@ public class MainForm extends JFrame {
         ArrayList<String> asAnnu = Db.getAnnuaireList();
         setSize(800, 600);
         list1 = new JList<Object>(asAnnu.toArray());
+        DeconnexionButt = new JButton();
+
 
         buttonEnvoyer.addActionListener(new ActionListener() {
             @Override
@@ -87,6 +89,15 @@ public class MainForm extends JFrame {
                 ArrayList<DatabaseManager.Message> ahwx =Db.ArrayHistorywithX("xxOsornioxx",selected);
                 messageModel.addElement(ahwx.get(ahwx.size()-1).toString());
                 textArea1.setText("");
+            }
+        });
+
+        DeconnexionButt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                ActivityMain activityMain = new ActivityMain();
+
             }
         });
 
@@ -163,7 +174,6 @@ public class MainForm extends JFrame {
         ChangerPseudoButt = new JButton();
         ChangerPseudoButt.setText("Changer de Pseudo");
         PaneHead.add(ChangerPseudoButt, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        DeconnexionButt = new JButton();
         DeconnexionButt.setText("Deconnexion");
         PaneHead.add(DeconnexionButt, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
