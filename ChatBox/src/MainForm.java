@@ -83,7 +83,7 @@ public class MainForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String messageAEnv = textArea1.getText();
                 System.out.println(selected);
-                int idM =Db.getMaxIdmessage("xxOsornioxx",selected)+1;
+                int idM =Db.getMaxIdmessage()+1;
                 System.out.println(idM);
                 Db.insertmessage(idM,"xxOsornioxx",selected,messageAEnv,new Timestamp(System.currentTimeMillis()));
                 ArrayList<DatabaseManager.Message> ahwx =Db.ArrayHistorywithX("xxOsornioxx",selected);

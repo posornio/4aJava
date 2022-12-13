@@ -6,7 +6,7 @@ public class DatabaseManager {
 	//TODO : ID est finalement le hash code int de l'adresse IP (hashCode() de InetAddress 
 	static final String url = "jdbc:sqlite:src/test.db";
    private Connection conn = null;
-	  
+
 
    public void dbinit () {
 	   try{		
@@ -207,7 +207,24 @@ public class DatabaseManager {
 	   //tetst pour jenkins
 	   return 1;
    }
-   
+	public int getMaxIdmessage() {
+		String sql ="SELECT MAX(IDMESSAGE) FROM message";
+		int ret=0;
+		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+			// set the value//
+			ResultSet rs  = pstmt.executeQuery();
+
+			// loop through the result set
+			while (rs.next()) {
+				ret = rs.getInt("MAX(IDMESSAGE)");
+			}
+
+		} catch (SQLException e) {
+
+		}
+		return ret;
+	}
    
    
    //PAS BON (que idmessage et que dans un sens sender receiver
