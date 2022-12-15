@@ -78,7 +78,7 @@ public class ConversationUDP {
  	   	}
     }
     public void receive_annuaire() {
-
+    	DatabaseManager Db = new DatabaseManager();
     	while (true) {
     	try {
     		byte[] bufs= new byte[256];
@@ -96,6 +96,7 @@ public class ConversationUDP {
         	
         	else {
         	System.out.println(getownIP() + " est différent de : " + address.toString());
+        	
             DatagramPacket packet_ack = new DatagramPacket(this.pseudo.getBytes(),this.pseudo.length() , address, 3456);
             System.out.println("Longueur de getlength est : " + packet.getLength());
             String str = new String(packet.getData(), 0, packet.getLength());
@@ -109,6 +110,8 @@ public class ConversationUDP {
                 //socket.send(packet_ack);
         		//System.out.println("we sent");
             	System.out.println("on le connaît déja donc lui aussi, on n'envoie pas");
+            	Db.dbinit();
+            	Db.getAnnuaire();
             }
             else {
             	//ici process pas bon pas de ack mais demande de renvoi 
