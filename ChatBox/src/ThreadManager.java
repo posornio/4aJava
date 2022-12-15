@@ -5,30 +5,15 @@ import java.net.*;
 
 public class ThreadManager {
 
+	private static int port_recv_TCP = 7000;
+	
 
-
-    public static void main(String[] args) {
-        DatabaseManager Db = new DatabaseManager();
-
-        //Connection connection = Db.conn;
-        Db.dbinit();
-        System.out.println("");
-    }
-}
-
-
-class ThreadEcouteMessage extends Thread {
+class ThreadEcouteConnexionsTCP extends Thread {
     //TODO gerer  ports
     ConversationManager cm = new ConversationManager();
     DatabaseManager dbm = new DatabaseManager();
-    final ObjectInputStream dis;
-    //port arbitraire
-    final Socket s;
 
-    public ThreadEcouteMessage(Socket s) throws IOException {
-        this.s = s;
-        this.dis = new ObjectInputStream(s.getInputStream()) ;
-    }
+
     public void run(){
         dbm.dbinit();
         while (true){
@@ -37,32 +22,20 @@ class ThreadEcouteMessage extends Thread {
     }
 
     public void handlerRecepMess(){
-        try {
-            DatabaseManager.Message received = (DatabaseManager.Message) dis.readObject();
-            dbm.insertmessage(dbm.getMaxIdmessage(received.idRecv, received.idSender),
-                    received.idSender,received.idRecv,received.contenu,received.date);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    	cm.createconnectionserver(port_recv_TCP);
     }
 
-    }
+}
 
-class ThreadEcouteConnexions extends Thread {
+class ThreadEcouteConnexionsUDP extends Thread {
     ConversationUDP cu = new ConversationUDP(true);
     DatabaseManager dbm = new DatabaseManager();
 
     public void run(){
         dbm.dbinit();
+        //while true dans receive_annuaire
         cu.receive_annuaire();
     }
-
-    
-   
-
 }
 
 class ThreadEnvoiAnnuaire extends Thread {
@@ -79,3 +52,18 @@ class ThreadEnvoiAnnuaire extends Thread {
         cu.send_annuaire(login);
     }
 }
+
+    public static void main(String[] args) {
+        DatabaseManager Db = new DatabaseManager();
+
+        //Connection connection = Db.conn;
+        Db.dbinit();
+        System.out.println("");
+    }
+}
+
+
+
+
+
+

@@ -1,2 +1,7 @@
 /ThreadEnvoiAnnuaire.class
 /META-INF/
+/ThreadEcouteConnexionsTCP.class
+/ThreadEcouteConnexionsUDP.class
+/ThreadManager$ThreadEcouteConnexionsTCP.class
+/ThreadManager$ThreadEcouteConnexionsUDP.class
+/ThreadManager$ThreadEnvoiAnnuaire.class

@@ -12,14 +12,13 @@ import java.util.List;
 public class ConversationUDP {
 
     private DatagramSocket socket;
-    private boolean running;
-    private byte[] buf = new byte[256];
+    private static int port_recv_UDP = 3456;
     public String pseudo;
 
     public ConversationUDP(boolean isserver) {
     	try {
     		if (isserver) {
-        		socket = new DatagramSocket(3456);
+        		socket = new DatagramSocket(port_recv_UDP);
 
     		}
     		else
@@ -97,7 +96,7 @@ public class ConversationUDP {
         	else {
         	System.out.println(getownIP() + " est différent de : " + address.toString());
         	
-            DatagramPacket packet_ack = new DatagramPacket(this.pseudo.getBytes(),this.pseudo.length() , address, 3456);
+            DatagramPacket packet_ack = new DatagramPacket(this.pseudo.getBytes(),this.pseudo.length() , address, port_recv_UDP);
             System.out.println("Longueur de getlength est : " + packet.getLength());
             String str = new String(packet.getData(), 0, packet.getLength());
             System.out.println("Longueur est : " + str.length());
@@ -195,7 +194,7 @@ public class ConversationUDP {
     		InetAddress ia = InetAddress.getByName(getBroadcast());
         	byte[] bufs = pseudo.getBytes();
         	System.out.println("la longueur est : " + bufs.length);
-        	DatagramPacket DpSend = new DatagramPacket(bufs, bufs.length, ia, 3456);
+        	DatagramPacket DpSend = new DatagramPacket(bufs, bufs.length, ia, port_recv_UDP);
         	socket.send(DpSend);
     	}
     	catch (Exception e)
@@ -211,7 +210,7 @@ public class ConversationUDP {
     		this.pseudo = logz;
         	byte[] bufs = logz.getBytes();
         	System.out.println("la longueur est : " + bufs.length);
-        	DatagramPacket DpSend = new DatagramPacket(bufs, bufs.length, ia, 3456);
+        	DatagramPacket DpSend = new DatagramPacket(bufs, bufs.length, ia, port_recv_UDP);
         	socket.send(DpSend);
     	}
     	catch (Exception e)

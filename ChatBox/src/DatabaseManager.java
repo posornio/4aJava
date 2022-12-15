@@ -3,10 +3,10 @@ import java.util.ArrayList;
 
 public class DatabaseManager {
    //TODO : mettre un constructeur avec tous les attributs plutot que des var globales
-	//TODO : ID est finalement le hash code int de l'adresse IP (hashCode() de InetAddress 
+	//TODO : ID est finalement le string de l'adresse IP de InetAddress 
 	static final String url = "jdbc:sqlite:src/test.db";
    private Connection conn = null;
-	  
+
 
    public void dbinit () {
 	   try{		
@@ -71,8 +71,17 @@ public class DatabaseManager {
    //on a alors un port en écoute. coté des personnes qui écoutent sur les ports on envoie un paquet au serveur 
    //le serveur check l'ip du packet recu, si il s'agit de la personne avec qui on veut discuter on accepte 
    //sinon, on refuse
-   public void createtableports() {
-		try {
+   
+   //ca c nul au dessus on fait plutot : 
+   
+   //on attribue en define un port (ex:7000) sur lequel tous les agents écoutent TCP
+   //pour entrer en communication on créer un thread et on envoie un message sur ce port 
+   //avec notre port. l'agent receveur va créer un thread communiquant TCP et va nous 
+   //renvoyer le port sur lequel ce thread écoute au port que lui même a recu de nous
+   //la communication est alors établie et pendant tous ce temps on écoute tjrs sur 
+   //le thread port 7000 pour d'éventuelles autres connexions
+   public void createtableports()  {}
+		/*try {
 			Statement stmt = null;
 			stmt = conn.createStatement();
 			String sql = "CREATE TABLE IF NOT EXISTS ports" +
@@ -84,7 +93,7 @@ public class DatabaseManager {
 			System.exit(0);
 		}
 		System.out.println("TablePorts created successfully");
-	}
+	}*/
    
    
    
