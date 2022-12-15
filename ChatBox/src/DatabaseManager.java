@@ -2,51 +2,58 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class DatabaseManager {
-   //TODO : mettre un constructeur avec tous les attributs plutot que des var globales
+	//TODO : mettre un constructeur avec tous les attributs plutot que des var globales
 	//TODO : ID est finalement le hash code int de l'adresse IP (hashCode() de InetAddress 
 	static final String url = "jdbc:sqlite:src/test.db";
-   private Connection conn = null;
+	private Connection conn = null;
+	private String pseudo ="xxOsornioxx";
 
 
-   public void dbinit () {
-	   try{		
-	    	// create a connection to the database
-	    	  Class.forName("org.sqlite.JDBC");
-	          this.conn = DriverManager.getConnection(url);
-	          
-	          System.out.println("Connection to SQLite \"users\" has been established.");
-	          
-	      } catch (SQLException e) {
-	          System.out.println(e.getMessage());
-	      } catch (ClassNotFoundException e) {
+	public void dbinit () {
+		try{
+			// create a connection to the database
+			Class.forName("org.sqlite.JDBC");
+			this.conn = DriverManager.getConnection(url);
+
+			System.out.println("Connection to SQLite \"users\" has been established.");
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-   }
-      
-   
-   
-   public void createtablemessage () {
-	   try {
-		   Statement stmt = null;
-		   stmt = conn.createStatement();
-		   String sql = "CREATE TABLE IF NOT EXISTS message" +
-                   "(\n	IDMESSAGE integer PRIMARY KEY,\n" +
-                   " 	IDSENDER text NOT NULL,\n" + 
-                   " 	IDRECV text NOT NULL,\n" + 
-                   " 	CONTENU  text,\n" + 
-                   "	DATEMESSAGE Timestamp\n)"; 
-		   stmt.executeUpdate(sql);
-	   }
-	   catch ( Exception e ) {
-	         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-	         System.exit(0);
-	   }
+		}
+	}
+
+	public String getPseudo() {
+		return pseudo;
+	}
+
+	public void setPseudo(String pseudo) {
+		this.pseudo = pseudo;
+	}
+
+	public void createtablemessage () {
+		try {
+			Statement stmt = null;
+			stmt = conn.createStatement();
+			String sql = "CREATE TABLE IF NOT EXISTS message" +
+					"(\n	IDMESSAGE integer PRIMARY KEY,\n" +
+					" 	IDSENDER text NOT NULL,\n" +
+					" 	IDRECV text NOT NULL,\n" +
+					" 	CONTENU  text,\n" +
+					"	DATEMESSAGE Timestamp\n)";
+			stmt.executeUpdate(sql);
+		}
+		catch ( Exception e ) {
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			System.exit(0);
+		}
 		System.out.println("TableMessage created successfully");
 
-   }
-   
-   public void createtableusers() {
+	}
+
+	public void createtableusers() {
 		try {
 			Statement stmt = null;
 			stmt = conn.createStatement();
@@ -62,9 +69,9 @@ public class DatabaseManager {
 		System.out.println("TableUsers created successfully");
 	}
 
-  
-   
-   public void insertuser( String idUser,String login) {
+
+
+	public void insertuser( String idUser,String login) {
 		String sql = "INSERT INTO users VALUES(?,?)";
 		//(IDUSERS,LOGIN)
 		try ( PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -76,22 +83,22 @@ public class DatabaseManager {
 		}
 	}
 
-   public void insertmessage(int idmessage, String idsender, String idreceiver, String contenu, Timestamp Datetimemessage) {
-	   String sql = "INSERT INTO message VALUES(?,?,?,?,?)";
+	public void insertmessage(int idmessage, String idsender, String idreceiver, String contenu, Timestamp Datetimemessage) {
+		String sql = "INSERT INTO message VALUES(?,?,?,?,?)";
 
-       try ( PreparedStatement pstmt = conn.prepareStatement(sql)) {
-           pstmt.setInt(1,idmessage );
-           pstmt.setString(2,idsender );
-           pstmt.setString(3,idreceiver );
-           pstmt.setString(4, contenu);
-           pstmt.setTimestamp(5,Datetimemessage);
-           pstmt.executeUpdate();
-       } catch (SQLException e) {
-           System.out.println(e.getMessage());
-       }
-   }
-   
-   public void changerPseudo(String idUser, String newlogin){
+		try ( PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1,idmessage );
+			pstmt.setString(2,idsender );
+			pstmt.setString(3,idreceiver );
+			pstmt.setString(4, contenu);
+			pstmt.setTimestamp(5,Datetimemessage);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public void changerPseudo(String idUser, String newlogin){
 		String sql = "UPDATE users SET LOGIN = ? WHERE IDUSERS = ?";
 		//, WHERE IDUSERS = ?
 		try ( PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -105,9 +112,9 @@ public class DatabaseManager {
 			System.out.println(e.getMessage());
 		}
 	}
-   
-   public boolean IdExists(String idUser) {
-	   String sql = "SELECT IDUSERS "
+
+	public boolean IdExists(String idUser) {
+		String sql = "SELECT IDUSERS "
 				+ "FROM users WHERE IDUSERS = ?";
 		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
 
@@ -116,16 +123,16 @@ public class DatabaseManager {
 			//
 			ResultSet rs  = pstmt.executeQuery();
 
-	   
+
 			return rs.next();
 		}
-	    catch (SQLException e) {
+		catch (SQLException e) {
 			return false;
-	    }
-   }
-   
-   public boolean id_login_exists(String idUser,String Pseudo) {
-	   String sql = "SELECT LOGIN "
+		}
+	}
+
+	public boolean id_login_exists(String idUser,String Pseudo) {
+		String sql = "SELECT LOGIN "
 				+ "FROM users WHERE IDUSERS = ? and LOGIN = ?";
 
 		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
@@ -138,13 +145,13 @@ public class DatabaseManager {
 
 			return rs.next();
 		}
-	    catch (SQLException e) {
+		catch (SQLException e) {
 			return false;
-	    }
-   }
-   
-   
-   public void getIdByLogin(String login){
+		}
+	}
+
+
+	public void getIdByLogin(String login){
 
 		String id = getIdbyLoginString(login);
 		if (id.equals("")) {
@@ -153,9 +160,9 @@ public class DatabaseManager {
 		else System.out.println(id);
 	}
 
-   
-   public String getIdbyLoginString(String login) {
-	   String sql = "SELECT IDUSERS "
+
+	public String getIdbyLoginString(String login) {
+		String sql = "SELECT IDUSERS "
 				+ "FROM users WHERE LOGIN = ?";
 
 		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
@@ -171,42 +178,42 @@ public class DatabaseManager {
 			}
 		} catch (SQLException e) {
 			return "";
-	}
+		}
 		return "";
-   }
-   
-   
-   public ArrayList<String> getAnnuaireList(){
-	   
+	}
+
+
+	public ArrayList<String> getAnnuaireList(){
+
 		String sql = "SELECT LOGIN FROM users WHERE LOGIN <> ''";
 		ArrayList<String> result = new ArrayList<String>();
 		try (Statement stmt  = conn.createStatement();
-			ResultSet rs    = stmt.executeQuery(sql)){
+			 ResultSet rs    = stmt.executeQuery(sql)){
 
 			// loop through the result set
-		while (rs.next()) {
-			result.add(rs.getString("LOGIN"));
+			while (rs.next()) {
+				result.add(rs.getString("LOGIN"));
 			}
-		} 
+		}
 		catch (SQLException e) {
 		}
 		return result;
-   }
-   
-   public void getAnnuaire(){
-	   if (getAnnuaireList().isEmpty()) {
-			System.out.println("Annuaire Vide.");
-	   }
-	   else	System.out.println(getAnnuaireList());
 	}
-   
-   public int getMaxIdmessage(String myId, String theirID) {
-	   String sql = "SELECT IDMESSAGE FROM message WHERE (IDSENDER = ? AND IDRECV = ?) OR (IDSENDER = ? AND IDRECV = ?)";
+
+	public void getAnnuaire(){
+		if (getAnnuaireList().isEmpty()) {
+			System.out.println("Annuaire Vide.");
+		}
+		else	System.out.println(getAnnuaireList());
+	}
+
+	public int getMaxIdmessage(String myId, String theirID) {
+		String sql = "SELECT IDMESSAGE FROM message WHERE (IDSENDER = ? AND IDRECV = ?) OR (IDSENDER = ? AND IDRECV = ?)";
 	   /*pstmt.setInt(4, myId);;
        pstmt.setInt(3, theirID);*/
-	   //tetst pour jenkins
-	   return 1;
-   }
+		//tetst pour jenkins
+		return 1;
+	}
 	public int getMaxIdmessage() {
 		String sql ="SELECT MAX(IDMESSAGE) FROM message";
 		int ret=0;
@@ -225,33 +232,33 @@ public class DatabaseManager {
 		}
 		return ret;
 	}
-   
-   
-   //PAS BON (que idmessage et que dans un sens sender receiver
-   public void selectHistorywithX(String myId, String theirID){
-	   
-       String sql = "SELECT IDMESSAGE, CONTENU, DATEMESSAGE FROM message WHERE IDSENDER = ? AND IDRECV = ?";
-       //idmessage, idsender, idreceiver, contenu, Datetimemessage
-       
-       try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
-    	   
-              // set the value
-              pstmt.setString(1, myId);;
-              pstmt.setString(2, theirID);
-          
-              ResultSet rs  = pstmt.executeQuery();
-              // loop through the result set
-              while (rs.next()) {
-                  System.out.println(rs.getInt("IDMESSAGE"));
-              }
-          } catch (SQLException e) {
-              System.out.println(e.getMessage());
-          }
 
-   }
-   
-   
-   public ArrayList<Message> ArrayHistorywithX(String myId, String theirID){
+
+	//PAS BON (que idmessage et que dans un sens sender receiver
+	public void selectHistorywithX(String myId, String theirID){
+
+		String sql = "SELECT IDMESSAGE, CONTENU, DATEMESSAGE FROM message WHERE IDSENDER = ? AND IDRECV = ?";
+		//idmessage, idsender, idreceiver, contenu, Datetimemessage
+
+		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+			// set the value
+			pstmt.setString(1, myId);;
+			pstmt.setString(2, theirID);
+
+			ResultSet rs  = pstmt.executeQuery();
+			// loop through the result set
+			while (rs.next()) {
+				System.out.println(rs.getInt("IDMESSAGE"));
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+	}
+
+
+	public ArrayList<Message> ArrayHistorywithX(String myId, String theirID){
 		ArrayList<Message> result = new ArrayList<Message>();
 
 		String sql = "SELECT IDSENDER, IDRECV, CONTENU, DATEMESSAGE FROM message WHERE (IDSENDER = ? AND IDRECV = ?) OR (IDSENDER = ? AND IDRECV = ?)";
@@ -337,34 +344,35 @@ public class DatabaseManager {
 			this.idRecv = idRecv;
 			this.date = date;
 		}
-		
+
 		public String toString() {
-			return this.idSender + " " + this.contenu + " " + this.idRecv + " " + this.date; 
+			return this.idSender + " " + this.contenu + " " + this.idRecv + " " + this.date;
 		}
+
 	}
-   
-   public static void main(String[] args) {
-	   DatabaseManager Db = new DatabaseManager();
-	   //
-	   AccountManager Am = new AccountManager();
 
-	   Db.dbinit();  
-	   Db.createtableusers();
-	   Db.createtablemessage();
-	   //System.out.println("Table message created successfully");
-	   Timestamp D = new Timestamp(System.currentTimeMillis());
-	   Db.insertuser("5", "xxRaveauxx");
-	   Db.insertuser("7", "xxOsornio2xx");
-	   Db.insertmessage(1, "xxRaveauxx", "xxOsornioxx", "Coucou premier message", D);
-	   Db.insertmessage(2, "xxOsornio2xx", "xxOsornioxx", "WAZAAAAA", D);
+	public static void main(String[] args) {
+		DatabaseManager Db = new DatabaseManager();
+		//
+		AccountManager Am = new AccountManager();
 
-	   Db.insertuser("127.0.0.98","");
+		Db.dbinit();
+		Db.createtableusers();
+		Db.createtablemessage();
+		//System.out.println("Table message created successfully");
+		Timestamp D = new Timestamp(System.currentTimeMillis());
+		Db.insertuser("5", "xxRaveauxx");
+		Db.insertuser("7", "xxOsornio2xx");
+		Db.insertmessage(1, "xxRaveauxx", "xxOsornioxx", "Coucou premier message", D);
+		Db.insertmessage(2, "xxOsornio2xx", "xxOsornioxx", "WAZAAAAA", D);
 
-	   //System.out.println("Datetime OK and message added to DB");
-	   System.out.println(Db.ArrayHistorywithX("5", "6"));
-	   Db.getAnnuaire();
-	   Db.getAnnuaire();
-	   Db.getAnnuaire();
-	   System.out.println(Db.ArrayHistorywithX("xxOsornioxx","xxRaveauxx").toString());
-   }
+		Db.insertuser("127.0.0.98","");
+
+		//System.out.println("Datetime OK and message added to DB");
+		System.out.println(Db.ArrayHistorywithX("5", "6"));
+		Db.getAnnuaire();
+		Db.getAnnuaire();
+		Db.getAnnuaire();
+		System.out.println(Db.ArrayHistorywithX("xxOsornioxx","xxRaveauxx").toString());
+	}
 }
