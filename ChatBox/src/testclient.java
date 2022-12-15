@@ -7,7 +7,7 @@ public class testclient {
 
 		//allo
 		System.out.println(Cu.getownIP());
-		Cu.update_self("12345");
+		Cu.update_self("123456");
 		//Cu.pseudo="testfinaldelamortquitue";
 		Cu.send_annuaire();
 		/*cm.setports(1235,1234);

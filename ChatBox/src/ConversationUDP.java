@@ -52,15 +52,16 @@ public class ConversationUDP {
     //Process va mettre à jour son annuaire avec le login et ip reçu et va renvoyer un boolean 
     //qui dit si oui ou non l'update a fonctionné
     public boolean process(String log,InetAddress addr) {
-    	if (log.equals("all0oo")) {
-    		System.out.println("we process");
-    	}
     	String addr_s = addr.toString();
  	   	DatabaseManager Db = new DatabaseManager();
  	   	Db.dbinit();
  	   	AccountManager Am = new AccountManager();
- 	   	System.out.println(log + " est le log et ca c'est l'addr :");
- 	   	System.out.println(addr);
+ 	   	System.out.println(log + " est le log et ca c'est l'addr :" + addr);
+ 	   	if (Db.id_login_exists(addr_s, log)) {
+ 	   		System.out.println("entrée déja existante on ne renvoie pas");
+ 	   		return true;
+ 	   	}
+ 	   	else {
     	if (Db.IdExists(addr_s)) {
 
     		//il s'agit d'une connecxion/changement pseudo c pareil
@@ -73,9 +74,9 @@ public class ConversationUDP {
     		Am.createaccount(addr_s, log);
     	}
     	Db.getAnnuaire();
-    	return Db.id_login_exists(addr_s, log);
+    	return false;
+ 	   	}
     }
-    
     public void receive_annuaire() {
 
     	while (true) {
@@ -84,6 +85,7 @@ public class ConversationUDP {
         	DatagramPacket packet  = new DatagramPacket(bufs, bufs.length);
         	socket.receive(packet);
         	InetAddress address = packet.getAddress();
+        	// ici on écoute par convention tous sur 3456 et non pas sur le port d'envoi du packet 
             int port = packet.getPort();
     		System.out.println("on a receive");
         	if (address.toString().equals(getownIP())) {
@@ -93,19 +95,20 @@ public class ConversationUDP {
         	}
         	
         	else {
-        	System.out.println(getownIP().length() + " est différent askip de : " + address.toString().length());
-            DatagramPacket packet_ack = new DatagramPacket(this.pseudo.getBytes(),this.pseudo.length() , address, port);
+        	System.out.println(getownIP() + " est différent de : " + address.toString());
+            DatagramPacket packet_ack = new DatagramPacket(this.pseudo.getBytes(),this.pseudo.length() , address, 3456);
             System.out.println("Longueur de getlength est : " + packet.getLength());
             String str = new String(packet.getData(), 0, packet.getLength());
             System.out.println("Longueur est : " + str.length());
             System.out.println("le login a process est :" + str);
+            System.out.println("le port est : " + port);
             if (process(str,address)) {
             	//Si le process est bon on peut renvoyer un ack
             	//ici on ne le fait pas par simplification du problème 
             	// et supposotion de non pertes dans notre rézo
                 //socket.send(packet_ack);
         		//System.out.println("we sent");
-
+            	System.out.println("on le connaît déja donc lui aussi, on n'envoie pas");
             }
             else {
             	//ici process pas bon pas de ack mais demande de renvoi 
@@ -113,19 +116,20 @@ public class ConversationUDP {
             	//byte[] buf2=new byte[256];
             	//DatagramPacket packet2  = new DatagramPacket(buf2, buf2.length);
                 //socket.send(packet2);
+            	socket.send(packet_ack);
+                System.out.println("we sent");
             }
             //Si jamais on update bien dans l'annuaire on renvoie le même paquet que celui reçu
             //Sinon, on envoie un paquet vide signifiant que l'update n'était pas nécessaire ou mauvais
             
             //enfin, il faut renvoyer son propre état pour construire l'annuaire du nouveau connecté :
+            //Thread.sleep(500);
             
-            socket.send(packet_ack);
-            System.out.println("we sent");
     	}}
     	catch (Exception e) {
     		System.out.println("Could not receive Annuary with " + e);
     	}
-    	}
+    	} 	   	
     }
     
     public String getownIP() {
