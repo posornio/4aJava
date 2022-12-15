@@ -14,7 +14,7 @@ public class ConversationUDP {
     private DatagramSocket socket;
     private boolean running;
     private byte[] buf = new byte[256];
-    private String pseudo;
+    public String pseudo;
 
     public ConversationUDP(boolean isserver) {
     	try {
@@ -84,14 +84,16 @@ public class ConversationUDP {
         	DatagramPacket packet  = new DatagramPacket(bufs, bufs.length);
         	socket.receive(packet);
         	InetAddress address = packet.getAddress();
-        	if (address.toString() == getownIP()) {
+            int port = packet.getPort();
+    		System.out.println("on a receive");
+        	if (address.toString().equals(getownIP())) {
+        		System.out.println("c nou");
         		this.pseudo = new String(packet.getData(), 0, packet.getLength());
         		process(this.pseudo,address);
         	}
         	
         	else {
-            int port = packet.getPort();
-            
+        	System.out.println(getownIP().length() + " est différent askip de : " + address.toString().length());
             DatagramPacket packet_ack = new DatagramPacket(this.pseudo.getBytes(),this.pseudo.length() , address, port);
             System.out.println("Longueur de getlength est : " + packet.getLength());
             String str = new String(packet.getData(), 0, packet.getLength());
