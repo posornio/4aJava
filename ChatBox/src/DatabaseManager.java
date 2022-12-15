@@ -182,7 +182,44 @@ public class DatabaseManager {
 		return "";
 	}
 
+	public ArrayList<String> getConvOuvertes(){
 
+		ArrayList<String> result = new ArrayList<String>();
+		String sql = "SELECT DISTINCT(IDSENDER) FROM message WHERE IDSENDER <> ''";
+		String iter="";
+		try (Statement stmt  = conn.createStatement();
+			 ResultSet rs    = stmt.executeQuery(sql)){
+
+			// loop through the result set
+			while (rs.next()) {
+				iter= rs.getString("IDSENDER");
+				//System.out.println(iter);
+				//if (!result.contains(iter)){
+				result.add(iter);
+				//}
+			}
+		}
+		catch (SQLException e) {
+		}
+		sql = "SELECT DISTINCT(IDRECV) FROM message WHERE IDRECV <> ''";
+		try (Statement stmt  = conn.createStatement();
+			 ResultSet rs    = stmt.executeQuery(sql)){
+
+			// loop through the result set
+			while (rs.next()) {
+				iter= rs.getString("IDRECV");
+				//System.out.println(iter);
+				if (!result.contains(iter)&&!iter.equals(getPseudo())){
+				result.add(iter);
+				}
+			}
+		}
+		catch (SQLException e) {
+		}
+		return result;
+
+
+	}
 	public ArrayList<String> getAnnuaireList(){
 
 		String sql = "SELECT LOGIN FROM users WHERE LOGIN <> ''";
@@ -361,18 +398,21 @@ public class DatabaseManager {
 		Db.createtablemessage();
 		//System.out.println("Table message created successfully");
 		Timestamp D = new Timestamp(System.currentTimeMillis());
-		Db.insertuser("5", "xxRaveauxx");
-		Db.insertuser("7", "xxOsornio2xx");
-		Db.insertmessage(1, "xxRaveauxx", "xxOsornioxx", "Coucou premier message", D);
-		Db.insertmessage(2, "xxOsornio2xx", "xxOsornioxx", "WAZAAAAA", D);
+		//Db.insertuser("5", "xxRaveauxx");
+		//Db.insertuser("7", "xxOsornio2xx");
+		//Db.insertuser("8", "xxOsornio3xx");
+		System.out.println(Db.getAnnuaireList());
+		System.out.println(Db.getConvOuvertes());
+		//Db.insertmessage(1, "xxRaveauxx", "xxOsornioxx", "Coucou premier message", D);
+		//Db.insertmessage(2, "xxOsornio2xx", "xxOsornioxx", "WAZAAAAA", D);
 
-		Db.insertuser("127.0.0.98","");
+		//Db.insertuser("127.0.0.98","");
 
 		//System.out.println("Datetime OK and message added to DB");
-		System.out.println(Db.ArrayHistorywithX("5", "6"));
-		Db.getAnnuaire();
-		Db.getAnnuaire();
-		Db.getAnnuaire();
-		System.out.println(Db.ArrayHistorywithX("xxOsornioxx","xxRaveauxx").toString());
+		//System.out.println(Db.ArrayHistorywithX("5", "6"));
+
+
+
+		//System.out.println(Db.ArrayHistorywithX("xxOsornioxx","xxRaveauxx").toString());
 	}
 }

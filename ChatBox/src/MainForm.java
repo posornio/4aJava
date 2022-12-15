@@ -36,6 +36,15 @@ public class MainForm extends JFrame {
     private JButton buttonEnvoyer;
     private JTextArea textArea1;
     private DefaultListModel messageModel = new DefaultListModel();
+    private DefaultListModel convoModel = new DefaultListModel();
+
+    public DefaultListModel getConvoModel() {
+        return convoModel;
+    }
+
+    public void setConvoModel(DefaultListModel convoModel) {
+        this.convoModel = convoModel;
+    }
 
     private String selected;
     private String selectAnnu;
@@ -53,6 +62,14 @@ public class MainForm extends JFrame {
     private JTable table1;
 
 
+    public DefaultListModel getMessageModel() {
+        return messageModel;
+    }
+
+    public void setMessageModel(DefaultListModel messageModel) {
+        this.messageModel = messageModel;
+    }
+
     public MainForm() {
 
         $$$setupUI$$$();
@@ -64,11 +81,17 @@ public class MainForm extends JFrame {
         Db.dbinit();
 
         ArrayList<String> asAnnu = Db.getAnnuaireList();
+        ArrayList<String> ConvOpen = Db.getConvOuvertes();
+        System.out.println(ConvOpen);
         setSize(800, 600);
-        DefaultListModel messageModel = new DefaultListModel();
+        DefaultListModel messageModel = getMessageModel();
+        DefaultListModel convoModel = getConvoModel();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        list1 = new JList<>(asAnnu.toArray());
+        for ( int i = 0; i < ConvOpen.toArray().length; i++ ){
+            convoModel.addElement(ConvOpen.get(i));
+        }
+        list1 = new JList(convoModel);
         paneContact.add(list1);
         list1.setFixedCellHeight(50);
         list2 = new JList(messageModel);
@@ -110,7 +133,9 @@ public class MainForm extends JFrame {
 
         ArrayList<String> asAnnu = Db.getAnnuaireList();
         setSize(800, 600);
-        list1 = new JList<Object>(asAnnu.toArray());
+        //
+        //
+        list1 = new JList(convoModel);
         DeconnexionButt = new JButton();
         ChangerPseudoButt = new JButton(Db.getPseudo());
         ChangerPseudoButt.setText(Db.getPseudo());
@@ -129,6 +154,7 @@ public class MainForm extends JFrame {
                 ArrayList<DatabaseManager.Message> ahwx =Db.ArrayHistorywithX(Db.getPseudo(),selected);
                 messageModel.addElement(ahwx.get(ahwx.size()-1).toString());
                 textArea1.setText("");
+                list2.repaint();
             }
         });
 
@@ -308,7 +334,7 @@ public class MainForm extends JFrame {
 
 
         // Create the list model and the contact list
-        JList<Object> contactList = new JList<>(asAnnu.toArray());
+        JList<Object> contactList = new JList(getConvoModel());
         // Add some sample contacts to the list mode
 
         // Add the contact list to the panel

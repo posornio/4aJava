@@ -73,6 +73,8 @@ public class ContactSelector extends JFrame {
                 setVisible(false);
                 //notifyAll();
                 mf.setSelectAnnu(contactChoisi);
+                if(!mf.getConvoModel().contains(contactChoisi)){
+                    mf.getConvoModel().addElement(contactChoisi);}
                 //System.out.println(contactChoisi);
                 //messageModel = initLM(histWX);
                 //messageModel = new DefaultListModel();
