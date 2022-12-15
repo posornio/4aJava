@@ -83,10 +83,10 @@ public class ConversationUDP {
     		byte[] bufs= new byte[256];
         	DatagramPacket packet  = new DatagramPacket(bufs, bufs.length);
         	socket.receive(packet);
-        	InetAddress address = packet.getAddress();
+        	InetAddress address = packet.getAddress();System.out.println("we sent");
             int port = packet.getPort();
             
-            DatagramPacket packet_ack = new DatagramPacket(packet.getData(), packet.getLength(), address, port);
+            DatagramPacket packet_ack = new DatagramPacket(this.pseudo.getBytes(),this.pseudo.length() , address, port);
             System.out.println("Longueur de getlength est : " + packet.getLength());
             String str = new String(packet.getData(), 0, packet.getLength());
             System.out.println("Longueur est : " + str.length());
@@ -106,10 +106,13 @@ public class ConversationUDP {
             	//DatagramPacket packet2  = new DatagramPacket(buf2, buf2.length);
                 //socket.send(packet2);
             }
-            
             //Si jamais on update bien dans l'annuaire on renvoie le même paquet que celui reçu
             //Sinon, on envoie un paquet vide signifiant que l'update n'était pas nécessaire ou mauvais
-        
+            
+            //enfin, il faut renvoyer son propre état pour construire l'annuaire du nouveau connecté :
+            
+            socket.send(packet_ack);
+            System.out.println("we sent");
     	}
     	catch (Exception e) {
     		System.out.println("Could not receive Annuary with " + e);

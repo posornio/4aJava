@@ -15,6 +15,9 @@ public class DatabaseManager {
 	          this.conn = DriverManager.getConnection(url);
 	          
 	          System.out.println("Connection to SQLite \"users\" has been established.");
+	          createtablemessage();
+	          createtableusers();
+	          createtableports();
 	          
 	      } catch (SQLException e) {
 	          System.out.println(e.getMessage());
@@ -73,7 +76,7 @@ public class DatabaseManager {
 			Statement stmt = null;
 			stmt = conn.createStatement();
 			String sql = "CREATE TABLE IF NOT EXISTS ports" +
-					"(\n PORTUTILISEE integer PRIMARY KEY,\n)";
+					"(\n PORTUTILISEE integer PRIMARY KEY\n)";
 			stmt.executeUpdate(sql);
 		}
 		catch ( Exception e ) {
