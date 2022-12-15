@@ -83,7 +83,13 @@ public class ConversationUDP {
     		byte[] bufs= new byte[256];
         	DatagramPacket packet  = new DatagramPacket(bufs, bufs.length);
         	socket.receive(packet);
-        	InetAddress address = packet.getAddress();System.out.println("we sent");
+        	InetAddress address = packet.getAddress();
+        	if (address.toString() == getownIP()) {
+        		this.pseudo = new String(packet.getData(), 0, packet.getLength());
+        		process(this.pseudo,address);
+        	}
+        	
+        	else {
             int port = packet.getPort();
             
             DatagramPacket packet_ack = new DatagramPacket(this.pseudo.getBytes(),this.pseudo.length() , address, port);
@@ -113,7 +119,7 @@ public class ConversationUDP {
             
             socket.send(packet_ack);
             System.out.println("we sent");
-    	}
+    	}}
     	catch (Exception e) {
     		System.out.println("Could not receive Annuary with " + e);
     	}
