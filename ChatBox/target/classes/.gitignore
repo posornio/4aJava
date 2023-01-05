@@ -5,3 +5,5 @@
 /ThreadManager$ThreadEcouteConnexionsTCP.class
 /ThreadManager$ThreadEcouteConnexionsUDP.class
 /ThreadManager$ThreadEnvoiAnnuaire.class
+/ThreadManager$ThreadInitConnexionsTCP.class
+/ThreadInitConnexionsTCP.class

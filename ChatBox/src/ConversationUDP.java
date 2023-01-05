@@ -125,8 +125,7 @@ public class ConversationUDP {
             //Sinon, on envoie un paquet vide signifiant que l'update n'était pas nécessaire ou mauvais
             
             //enfin, il faut renvoyer son propre état pour construire l'annuaire du nouveau connecté :
-            //Thread.sleep(500);
-            
+                       
     	}}
     	catch (Exception e) {
     		System.out.println("Could not receive Annuary with " + e);

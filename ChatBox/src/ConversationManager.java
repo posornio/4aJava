@@ -26,7 +26,7 @@ public class ConversationManager{
 	
 	public void setpc(int pc)
 	{
-		this.port_s=pc;
+		this.port_c=pc;
 	}
 	
 	public void setports(int ps,int pc) {
@@ -39,7 +39,7 @@ public class ConversationManager{
            boolean found = false;
            int i = 1234;
            while (!found & i<1734){
-               try (Socket Sock= new Socket ("localhost",i)){
+               try (ServerSocket Sock= new ServerSocket (i)){
                    System.out.println("Server is listening on port " + i);
                    found = true;
                    Sock.close();
@@ -50,7 +50,7 @@ public class ConversationManager{
                i++;  
            }
            if (found) {
-        	   return i;
+        	   return i-1;
            }
            else return 0;
    }
@@ -65,6 +65,7 @@ public class ConversationManager{
 		         System.out.println ("Error creating connection : " + e);
 		     }
 		}
+	   
 	   
 	public void createconnectionserver() {
 		try {
@@ -89,13 +90,24 @@ public class ConversationManager{
 	
 	public void createconnectionclient(InetAddress addr) {
 		try {
-			System.out.println("Trying to build socket");
+			System.out.println("Trying to build socket with \n " + addr + " et de port " + this.port_c);
 	        this.Sock= new Socket (addr,this.port_c);
 		}
 		catch (Exception e) {
 	         System.out.println ("Error creating connection : " + e);
 	     }
 	}
+	
+	public void initstream() {
+		try {
+			this.in = new ObjectInputStream (this.Sock.getInputStream());
+	        this.out = new ObjectOutputStream(this.Sock.getOutputStream());
+		}
+		catch (Exception e) {
+			System.out.println ("Error creating streams : " + e);
+		}
+	}
+	
 	
 	public void initstreamserv() {
 		try {
@@ -151,12 +163,18 @@ public class ConversationManager{
 	
 	public void sendmessage(String mess) {
 		try {
+			//this.out = new ObjectOutputStream(this.Sock.getOutputStream());
 			out.writeUTF(mess);
 	        out.flush();
 		}
 		catch (Exception e) {
 			System.out.println ("Error sending message : " + e);
 		}	
+	}
+	
+	
+	public InetAddress getaddr() {
+		return this.Sock.getInetAddress();
 	}
 	    
 }
