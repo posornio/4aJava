@@ -4,6 +4,9 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Timestamp;
@@ -20,23 +23,18 @@ public class MainForm extends JFrame {
     private JPanel PaneCenter;
     private JPanel mainPanel;
     private JLabel nameLabel;
-    private JList<Object> list1;
+    private JList list1;
 
-    public JList<Object> getList1() {
-        return list1;
-    }
 
-    public void setList1(JList<Object> list1) {
-        this.list1 = list1;
-    }
 
     private JScrollPane paneContact;
     private JScrollPane paneMessages;
-    private JList list2;
+    private JTable list2;
     private JButton buttonEnvoyer;
     private JTextArea textArea1;
-    private DefaultListModel messageModel = new DefaultListModel();
+    private DefaultTableModel messageModel = new DefaultTableModel(0,2);
     private DefaultListModel convoModel = new DefaultListModel();
+    private TableModel messageTable= new DefaultTableModel();
 
     public DefaultListModel getConvoModel() {
         return convoModel;
@@ -47,6 +45,15 @@ public class MainForm extends JFrame {
     }
 
     private String selected;
+
+    public String getSelected() {
+        return selected;
+    }
+
+    public void setSelected(String selected) {
+        this.selected = selected;
+    }
+
     private String selectAnnu;
 
     public String getSelectAnnu() {
@@ -62,11 +69,12 @@ public class MainForm extends JFrame {
     private JTable table1;
 
 
-    public DefaultListModel getMessageModel() {
+    public DefaultTableModel getMessageModel() {
         return messageModel;
     }
 
-    public void setMessageModel(DefaultListModel messageModel) {
+
+    public void setMessageModel(DefaultTableModel messageModel) {
         this.messageModel = messageModel;
     }
 
@@ -75,6 +83,8 @@ public class MainForm extends JFrame {
         $$$setupUI$$$();
         setContentPane(mainPanel);
         setTitle("ChatApp");
+        String header[]= new String[]{"Arrivant","Partant"};
+        messageModel.setColumnIdentifiers(header);
         DatabaseManager Db = new DatabaseManager();
 
         //Connection connection = Db.conn;
@@ -84,22 +94,30 @@ public class MainForm extends JFrame {
         ArrayList<String> ConvOpen = Db.getConvOuvertes();
         System.out.println(ConvOpen);
         setSize(800, 600);
-        DefaultListModel messageModel = getMessageModel();
+        DefaultTableModel messageModel = getMessageModel();
         DefaultListModel convoModel = getConvoModel();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         for ( int i = 0; i < ConvOpen.toArray().length; i++ ){
             convoModel.addElement(ConvOpen.get(i));
         }
-        list1 = new JList(convoModel);
+        //list1 = new JList(convoModel);
+        list1 = new JList();
+        list2= new JTable();
+        //buttonEnvoyer = new JButton("Envoyer");
+        getRootPane().setDefaultButton(buttonEnvoyer);
+        //buttonEnvoyer.setMnemonic(KeyEvent.VK_ENTER);
+
+        list1.setModel(convoModel);
         paneContact.add(list1);
-        list1.setFixedCellHeight(50);
-        list2 = new JList(messageModel);
-        list2.setFixedCellWidth(1);
-        list2.setFixedCellWidth(1);
+        list2.setModel(messageModel);
+        //list2.setFixedCellWidth(1);
+        //list2.setFixedCellWidth(1);
         paneMessages.add(list2);
         list1.setEnabled(true);
         list2.setEnabled(true);
+        //JRootPane rootPane = SwingUtilities.getRootPane(buttonEnvoyer);
+
 
         paneContact.setEnabled(true);
         paneMessages.setEnabled(false);
@@ -109,6 +127,7 @@ public class MainForm extends JFrame {
 
     public static void main(String[] args) {
         MainForm myForm = new MainForm();
+        //myForm.getRootPane()
 
     }
 
@@ -130,12 +149,17 @@ public class MainForm extends JFrame {
         //contactSelector.visible(false);
         ConversationManager cm = new ConversationManager();
         buttonEnvoyer = new JButton("Envoyer");
+        boolean convOuverte = false;
+        buttonEnvoyer.setVisible(false);
+        textArea1 = new JTextArea();
 
+        textArea1.setVisible(false);
         ArrayList<String> asAnnu = Db.getAnnuaireList();
         setSize(800, 600);
         //
         //
         list1 = new JList(convoModel);
+        list2 = new JTable(messageModel);
         DeconnexionButt = new JButton();
         ChangerPseudoButt = new JButton(Db.getPseudo());
         ChangerPseudoButt.setText(Db.getPseudo());
@@ -143,18 +167,27 @@ public class MainForm extends JFrame {
 
 
 
+
+
         buttonEnvoyer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String messageAEnv = textArea1.getText();
-                System.out.println(selected);
-                int idM =Db.getMaxIdmessage()+1;
-                System.out.println(idM);
-                Db.insertmessage(idM,Db.getPseudo(),selected,messageAEnv,new Timestamp(System.currentTimeMillis()));
-                ArrayList<DatabaseManager.Message> ahwx =Db.ArrayHistorywithX(Db.getPseudo(),selected);
-                messageModel.addElement(ahwx.get(ahwx.size()-1).toString());
-                textArea1.setText("");
-                list2.repaint();
+                if(messageAEnv.matches("[\n]+")){
+                    textArea1.setText("");
+                }
+                if (!messageAEnv.isEmpty() && !messageAEnv.matches("[\n]+")) {
+                    System.out.println(selected);
+                    int idM =Db.getMaxIdmessage()+1;
+                    System.out.println(idM);
+                    Db.insertmessage(idM,Db.getPseudo(),selected,messageAEnv,new Timestamp(System.currentTimeMillis()));
+                    ArrayList<DatabaseManager.Message> ahwx =Db.ArrayHistorywithX(Db.getPseudo(),selected);
+                    messageModel.addRow(new Object[]{ahwx.get(ahwx.size()-1) ,ahwx.get(ahwx.size()-1) }) ;
+                    textArea1.setText("");
+
+                    list2.setModel(messageModel);
+                    list2.setDefaultRenderer(DatabaseManager.Message.class,new MessageTableRenderer(selected));
+                    ;;}
             }
         });
 
@@ -172,6 +205,8 @@ public class MainForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
                 activityPseudo.setVisible(true);
+                activityPseudo.usernameField.setText("Nouveau psuedo: ");
+
 
 
             }
@@ -187,78 +222,70 @@ public class MainForm extends JFrame {
 
             }
         });
-        list2 = new JList(messageModel);
+        list2.setModel(messageModel);
 
 
         list1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 //ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-                selected = asAnnu.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
+                boolean convOuverte = true;
+                buttonEnvoyer.setVisible(true);
+                textArea1.setVisible(true);
+                //selected = asAnnu.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
+                selected = (String) convoModel.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
+                System.out.println(selected);
                 ArrayList<DatabaseManager.Message> histWX = Db.ArrayHistorywithX(Db.getPseudo(), selected);
                 //messageModel = initLM(histWX);
                 //messageModel = new DefaultListModel();
-                messageModel.removeAllElements();
+                messageModel.setRowCount(0);
 
                 for ( int i = 0; i < histWX.toArray().length; i++ ){
                     DatabaseManager.Message message =histWX.get(i);
-                    messageModel.addElement(message);
-                }
-                list2 = new JList(messageModel);
-
-            }
-        });
-
-/*
-        list2.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                //ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-                int sel = ((ListSelectionModel) e.getSource()).getSelectedIndices()[0];
-                System.out.println(sel);
-                ArrayList<DatabaseManager.Message> histWX = Db.ArrayHistorywithX("        Db.getPseudo()
-", selected);
-                messageModel.set(sel,histWX.get(sel).contenu+histWX.get(sel).date.toString());
-
-            }
-        });
-*/
-        list2.setCellRenderer(new DefaultListCellRenderer(){
-            // @Override
-            public Component getListCellRendererComponent(JList liste, Object value,int index,boolean isSelected, boolean cellHasFocus){
-                Component c = super.getListCellRendererComponent(liste,value,index,isSelected,cellHasFocus);
-                if (value instanceof DatabaseManager.Message){
-                    DatabaseManager.Message msg = (DatabaseManager.Message) value;
-                    setText(msg.contenu);
-                    if (msg.idSender.equals(selected)){
-                        setHorizontalAlignment(SwingConstants.LEFT);
-                        setBackground(Color.gray);
-                        setPreferredSize((new Dimension(10,30)));
-                        setForeground(Color.WHITE);
+                    //messageModel.addElement(message);
+                    if (message.idSender.equals(Db.getPseudo())){
+                        messageModel.addRow(new Object[]{message,message});
+                    }
+                    else {
+                        messageModel.addRow(new Object[]{message,message});
 
                     }
-                    else{
-                        setHorizontalAlignment(SwingConstants.RIGHT);
-                        setPreferredSize((new Dimension(10,30)));
+                }
+                list2.setModel(messageModel);
 
+            }
+        });
+
+        list1.setCellRenderer(new DefaultListCellRenderer(){
+            public Component getListCellRendererComponent(JList list, Object value,int index,boolean isSelected, boolean cellHasFocus) {
+                if (value instanceof String){
+                    setBackground(Color.white);
+                    setForeground(Color.black);
+                    String contact = (String) value;
+                    ArrayList<DatabaseManager.Message> msgArr = Db.ArrayHistorywithX(Db.getPseudo(),contact);
+                    setText(contact);
+                    if (msgArr.size()>0){
+                        DatabaseManager.Message dernierMsg = msgArr.get(msgArr.size()-1);
+                        String msgCont = dernierMsg.contenu;
+                        String fleche="<-";
+                        if (dernierMsg.idSender.equals(Db.getPseudo())){
+                            fleche="->";
+                        }
+                        fleche = contact + fleche +msgCont;
+                        setText(fleche);}
+
+                    if (isSelected){
                         setBackground(Color.BLUE.brighter());
                         setForeground(Color.WHITE);
-
                     }
-                    if (isSelected) {
-                        setBackground(getBackground().darker());
-                        if (msg.idSender.equals(selected)){
-                            setText(msg.contenu + " " + msg.date.toString());
-                        }else{
-                            setText(msg.date.toString() + " " +msg.contenu );
 
-                        }
-
-                        }
                 }
-                return c;
+                return this;
             }
+
         });
+
+        list2.setDefaultRenderer(DatabaseManager.Message.class,new MessageTableRenderer(this.getSelected()));
 
 
 
@@ -297,7 +324,6 @@ public class MainForm extends JFrame {
         PaneCenter.add(panel1, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 
         panel1.add(buttonEnvoyer, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        textArea1 = new JTextArea();
         panel1.add(textArea1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         PaneHead = new JPanel();
         PaneHead.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
@@ -324,28 +350,106 @@ public class MainForm extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return mainPanel;
     }
-    public void handlerAnnu(ArrayList<String> asAnnu){
-        JFrame frame = new JFrame("Annuaire");
-        frame.setLayout(new BorderLayout());
-        DatabaseManager Db = new DatabaseManager();
-        Db.dbinit();
-        frame.setSize(800, 600);
-        DefaultListModel messageModel = new DefaultListModel();
+
+}
+class MessageCellRenderer extends JLabel implements ListCellRenderer{
+    String selected;
+    // @Override
+    public MessageCellRenderer(String selected){
+        setPreferredSize((new Dimension(10,30)));
+        setOpaque(true);
+
+        this.selected=selected;
+    }
+    public Component getListCellRendererComponent(JList list, Object value,int index,boolean isSelected, boolean cellHasFocus){
+        if (value instanceof DatabaseManager.Message){
+            DatabaseManager.Message msg = (DatabaseManager.Message) value;
+            setText(msg.contenu);
+            if (msg.idSender.equals(selected)){
+                setHorizontalAlignment(SwingConstants.LEFT);
+                setBackground(Color.gray);
+                setForeground(Color.WHITE);
+
+            }
+            else{
+                setHorizontalAlignment(SwingConstants.RIGHT);
+                setPreferredSize((new Dimension(10,30)));
+
+                setBackground(Color.BLUE.brighter());
+                setForeground(Color.WHITE);
+
+            }
+            if (isSelected) {
+                setBackground(getBackground().darker());
+                if (msg.idSender.equals(selected)){
+                    setText(msg.contenu + " " + msg.date.toString());
+                }else{
+                    setText(msg.date.toString() + " " +msg.contenu );
+
+                }
+
+            }
+        }
+        return this;
+    }
+}
+
+class MessageTableRenderer extends DefaultTableCellRenderer{
+    String selected;
+
+    public MessageTableRenderer(String selected){
+        setPreferredSize((new Dimension(10,30)));
+        setOpaque(true);
+
+        this.selected=selected;
+    }
+    private static final long serialVersionUID = 1L;
+
+    public Component getTableCellRendererComponent(JTable list, Object value,boolean isSelected, boolean cellHasFocus,int row, int col) {
+        Component c = super.getTableCellRendererComponent(list,value,isSelected,cellHasFocus,row,col);
+        Object messAt = list.getModel().getValueAt(row, col);
+        DatabaseManager.Message msg = (DatabaseManager.Message) messAt;
+        c.setBackground(Color.cyan);
+        if (msg.idSender.equals(selected)){
+            setHorizontalAlignment(SwingConstants.LEFT);
+            c.setBackground(Color.gray);
+            setPreferredSize((new Dimension(10,30)));
+            c.setForeground(Color.WHITE);
+
+        }
+        if (messAt instanceof DatabaseManager.Message){
+            //DatabaseManager.Message msg = (DatabaseManager.Message) messAt;
+            setText(msg.contenu);
+            if (msg.idSender.equals(selected)){
+                setHorizontalAlignment(SwingConstants.LEFT);
+                c.setBackground(Color.gray);
+                setPreferredSize((new Dimension(10,30)));
+                c.setForeground(Color.WHITE);
+
+            }
+            else{
+                setHorizontalAlignment(SwingConstants.RIGHT);
+                setPreferredSize((new Dimension(10,30)));
+
+                c.setBackground(Color.BLUE.brighter());
+                c.setForeground(Color.WHITE);
+
+            }
+            if (isSelected) {
+                c.setBackground(getBackground().darker());
+                if (msg.idSender.equals(selected)){
+                    //c.setText(msg.contenu + " " + msg.date.toString());
+                    list.getModel().setValueAt(msg.contenu + " " + msg.date.toString(),row,col);
+
+                }else{
+                    //c.setText(msg.date.toString() + " " +msg.contenu );
+                    list.getModel().setValueAt(msg.date.toString() + " " +msg.contenu,row,col);
 
 
-        // Create the list model and the contact list
-        JList<Object> contactList = new JList(getConvoModel());
-        // Add some sample contacts to the list mode
+                }
 
-        // Add the contact list to the panel
-        frame.add(new JScrollPane(contactList), BorderLayout.CENTER);
-        frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setContentPane(new ContactSelector());
-        frame.setLocationRelativeTo(null);
-
-
-        frame.pack();
-        frame.setVisible(true);
+            }
+        }
+        return c;
     }
 }

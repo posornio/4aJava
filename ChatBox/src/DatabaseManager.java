@@ -398,12 +398,13 @@ public class DatabaseManager {
 		Db.createtablemessage();
 		//System.out.println("Table message created successfully");
 		Timestamp D = new Timestamp(System.currentTimeMillis());
-		//Db.insertuser("5", "xxRaveauxx");
-		//Db.insertuser("7", "xxOsornio2xx");
-		//Db.insertuser("8", "xxOsornio3xx");
+		Db.insertuser("5", "xxRaveauxx");
+		//Db.insertuser("6", "xxOsornioxx");
+		Db.insertuser("7", "xxOsornio2xx");
+		Db.insertuser("8", "xxOsornio3xx");
 		System.out.println(Db.getAnnuaireList());
 		System.out.println(Db.getConvOuvertes());
-		//Db.insertmessage(1, "xxRaveauxx", "xxOsornioxx", "Coucou premier message", D);
+		Db.insertmessage(1, "xxRaveauxx", "xxOsornioxx", "Coucou premier message", D);
 		//Db.insertmessage(2, "xxOsornio2xx", "xxOsornioxx", "WAZAAAAA", D);
 
 		//Db.insertuser("127.0.0.98","");

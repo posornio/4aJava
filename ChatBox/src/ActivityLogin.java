@@ -16,7 +16,7 @@ public class ActivityLogin extends JFrame {
         JFrame frame = new JFrame("Login Page");
         setVisible(false);
         // Set the size of the frame
-        setSize(800, 600);
+        setSize(400, 200);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         // Create a panel to hold the components
@@ -26,26 +26,31 @@ public class ActivityLogin extends JFrame {
         add(panel);
 
         // Set the layout of the panel to GridLayout
-        panel.setLayout(new GridLayout(1, 3));
+        setLayout(new FlowLayout());
 
         // Create labels for the username and password fields
         JLabel usernameLabel = new JLabel("Username:");
 
 
         // Create text fields for the username and password
-        JTextField usernameField = new JTextField();
+        JTextField usernameField = new JTextField("Username");
 
         // Create a login button
         JButton loginButton = new JButton("Login");
 
         // Add the labels, fields, and button to the panel
-        panel.add(usernameLabel);
+        //panel.add(usernameLabel);
+        Box box = Box.createVerticalBox();
+
         usernameLabel.setSize(new Dimension(100,10));
-        panel.add(usernameField);
+        box.add(usernameField);
         usernameField.setSize(new Dimension(100,2));
-        panel.add(loginButton);
+        box.add(loginButton);
+        panel.add(box);
         loginButton.setSize(new Dimension(100,50));
         loginButton.setMaximumSize(new Dimension(100,1));
+        getRootPane().setDefaultButton(loginButton);
+
 
         // Show the frame
 
@@ -62,6 +67,8 @@ public class ActivityLogin extends JFrame {
 
             }
         });
+
+
     }
 
         public static void main(String[] args) {

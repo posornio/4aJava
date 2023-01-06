@@ -2,10 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class ActivityPseudo extends JFrame {
     private String pseudo;
     private MainForm mf;
+
+    JTextField usernameField;
 
     public String getPseudo() {
         return pseudo;
@@ -25,7 +29,6 @@ public class ActivityPseudo extends JFrame {
     public ActivityPseudo(){}
     public ActivityPseudo(MainForm mf,DatabaseManager Db){
 
-        // Create a new JFrame with the title "Login Page"
 
         ConversationManager cm = new ConversationManager();
         //Connection connection = Db.conn;
@@ -33,44 +36,42 @@ public class ActivityPseudo extends JFrame {
         JFrame frame = new JFrame("Changer Pseudo");
         setVisible(false);
 
-        // Set the size of the frame
-        setSize(800, 600);
+        setSize(400, 200);
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         setLocationRelativeTo(null);
-        // Create a panel to hold the components
         JPanel panel = new JPanel();
 
-        // Add the panel to the frame
         add(panel);
 
-        // Set the layout of the panel to GridLayout
-        setLayout(new GridLayout(3, 1));
+        setLayout(new FlowLayout());
+        Box box = Box.createVerticalBox();
 
-        // Create labels for the username and password fields
         JLabel currentPseudo = new JLabel("Pseudo actuel :"+ Db.getPseudo());
 
         JLabel usernameLabel = new JLabel("Nouveau psuedo: ");
 
 
-        // Create text fields for the username and password
-        JTextField usernameField = new JTextField();
 
-        // Create a login button
+        usernameField = new JTextField("Nouveau psuedo: ");
+
         JButton loginButton = new JButton("Changer de pseudonyme");
 
-        // Add the labels, fields, and button to the panel
-        add(currentPseudo);
+        box.add(currentPseudo);
         currentPseudo.setHorizontalAlignment(SwingConstants.CENTER);
 
-        add(usernameLabel);
+        //add(usernameLabel);
         usernameLabel.setSize(new Dimension(100,10));
-        add(usernameField);
-        usernameField.setSize(new Dimension(100,2));
-        add(loginButton);
-        loginButton.setSize(new Dimension(100,50));
-        loginButton.setMaximumSize(new Dimension(100,1));
+        box.add(usernameField);
+        usernameField.setSize(new Dimension(900,2));
+        box.add(loginButton);
+        box.setAlignmentX(5);
+        box.setAlignmentY(5);
 
-        // Show the frame
+        add(box);
+        loginButton.setSize(new Dimension(100,50));
+        getRootPane().setDefaultButton(loginButton);
+
+
 
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -90,6 +91,12 @@ public class ActivityPseudo extends JFrame {
 
 
 
+            }
+        });
+
+        this.addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent e){
+               mf.setVisible(true);
             }
         });
     }
