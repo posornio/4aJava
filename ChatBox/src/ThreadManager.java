@@ -1,5 +1,6 @@
 
 import java.net.InetAddress;
+import java.sql.Timestamp;
 
 public class ThreadManager {}
 
@@ -35,13 +36,26 @@ class ThreadInitConnexionsTCP extends Thread {
             System.out.println("Sending message");
             cm.sendmessage(po);
             //il faut close conn client 
+            cm.closeconnection();
             cm.createconnectionserver(p);
+            cm.initstreamclient();
             System.out.println("Connexion ok");
             int port = Integer.parseInt(cm.recvmessage());
             this.portD = port;
+            System.out.println("le port est : " + portD);
         	cm.setpc(portD);
             cm.createconnectionclient(this.addr);
-            System.out.println("Connexion établie entre nous port" + po + " et entre " + this.addr + " sur le port " + port);
+            //cm.initstreamin();
+            cm.sendmessage("Connexion établie pour moi le S");
+            System.out.println("Connexion établie entre nous port " + po + " et entre " + this.addr + " sur le port " + port);
+            ThreadEnvoiTCP TE = new ThreadEnvoiTCP(cm);
+            ThreadReceptionTCP TR = new ThreadReceptionTCP(cm);
+            System.out.println("Thread créés");
+            TR.start();
+            System.out.println("TR OK !!!!");
+            TE.start();
+            System.out.println("TE OK !!!!");
+
         }
         else {
         	cm.setpc(portD);
@@ -50,24 +64,97 @@ class ThreadInitConnexionsTCP extends Thread {
             int p = cm.scanports();
             String po = Integer.toString(p);
             System.out.println("ON ATTEINT BIEN CA AVEC P = " + p);
-            //TODO : probleme ici ca send pas le message probablement porbleme de streams 
+            cm.initstreamout();
             cm.sendmessage(po);
+            System.out.println("message sent");
+            cm.initstreamin();
             cm.createconnectionserver(p);
+            System.out.println("Connexion établie entre nous port " + po + " et entre " + this.addr + " sur le port " + portD);
+            //cm.initstreamclient();
+            //System.out.println("Streams créés");
+            ThreadEnvoiTCP TE = new ThreadEnvoiTCP(cm);
+            ThreadReceptionTCP TR = new ThreadReceptionTCP(cm);
+            System.out.println("Thread créés");
+            TR.start();
+            System.out.println("TR OK !!!!");
+            TE.start();
+            System.out.println("TE OK !!!!");
+            
+            
         }
-        while (true)
-        {
-           	cm.printrecvmessage();
-           	String tosend ="on send pas un truc vide cette fois lol";
-           	cm.sendmessage(tosend);
+        //while (true)
+        //{
+        	//System.out.println("On est dans le while TRUE !!!");
+           	//cm.printrecvmessage();
+           	//String tosend ="on send pas un truc vide cette fois lol";
+           	//cm.sendmessage(tosend);
             // Exiting from a while loop should be done when a client gives an exit message.
-            if(tosend.equals("ExitClavardage"))
+            
+        //}
+    }
+}
+
+class ThreadEnvoiTCP extends Thread {
+    
+    ConversationManager cm;
+
+	
+    public ThreadEnvoiTCP(ConversationManager c) {
+    	this.cm=c;
+    }
+
+    public void run(){
+    	int i =0;
+        while (true){
+        	System.out.println("Thread envoi ligne 1 ");
+        	if (i == 7) {
+        		cm.sendmessage("ExitClavardage");
+        		//cm.closeconnection();
+        	}
+        	else {
+	        	cm.sendmessage("Le message que j'envoie et i=" + i);
+	        	i++;
+        	}
+        	try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+    }
+
+    //public void handlerRecepMess(){    }
+
+}
+
+
+class ThreadReceptionTCP extends Thread {
+    
+    ConversationManager cm;
+	
+    public ThreadReceptionTCP(ConversationManager c) {
+    	this.cm =c;
+    }
+
+    public void run(){
+        while (true){
+        	String received = cm.recvmessage();
+        	System.out.println("received : " + received);
+        	if(received.equals("ExitClavardage"))
             {
-            	cm.closeconnection();
+            	//cm.closeconnection();
                 System.out.println("Connection Closed");
             }
         }
     }
+
+    //public void handlerRecepMess(){    }
+
 }
+
+
+
 
 class ThreadEcouteConnexionsTCP extends Thread {
     
@@ -84,7 +171,7 @@ class ThreadEcouteConnexionsTCP extends Thread {
             //handlerRecepMess(); 
         	cm.createconnectionserver(port_recv_TCP);
         	System.out.println("Connexion ok");
-        	cm.initstream();
+        	cm.initstreamclient();
         	String port = cm.recvmessage();
         	ThreadInitConnexionsTCP T= new ThreadInitConnexionsTCP(cm.getaddr(),Integer.parseInt(port));
         	cm.closeconnection();

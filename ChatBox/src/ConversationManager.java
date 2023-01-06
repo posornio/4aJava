@@ -98,10 +98,18 @@ public class ConversationManager{
 	     }
 	}
 	
-	public void initstream() {
+	public void initstreamout() {
+		try {
+	        this.out = new ObjectOutputStream(this.Sock.getOutputStream());
+		}
+		catch (Exception e) {
+			System.out.println ("Error creating streams : " + e);
+		}
+	}
+	
+	public void initstreamin() {
 		try {
 			this.in = new ObjectInputStream (this.Sock.getInputStream());
-	        this.out = new ObjectOutputStream(this.Sock.getOutputStream());
 		}
 		catch (Exception e) {
 			System.out.println ("Error creating streams : " + e);
@@ -164,6 +172,7 @@ public class ConversationManager{
 	public void sendmessage(String mess) {
 		try {
 			//this.out = new ObjectOutputStream(this.Sock.getOutputStream());
+			//System.out.println("on write " + mess + " reste à flush");
 			out.writeUTF(mess);
 	        out.flush();
 		}

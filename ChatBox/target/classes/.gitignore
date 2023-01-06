@@ -7,3 +7,5 @@
 /ThreadManager$ThreadEnvoiAnnuaire.class
 /ThreadManager$ThreadInitConnexionsTCP.class
 /ThreadInitConnexionsTCP.class
+/ThreadEnvoiTCP.class
+/ThreadReceptionTCP.class
