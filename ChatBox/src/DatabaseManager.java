@@ -369,7 +369,7 @@ public class DatabaseManager {
 		return ret;}
 
 
-	public class Message{
+	public static class Message{
 		String contenu;
 		String idSender;
 		String idRecv;
@@ -384,6 +384,11 @@ public class DatabaseManager {
 
 		public String toString() {
 			return this.idSender + " " + this.contenu + " " + this.idRecv + " " + this.date;
+		}
+
+		public Message empty(Message msg){
+			msg.contenu="";
+			return msg;
 		}
 
 	}
