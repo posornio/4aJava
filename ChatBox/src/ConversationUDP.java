@@ -12,14 +12,13 @@ import java.util.List;
 public class ConversationUDP {
 
     private DatagramSocket socket;
-    private boolean running;
-    private byte[] buf = new byte[256];
-    private String pseudo;
+    private static int port_recv_UDP = 3456;
+    public String pseudo;
 
     public ConversationUDP(boolean isserver) {
     	try {
     		if (isserver) {
-        		socket = new DatagramSocket(3456);
+        		socket = new DatagramSocket(port_recv_UDP);
 
     		}
     		else
@@ -52,15 +51,16 @@ public class ConversationUDP {
     //Process va mettre à jour son annuaire avec le login et ip reçu et va renvoyer un boolean 
     //qui dit si oui ou non l'update a fonctionné
     public boolean process(String log,InetAddress addr) {
-    	if (log.equals("all0oo")) {
-    		System.out.println("we process");
-    	}
     	String addr_s = addr.toString();
  	   	DatabaseManager Db = new DatabaseManager();
  	   	Db.dbinit();
  	   	AccountManager Am = new AccountManager();
- 	   	System.out.println(log + " est le log et ca c'est l'addr :");
- 	   	System.out.println(addr);
+ 	   	System.out.println(log + " est le log et ca c'est l'addr :" + addr);
+ 	   	if (Db.id_login_exists(addr_s, log)) {
+ 	   		System.out.println("entrée déja existante on ne renvoie pas");
+ 	   		return true;
+ 	   	}
+ 	   	else {
     	if (Db.IdExists(addr_s)) {
 
     		//il s'agit d'une connecxion/changement pseudo c pareil
@@ -73,39 +73,64 @@ public class ConversationUDP {
     		Am.createaccount(addr_s, log);
     	}
     	Db.getAnnuaire();
-    	return Db.id_login_exists(addr_s, log);
+    	return false;
+ 	   	}
     }
-    
-    public void receive_annuraire() {
-
-
+    public void receive_annuaire() {
+    	DatabaseManager Db = new DatabaseManager();
+    	while (true) {
     	try {
     		byte[] bufs= new byte[256];
         	DatagramPacket packet  = new DatagramPacket(bufs, bufs.length);
         	socket.receive(packet);
         	InetAddress address = packet.getAddress();
+        	// ici on écoute par convention tous sur 3456 et non pas sur le port d'envoi du packet 
             int port = packet.getPort();
-            packet = new DatagramPacket(bufs, bufs.length, address, port);
-            String str = new String(bufs, StandardCharsets.UTF_8);
+    		System.out.println("on a receive");
+        	if (address.toString().equals(getownIP())) {
+        		System.out.println("c nou");
+        		this.pseudo = new String(packet.getData(), 0, packet.getLength());
+        		process(this.pseudo,address);
+        	}
+        	
+        	else {
+        	System.out.println(getownIP() + " est différent de : " + address.toString());
+        	
+            DatagramPacket packet_ack = new DatagramPacket(this.pseudo.getBytes(),this.pseudo.length() , address, port_recv_UDP);
+            System.out.println("Longueur de getlength est : " + packet.getLength());
+            String str = new String(packet.getData(), 0, packet.getLength());
+            System.out.println("Longueur est : " + str.length());
             System.out.println("le login a process est :" + str);
+            System.out.println("le port est : " + port);
             if (process(str,address)) {
-                socket.send(packet);
-        		System.out.println("we sent");
-
+            	//Si le process est bon on peut renvoyer un ack
+            	//ici on ne le fait pas par simplification du problème 
+            	// et supposotion de non pertes dans notre rézo
+                //socket.send(packet_ack);
+        		//System.out.println("we sent");
+            	System.out.println("on le connaît déja donc lui aussi, on n'envoie pas");
+            	Db.dbinit();
+            	Db.getAnnuaire();
             }
             else {
-            	byte[] buf2=new byte[256];
-            	DatagramPacket packet2  = new DatagramPacket(buf2, buf2.length);
-                socket.send(packet2);
+            	//ici process pas bon pas de ack mais demande de renvoi 
+            	//ici pas traité
+            	//byte[] buf2=new byte[256];
+            	//DatagramPacket packet2  = new DatagramPacket(buf2, buf2.length);
+                //socket.send(packet2);
+            	socket.send(packet_ack);
+                System.out.println("we sent");
             }
-            
             //Si jamais on update bien dans l'annuaire on renvoie le même paquet que celui reçu
             //Sinon, on envoie un paquet vide signifiant que l'update n'était pas nécessaire ou mauvais
-        
-    	}
+            
+            //enfin, il faut renvoyer son propre état pour construire l'annuaire du nouveau connecté :
+                       
+    	}}
     	catch (Exception e) {
     		System.out.println("Could not receive Annuary with " + e);
     	}
+    	} 	   	
     }
     
     public String getownIP() {
@@ -166,8 +191,9 @@ public class ConversationUDP {
     	try {
     		System.out.println("adresse de broadacast :" + getBroadcast());
     		InetAddress ia = InetAddress.getByName(getBroadcast());
-        	byte[] bufs = pseudo.getBytes(StandardCharsets.UTF_8);
-        	DatagramPacket DpSend = new DatagramPacket(bufs, bufs.length, ia, 3456);
+        	byte[] bufs = pseudo.getBytes();
+        	System.out.println("la longueur est : " + bufs.length);
+        	DatagramPacket DpSend = new DatagramPacket(bufs, bufs.length, ia, port_recv_UDP);
         	socket.send(DpSend);
     	}
     	catch (Exception e)
@@ -176,6 +202,25 @@ public class ConversationUDP {
     	}
     }
     
+    public void send_annuaire(String logz) {
+    	try {
+    		System.out.println("adresse de broadacast :" + getBroadcast());
+    		InetAddress ia = InetAddress.getByName(getBroadcast());
+    		this.pseudo = logz;
+        	byte[] bufs = logz.getBytes();
+        	System.out.println("la longueur est : " + bufs.length);
+        	DatagramPacket DpSend = new DatagramPacket(bufs, bufs.length, ia, port_recv_UDP);
+        	socket.send(DpSend);
+    	}
+    	catch (Exception e)
+    	{
+    		System.out.println("Could not send annuary with " + e);
+    	}
+    }
+    
+    public void process_ack() {
+    	//ici pas nécessaire finalement
+    }
        
     
     
