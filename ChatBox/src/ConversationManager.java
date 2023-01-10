@@ -137,6 +137,18 @@ public class ConversationManager{
 		}
 	}
 	
+	public boolean isSocknull() {
+		return (this.Sock == null);
+	}
+	
+	public boolean isSSocknull() {
+		return (this.servSocket == null);
+	}
+	
+	public boolean isClosed() {
+		return this.Sock.isClosed();
+		}
+	
 	public void closeconnection() {
 		try {
 			 this.in.close();

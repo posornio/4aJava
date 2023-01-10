@@ -1,6 +1,7 @@
 
 import java.net.InetAddress;
 import java.sql.Timestamp;
+import java.util.Scanner;
 
 public class ThreadManager {}
 
@@ -106,22 +107,25 @@ class ThreadEnvoiTCP extends Thread {
     public void run(){
     	int i =0;
         while (true){
+        	if (cm.isClosed()) {
+        		break;
+        	}
         	System.out.println("Thread envoi ligne 1 ");
-        	if (i == 7) {
+        	if (i == 2) {
         		cm.sendmessage("ExitClavardage");
-        		//cm.closeconnection();
+        		cm.closeconnection();
+        		break;
         	}
         	else {
-	        	cm.sendmessage("Le message que j'envoie et i=" + i);
+        		Scanner sc= new Scanner(System.in);
+        		String str= sc.nextLine();
+	        	cm.sendmessage(str + " et i=" + i);
+	        	//ici on rajoute a la database le message envoyé et on
+	        	//print en frontend
 	        	i++;
         	}
-        	try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
         }
+        System.out.println("closing TE");
     }
 
     //public void handlerRecepMess(){    }
@@ -139,14 +143,21 @@ class ThreadReceptionTCP extends Thread {
 
     public void run(){
         while (true){
+        	if (cm.isClosed()) {
+        		break;
+        	}
         	String received = cm.recvmessage();
+        	//ici on rajoute a la database le message reçu et on
+        	//print en frontend
         	System.out.println("received : " + received);
         	if(received.equals("ExitClavardage"))
             {
-            	//cm.closeconnection();
+            	cm.closeconnection();
                 System.out.println("Connection Closed");
+                break;
             }
         }
+        System.out.println("closing TR");
     }
 
     //public void handlerRecepMess(){    }
