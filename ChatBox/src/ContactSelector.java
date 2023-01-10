@@ -83,22 +83,28 @@ public class ContactSelector extends JFrame {
                 setVisible(false);
                 //notifyAll();
                 mf.setSelectAnnu(contactChoisi);
-                try {
-                    ThreadInitConnexionsTCP tI = new ThreadInitConnexionsTCP(InetAddress.getByName(contactChoisi));
-                    tI.start();
-                    tI.join();
-                    setCm(tI.getcm());
-                    if(!mf.getConvoModel().contains(contactChoisi)){
-                        mf.getMapCM().put(contactChoisi,tI.getcm())
-                        ;}
-
-                } catch (UnknownHostException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
                 if(!mf.getConvoModel().contains(contactChoisi)){
-                    mf.getConvoModel().addElement(contactChoisi);}
+                    mf.getConvoModel().addElement(contactChoisi);
+                    try {
+                        ThreadInitConnexionsTCP tI = new ThreadInitConnexionsTCP(InetAddress.getByName(contactChoisi));
+                        tI.start();
+                        tI.join();
+                        setCm(tI.getcm());
+                        mf.getMapCM().put(contactChoisi,tI.getcm());/*
+                    if(!mf.getConvoModel().contains(contactChoisi)){
+                        mf.getMapCM().put(contactChoisi,tI.getcm());
+                        mf.getConvoModel().addElement(contactChoisi);
+                    }*/
+
+                    } catch (UnknownHostException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                }
+
+
                 //System.out.println(contactChoisi);
                 //messageModel = initLM(histWX);
                 //messageModel = new DefaultListModel();

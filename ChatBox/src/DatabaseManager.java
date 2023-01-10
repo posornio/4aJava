@@ -427,22 +427,19 @@ public class DatabaseManager {
 	   //
 	   AccountManager Am = new AccountManager();
 
-	   Db.dbinit();  
+	   Db.dbinit();
 	   Db.createtableusers();
 	   Db.createtablemessage();
 	   //System.out.println("Table message created successfully");
 	   Timestamp D = new Timestamp(System.currentTimeMillis());
-	   Db.insertmessage(1, "5", "6", "Coucou premier message", D);
 	   Db.insertuser("5", "xxRaveauxx");
-	   Db.insertuser("6", "xxOsornioxx");
-	   Db.insertuser("127.0.0.98","");
+	   //Db.insertuser("6", "xxOsornioxx");
+	   Db.insertuser("7", "xxOsornio2xx");
+	   Db.insertuser("8", "xxOsornio3xx");
 
-	   //System.out.println("Datetime OK and message added to DB");
-	   System.out.println(Db.ArrayHistorywithX("5", "6"));
-	   Db.getAnnuaire();
-	   Db.changerPseudo("5", "xxMatthisxx");
-	   Db.getAnnuaire();
-	   Am.changerpseudo("5", "zebicamarche la !");
-	   Db.getAnnuaire();
+	   ArrayList<String> asAnnu = Db.getAnnuaireList();
+	   System.out.println(asAnnu);
+	   //System.out.println(Db.getConvOuvertes());
+	   Db.insertmessage(1, "xxRaveauxx", "xxOsornioxx", "Coucou premier message", D);
    }
 }

@@ -80,7 +80,7 @@ public class ActivityLogin extends JFrame {
         loginButton.setSize(new Dimension(100,50));
         loginButton.setMaximumSize(new Dimension(100,1));
         getRootPane().setDefaultButton(loginButton);
-        setVisible(true);
+        setVisible(false);
 
 
 

@@ -22,6 +22,15 @@ public class MainForm extends JFrame {
     private JButton ChangerPseudoButt;
     private JButton DeconnexionButt;
     private JPanel PaneHead;
+
+    public JTable getList2() {
+        return list2;
+    }
+
+    public void setList2(JTable list2) {
+        this.list2 = list2;
+    }
+
     private JPanel PaneCenter;
     private JPanel mainPanel;
     private JLabel nameLabel;
@@ -116,7 +125,6 @@ public class MainForm extends JFrame {
         DefaultListModel convoModel = getConvoModel();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        convoModel.removeAllElements();
         /*
         for ( int i = 0; i < ConvOpen.toArray().length; i++ ){
             convoModel.addElement(ConvOpen.get(i));
@@ -181,8 +189,13 @@ public class MainForm extends JFrame {
         setSize(800, 600);
         //
         //
+        //convoModel.removeAllElements();
+
         list1 = new JList(convoModel);
         list2 = new JTable(messageModel);
+        list2.setShowGrid(false);
+        list2.setIntercellSpacing(new Dimension(1, 1));
+        list2.setDragEnabled(false);
         DeconnexionButt = new JButton();
         ChangerPseudoButt = new JButton(Db.getPseudo());
         ChangerPseudoButt.setText(Db.getPseudo());
@@ -205,7 +218,7 @@ public class MainForm extends JFrame {
                 }
                 if (!messageAEnv.isEmpty() && !messageAEnv.matches("[\n]+")) {
                     System.out.println(selected);
-                    try{ getMapCM().get(selected).sendmessage(messageAEnv);
+
                     int idM =Db.getMaxIdmessage()+1;
                     System.out.println(idM);
                     Db.insertmessage(idM,Db.getPseudo(),selected,messageAEnv,new Timestamp(System.currentTimeMillis()));
@@ -213,14 +226,35 @@ public class MainForm extends JFrame {
                     emptyMsg.date=ahwx.get(ahwx.size()-1).date;
                     Timestamp ts = new Timestamp(System.currentTimeMillis());
                     DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",ts);
-                    messageModel.addRow(new Object[]{ emptyMsg,ahwx.get(ahwx.size()-1), emptyMsg }) ;
-                    //MessageTableRenderer mtr = new MessageTableRenderer(selected,ahwx);
+                    messageModel.addRow(new Object[]{ emptyMsg,emptyMsg,ahwx.get(ahwx.size()-1) }) ;
                     //messListM.addElement(ahwx.get(ahwx.size()-1));
                     textArea1.setText("");
 
-                    list2.setModel(messageModel);}
+                    list2.setModel(messageModel);
+
+
+
+
+
+                    /*
+                    try{ getMapCM().get(selected).sendmessage(messageAEnv);
+                        int idM =Db.getMaxIdmessage()+1;
+                        System.out.println(idM);
+                        Db.insertmessage(idM,Db.getPseudo(),selected,messageAEnv,new Timestamp(System.currentTimeMillis()));
+                        ArrayList<DatabaseManager.Message> ahwx = Db.ArrayHistorywithX(Db.getPseudo(),selected);
+                        emptyMsg.date=ahwx.get(ahwx.size()-1).date;
+                        Timestamp ts = new Timestamp(System.currentTimeMillis());
+                        DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",ts);
+                        messageModel.addRow(new Object[]{ emptyMsg,ahwx.get(ahwx.size()-1), emptyMsg }) ;
+                        //MessageTableRenderer mtr = new MessageTableRenderer(selected,ahwx);
+                        //messListM.addElement(ahwx.get(ahwx.size()-1));
+                        textArea1.setText("");
+
+                        list2.setModel(messageModel);}
                     catch (Exception e1){}
 
+
+                     */
 
                     //list2.setDefaultRenderer(String.class,new MessageTableRenderer(selected,ahwx));
                     ;;}
@@ -275,6 +309,7 @@ public class MainForm extends JFrame {
 
                 System.out.println(getSelected());
                 list2.getColumnModel().getColumn(0).setHeaderValue(selected);
+                list2.repaint();
 
                 ArrayList<DatabaseManager.Message> histWX = Db.ArrayHistorywithX(Db.getPseudo(), selected);
                 //messageModel = initLM(histWX);
@@ -476,28 +511,34 @@ class MessageTableRenderer extends JLabel implements TableCellRenderer {
 
                 DatabaseManager.Message msg = (DatabaseManager.Message) value;
                 setText(msg.contenu);
-                if (col==1){
-                    setText(msg.date.toString());
-                }
-                if (msg.contenu.equals("") && col!=1){
-                    setBackground(Color.WHITE);
-                }
+
+                if (!msg.contenu.equals("")){
                 //DatabaseManager.Message msg = (DatabaseManager.Message) messAt;
-                if (msg.idSender.equals(dbM.getPseudo())) {
+                    if (col==2) {
 
-                    //c.setHorizontalAlignment(SwingConstants.LEFT);
-                    setHorizontalAlignment(SwingConstants.RIGHT);
-                    setBackground(Color.BLUE.brighter());
-                    // setPreferredSize((new Dimension(10,30)));
-                    setForeground(Color.WHITE);
+                        //c.setHorizontalAlignment(SwingConstants.LEFT);
+                        setHorizontalAlignment(SwingConstants.RIGHT);
+                        setBackground(Color.BLUE.brighter());
+                        // setPreferredSize((new Dimension(10,30)));
+                        setForeground(Color.WHITE);
 
-                } else if (!msg.contenu.equals("")) {
-                    if (!msg.contenu.equals("")){
+                    }
+                    else if(col==0) {
                         setBackground(Color.GRAY);
                         setForeground(Color.WHITE);
                         setHorizontalAlignment(SwingConstants.LEFT);}
 
+                    }
+                else if (col!=1){
+                    setBackground(Color.WHITE);
+                    setForeground(Color.WHITE);
                 }
+                else{
+                    setBackground(Color.WHITE);
+                    setForeground(Color.black);
+                    setText(msg.date.toString().substring(0, msg.date.toString().length() -4));
+                }
+
                 if (isSelected) {
                     setBackground(getBackground().darker());/*
                     if (msg.contenu.equals("") && col!=1 && col!=2){
