@@ -6,7 +6,15 @@ public class DatabaseManager {
 	//TODO : ID est finalement le string de l'adresse IP de InetAddress 
 	static final String url = "jdbc:sqlite:src/test.db";
    private Connection conn = null;
+   private String pseudo = "xxOsornioxx";
 
+	public String getPseudo() {
+		return pseudo;
+	}
+
+	public void setPseudo(String pseudo) {
+		this.pseudo = pseudo;
+	}
 
    public void dbinit () {
 	   try{		
@@ -234,8 +242,45 @@ public class DatabaseManager {
 	}
 		return "";
    }
-   
-   
+
+	public ArrayList<String> getConvOuvertes(){
+
+		ArrayList<String> result = new ArrayList<String>();
+		String sql = "SELECT DISTINCT(IDSENDER) FROM message WHERE IDSENDER <> ''";
+		String iter="";
+		try (Statement stmt  = conn.createStatement();
+			 ResultSet rs    = stmt.executeQuery(sql)){
+
+			// loop through the result set
+			while (rs.next()) {
+				iter= rs.getString("IDSENDER");
+				//System.out.println(iter);
+				//if (!result.contains(iter)){
+				result.add(iter);
+				//}
+			}
+		}
+		catch (SQLException e) {
+		}
+		sql = "SELECT DISTINCT(IDRECV) FROM message WHERE IDRECV <> ''";
+		try (Statement stmt  = conn.createStatement();
+			 ResultSet rs    = stmt.executeQuery(sql)){
+
+			// loop through the result set
+			while (rs.next()) {
+				iter= rs.getString("IDRECV");
+				//System.out.println(iter);
+				if (!result.contains(iter)&&!iter.equals(getPseudo())){
+					result.add(iter);
+				}
+			}
+		}
+		catch (SQLException e) {
+		}
+		return result;
+
+
+	}
    public ArrayList<String> getAnnuaireList(){
 	   
 		String sql = "SELECT LOGIN FROM users WHERE LOGIN <> ''";
@@ -285,7 +330,24 @@ public class DatabaseManager {
 		}
 	   return ret;
    }
-   
+	public int getMaxIdmessage() {
+		String sql ="SELECT MAX(IDMESSAGE) FROM message";
+		int ret=0;
+		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+			// set the value//
+			ResultSet rs  = pstmt.executeQuery();
+
+			// loop through the result set
+			while (rs.next()) {
+				ret = rs.getInt("MAX(IDMESSAGE)");
+			}
+
+		} catch (SQLException e) {
+
+		}
+		return ret;
+	}
    
    
    //PAS BON (que idmessage et que dans un sens sender receiver
@@ -342,7 +404,7 @@ public class DatabaseManager {
 
 		return result;
 	}
-	public class Message{
+	public static class Message{
 		String contenu;
 		String idSender;
 		String idRecv;
