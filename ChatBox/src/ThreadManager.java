@@ -48,15 +48,19 @@ class ThreadInitConnexionsTCP extends Thread {
             cm.createconnectionclient(this.addr);
             //cm.initstreamin();
             cm.sendmessage("Connexion établie pour moi le S");
-            System.out.println("Connexion établie entre nous port " + po + " et entre " + this.addr + " sur le port " + port);
-            ThreadEnvoiTCP TE = new ThreadEnvoiTCP(cm);
+            System.out.println("Connexion établie entre nous port " + po + " et entre " + this.addr + " sur le port " + port);  
+            //TODO Il faut ajouter une table de conversations manager que peut utliser le GUI 
+            
+            
+            
+            /*ThreadEnvoiTCP TE = new ThreadEnvoiTCP(cm);
             ThreadReceptionTCP TR = new ThreadReceptionTCP(cm);
             System.out.println("Thread créés");
             TR.start();
             System.out.println("TR OK !!!!");
             TE.start();
             System.out.println("TE OK !!!!");
-
+			*/
         }
         else {
         	cm.setpc(portD);
@@ -73,13 +77,14 @@ class ThreadInitConnexionsTCP extends Thread {
             System.out.println("Connexion établie entre nous port " + po + " et entre " + this.addr + " sur le port " + portD);
             //cm.initstreamclient();
             //System.out.println("Streams créés");
-            ThreadEnvoiTCP TE = new ThreadEnvoiTCP(cm);
+            
+            /*ThreadEnvoiTCP TE = new ThreadEnvoiTCP(cm);
             ThreadReceptionTCP TR = new ThreadReceptionTCP(cm);
             System.out.println("Thread créés");
             TR.start();
             System.out.println("TR OK !!!!");
             TE.start();
-            System.out.println("TE OK !!!!");
+            System.out.println("TE OK !!!!");*/
             
             
         }
@@ -93,6 +98,9 @@ class ThreadInitConnexionsTCP extends Thread {
             
         //}
     }
+    
+    public ConversationManager getcm() {
+    	return this.cm;    }
 }
 
 class ThreadEnvoiTCP extends Thread {
@@ -129,6 +137,8 @@ class ThreadEnvoiTCP extends Thread {
     }
 
     //public void handlerRecepMess(){    }
+    public ConversationManager getcm() {
+    	return this.cm;    }
 
 }
 
