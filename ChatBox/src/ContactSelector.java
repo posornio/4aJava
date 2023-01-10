@@ -50,11 +50,8 @@ public class ContactSelector extends JFrame {
         DefaultListModel messageModel = new DefaultListModel();
 
 
-        // Create the list model and the contact list
         contactList = new JList<>(asAnnu.toArray());
-        // Add some sample contacts to the list mode
 
-        // Add the contact list to the panel
         add(new JScrollPane(contactList), BorderLayout.CENTER);
         //JButton loginButton = new JButton("Selectionner Contact");
         //add(loginButton);
@@ -82,7 +79,6 @@ public class ContactSelector extends JFrame {
         });
     }
 
-    // A simple main method to create the contact selector panel
     public static void main(String[] args) {
 
         ContactSelector contactSelector = new ContactSelector() ;
