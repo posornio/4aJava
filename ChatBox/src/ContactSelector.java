@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -29,7 +31,16 @@ public class ContactSelector extends JFrame {
         this.mf = mf;
     }
 
+    public ConversationManager getCm() {
+        return cm;
+    }
+
+    public void setCm(ConversationManager cm) {
+        this.cm = cm;
+    }
+
     private MainForm mf;
+    private ConversationManager cm;
 
     public void setListModel(DefaultListModel<String> listModel) {
         this.listModel = listModel;
@@ -40,12 +51,14 @@ public class ContactSelector extends JFrame {
     public ContactSelector(){}
     public ContactSelector(MainForm mainForm,DatabaseManager Db) {
         mf=mainForm;
+
         setVisible(false);
         setTitle("Annuaire");
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         setLayout(new GridLayout(1, 1));
 
         ArrayList<String> asAnnu = Db.getAnnuaireList();
+        System.out.println(asAnnu);
         setSize(800, 600);
         DefaultListModel messageModel = new DefaultListModel();
 
@@ -70,6 +83,20 @@ public class ContactSelector extends JFrame {
                 setVisible(false);
                 //notifyAll();
                 mf.setSelectAnnu(contactChoisi);
+                try {
+                    ThreadInitConnexionsTCP tI = new ThreadInitConnexionsTCP(InetAddress.getByName(contactChoisi));
+                    tI.start();
+                    tI.join();
+                    setCm(tI.getcm());
+                    if(!mf.getConvoModel().contains(contactChoisi)){
+                        mf.getMapCM().put(contactChoisi,tI.getcm())
+                        ;}
+
+                } catch (UnknownHostException ex) {
+                    throw new RuntimeException(ex);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
                 if(!mf.getConvoModel().contains(contactChoisi)){
                     mf.getConvoModel().addElement(contactChoisi);}
                 //System.out.println(contactChoisi);
@@ -85,6 +112,5 @@ public class ContactSelector extends JFrame {
 
     }
 
-    public void visible(boolean b) {
-        setVisible(b);    }
+
 }

@@ -281,22 +281,22 @@ public class DatabaseManager {
 
 
 	}
-   public ArrayList<String> getAnnuaireList(){
-	   
+	public ArrayList<String> getAnnuaireList(){
+
 		String sql = "SELECT LOGIN FROM users WHERE LOGIN <> ''";
 		ArrayList<String> result = new ArrayList<String>();
 		try (Statement stmt  = conn.createStatement();
-			ResultSet rs    = stmt.executeQuery(sql)){
+			 ResultSet rs    = stmt.executeQuery(sql)){
 
 			// loop through the result set
-		while (rs.next()) {
-			result.add(rs.getString("LOGIN"));
+			while (rs.next()) {
+				result.add(rs.getString("LOGIN"));
 			}
-		} 
+		}
 		catch (SQLException e) {
 		}
 		return result;
-   }
+	}
    
    public void getAnnuaire(){
 	   if (getAnnuaireList().isEmpty()) {

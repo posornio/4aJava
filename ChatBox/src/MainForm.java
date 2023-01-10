@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Map;
 
 import static java.lang.Thread.sleep;
 
@@ -26,7 +27,15 @@ public class MainForm extends JFrame {
     private JLabel nameLabel;
     private JList list1;
 
+    private Map<String,ConversationManager> mapCM;
 
+    public Map<String, ConversationManager> getMapCM() {
+        return mapCM;
+    }
+
+    public void setMapCM(Map<String, ConversationManager> mapCM) {
+        this.mapCM = mapCM;
+    }
 
     private JScrollPane paneContact;
     private JScrollPane paneMessages;
@@ -108,9 +117,10 @@ public class MainForm extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         convoModel.removeAllElements();
+        /*
         for ( int i = 0; i < ConvOpen.toArray().length; i++ ){
             convoModel.addElement(ConvOpen.get(i));
-        }
+        }*/
         //list1 = new JList(convoModel);
         list1 = new JList();
         //messageModel.setColumnIdentifiers(header);
@@ -195,6 +205,7 @@ public class MainForm extends JFrame {
                 }
                 if (!messageAEnv.isEmpty() && !messageAEnv.matches("[\n]+")) {
                     System.out.println(selected);
+                    try{ getMapCM().get(selected).sendmessage(messageAEnv);
                     int idM =Db.getMaxIdmessage()+1;
                     System.out.println(idM);
                     Db.insertmessage(idM,Db.getPseudo(),selected,messageAEnv,new Timestamp(System.currentTimeMillis()));
@@ -207,7 +218,8 @@ public class MainForm extends JFrame {
                     //messListM.addElement(ahwx.get(ahwx.size()-1));
                     textArea1.setText("");
 
-                    list2.setModel(messageModel);
+                    list2.setModel(messageModel);}
+                    catch (Exception e1){}
 
 
                     //list2.setDefaultRenderer(String.class,new MessageTableRenderer(selected,ahwx));

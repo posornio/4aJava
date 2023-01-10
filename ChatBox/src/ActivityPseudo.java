@@ -35,7 +35,7 @@ public class ActivityPseudo extends JFrame {
         this.pseudo = Db.getPseudo();
         JFrame frame = new JFrame("Changer Pseudo");
         setVisible(false);
-
+        AccountManager accountManager = new AccountManager();
         setSize(400, 200);
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -76,6 +76,8 @@ public class ActivityPseudo extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                while(!accountManager.seconnecter(Db.getIdbyLoginString(usernameField.getText()),usernameField.getText())){}
+
                 setVisible(false);
                 //Db.changerPseudo(usernameField.getText());
                 Db.setPseudo(usernameField.getText());
