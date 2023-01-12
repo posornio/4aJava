@@ -318,7 +318,7 @@ public class MainForm extends JFrame {
                     //messageModel.addElement(message);
                     DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",message.date);
 
-                    if (message.idSender.equals(Db.getPseudo())){
+                    if (message.idSender.equals(Db.getownIP())){
 
                         messageModel.addRow(new Object[]{emptyMsg,emptyMsg,message});
                         //messListM.addElement(message);
@@ -442,10 +442,12 @@ public class MainForm extends JFrame {
         DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",ts);
         int idM = getDb().getMaxIdmessage()+1;
         getDb().insertmessage(idM,addr.toString(),getDb().getownIP(),message,ts);
-        if (idSender.equals(getSelected())){
+        if (idSender.equals(Db.getIdbyLoginString(getSelected()))){
 
             messageModel.addRow(new Object[]{ message,emptyMsg,emptyMsg }) ;
         }
+        if(!getConvoModel().contains(idSender)){
+            getConvoModel().addElement(idSender);}
     }
     /**
      * @noinspection ALL
