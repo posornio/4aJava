@@ -6,7 +6,15 @@ public class DatabaseManager {
 	//TODO : ID est finalement le string de l'adresse IP de InetAddress 
 	static final String url = "jdbc:sqlite:src/test.db";
    private Connection conn = null;
+   private String pseudo = "xxOsornioxx";
 
+	public String getPseudo() {
+		return pseudo;
+	}
+
+	public void setPseudo(String pseudo) {
+		this.pseudo = pseudo;
+	}
 
    public void dbinit () {
 	   try{		
@@ -234,24 +242,83 @@ public class DatabaseManager {
 	}
 		return "";
    }
-   
-   
-   public ArrayList<String> getAnnuaireList(){
-	   
-		String sql = "SELECT LOGIN FROM users WHERE LOGIN <> ''";
-		ArrayList<String> result = new ArrayList<String>();
-		try (Statement stmt  = conn.createStatement();
-			ResultSet rs    = stmt.executeQuery(sql)){
+
+   public String getLoginbyIDString(String addr) {
+	   String sql = "SELECT LOGIN "
+				+ "FROM users WHERE IDUSERS = ?";
+
+		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+			// set the value
+			pstmt.setString(1,addr);
+			//
+			ResultSet rs  = pstmt.executeQuery();
 
 			// loop through the result set
-		while (rs.next()) {
-			result.add(rs.getString("LOGIN"));
+			while (rs.next()) {
+				return rs.getString("LOGIN");
 			}
-		} 
+		} catch (SQLException e) {
+			return "";
+	}
+		return "";
+   }
+
+   
+	public ArrayList<String> getConvOuvertes(){
+
+		ArrayList<String> result = new ArrayList<String>();
+		String sql = "SELECT DISTINCT(IDSENDER) FROM message WHERE IDSENDER <> ''";
+		String iter="";
+		try (Statement stmt  = conn.createStatement();
+			 ResultSet rs    = stmt.executeQuery(sql)){
+
+			// loop through the result set
+			while (rs.next()) {
+				iter= rs.getString("IDSENDER");
+				//System.out.println(iter);
+				//if (!result.contains(iter)){
+				result.add(iter);
+				//}
+			}
+		}
+		catch (SQLException e) {
+		}
+		sql = "SELECT DISTINCT(IDRECV) FROM message WHERE IDRECV <> ''";
+		try (Statement stmt  = conn.createStatement();
+			 ResultSet rs    = stmt.executeQuery(sql)){
+
+			// loop through the result set
+			while (rs.next()) {
+				iter= rs.getString("IDRECV");
+				//System.out.println(iter);
+				if (!result.contains(iter)&&!iter.equals(getPseudo())){
+					result.add(iter);
+				}
+			}
+		}
 		catch (SQLException e) {
 		}
 		return result;
-   }
+
+
+	}
+	public ArrayList<String> getAnnuaireList(){
+
+		String sql = "SELECT LOGIN FROM users WHERE LOGIN <> ''";
+		ArrayList<String> result = new ArrayList<String>();
+		try (Statement stmt  = conn.createStatement();
+			 ResultSet rs    = stmt.executeQuery(sql)){
+
+			// loop through the result set
+			while (rs.next()) {
+				result.add(rs.getString("LOGIN"));
+			}
+		}
+		catch (SQLException e) {
+		}
+		return result;
+	}
    
    public void getAnnuaire(){
 	   if (getAnnuaireList().isEmpty()) {
@@ -285,7 +352,24 @@ public class DatabaseManager {
 		}
 	   return ret;
    }
-   
+	public int getMaxIdmessage() {
+		String sql ="SELECT MAX(IDMESSAGE) FROM message";
+		int ret=0;
+		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+			// set the value//
+			ResultSet rs  = pstmt.executeQuery();
+
+			// loop through the result set
+			while (rs.next()) {
+				ret = rs.getInt("MAX(IDMESSAGE)");
+			}
+
+		} catch (SQLException e) {
+
+		}
+		return ret;
+	}
    
    
    //PAS BON (que idmessage et que dans un sens sender receiver
@@ -342,7 +426,7 @@ public class DatabaseManager {
 
 		return result;
 	}
-	public class Message{
+	public static class Message{
 		String contenu;
 		String idSender;
 		String idRecv;
@@ -365,22 +449,19 @@ public class DatabaseManager {
 	   //
 	   AccountManager Am = new AccountManager();
 
-	   Db.dbinit();  
+	   Db.dbinit();
 	   Db.createtableusers();
 	   Db.createtablemessage();
 	   //System.out.println("Table message created successfully");
 	   Timestamp D = new Timestamp(System.currentTimeMillis());
-	   Db.insertmessage(1, "5", "6", "Coucou premier message", D);
 	   Db.insertuser("5", "xxRaveauxx");
-	   Db.insertuser("6", "xxOsornioxx");
-	   Db.insertuser("127.0.0.98","");
+	   //Db.insertuser("6", "xxOsornioxx");
+	   Db.insertuser("7", "xxOsornio2xx");
+	   Db.insertuser("8", "xxOsornio3xx");
 
-	   //System.out.println("Datetime OK and message added to DB");
-	   System.out.println(Db.ArrayHistorywithX("5", "6"));
-	   Db.getAnnuaire();
-	   Db.changerPseudo("5", "xxMatthisxx");
-	   Db.getAnnuaire();
-	   Am.changerpseudo("5", "zebicamarche la !");
-	   Db.getAnnuaire();
+	   ArrayList<String> asAnnu = Db.getAnnuaireList();
+	   System.out.println(asAnnu);
+	   //System.out.println(Db.getConvOuvertes());
+	   Db.insertmessage(1, "xxRaveauxx", "xxOsornioxx", "Coucou premier message", D);
    }
 }
