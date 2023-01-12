@@ -17,7 +17,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/patrickosornio/Dev/4aJava/ChatBox/src/sqlite-jdbc-3.39.4.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="src" path="target/generated-sources/annotations">
 		<attributes>
