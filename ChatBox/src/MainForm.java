@@ -96,6 +96,15 @@ public class MainForm extends JFrame {
 
     private JTable table1;
 
+    private DatabaseManager Db;
+
+    public DatabaseManager getDb() {
+        return Db;
+    }
+
+    public void setDb(DatabaseManager db) {
+        Db = db;
+    }
 
     public DefaultTableModel getMessageModel() {
         return messageModel;
@@ -116,7 +125,7 @@ public class MainForm extends JFrame {
         String header[]= new String[]{selected,"",Db.getPseudo()};
         //Connection connection = Db.conn;
         Db.dbinit();
-
+        setDb(Db);
         ArrayList<String> asAnnu = Db.getAnnuaireList();
         ArrayList<String> ConvOpen = Db.getConvOuvertes();
         System.out.println(ConvOpen);
@@ -173,6 +182,7 @@ public class MainForm extends JFrame {
     private void createUIComponents() {
         DatabaseManager Db = new DatabaseManager();
         Db.dbinit();
+        setDb(Db);
         ContactSelector contactSelector = new ContactSelector(this,Db);
         ActivityPseudo activityPseudo =new ActivityPseudo(this,Db);
         ActivityLogin activityLogin = new ActivityLogin(Db);
@@ -219,9 +229,9 @@ public class MainForm extends JFrame {
                 if (!messageAEnv.isEmpty() && !messageAEnv.matches("[\n]+")) {
                     System.out.println(selected);
 
-                    int idM =Db.getMaxIdmessage()+1;
+                    int idM =getDb().getMaxIdmessage()+1;
                     System.out.println(idM);
-                    Db.insertmessage(idM,Db.getPseudo(),selected,messageAEnv,new Timestamp(System.currentTimeMillis()));
+                    getDb().insertmessage(idM,Db.getPseudo(),selected,messageAEnv,new Timestamp(System.currentTimeMillis()));
                     ArrayList<DatabaseManager.Message> ahwx = Db.ArrayHistorywithX(Db.getPseudo(),selected);
                     emptyMsg.date=ahwx.get(ahwx.size()-1).date;
                     Timestamp ts = new Timestamp(System.currentTimeMillis());
@@ -309,7 +319,7 @@ public class MainForm extends JFrame {
 
                 System.out.println(getSelected());
                 list2.getColumnModel().getColumn(0).setHeaderValue(selected);
-                list2.repaint();
+                list2.getTableHeader().resizeAndRepaint();
 
                 ArrayList<DatabaseManager.Message> histWX = Db.ArrayHistorywithX(Db.getPseudo(), selected);
                 //messageModel = initLM(histWX);
@@ -438,6 +448,16 @@ public class MainForm extends JFrame {
         }
         return model;
     }
+
+    public void handlerMR(DatabaseManager.Message message){
+        DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",message.date);
+        int idM = getDb().getMaxIdmessage()+1;
+        getDb().insertmessage(idM,message.idSender,message.idRecv,message.contenu,message.date);
+        if (message.idSender.equals(getSelected())){
+
+            messageModel.addRow(new Object[]{ message,emptyMsg,emptyMsg }) ;
+        }
+    }
     /**
      * @noinspection ALL
      */
@@ -536,7 +556,7 @@ class MessageTableRenderer extends JLabel implements TableCellRenderer {
                 else{
                     setBackground(Color.WHITE);
                     setForeground(Color.black);
-                    setText(msg.date.toString().substring(0, msg.date.toString().length() -4));
+                    setText(msg.date.toString().substring(0, msg.date.toString().length() -7));
                 }
 
                 if (isSelected) {

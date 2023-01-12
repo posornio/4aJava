@@ -89,7 +89,8 @@ public class ActivityPseudo extends JFrame {
 
                 mf.getChangerPseudoButt().setText(Db.getPseudo());
                 mf.getList2().getColumn(2).setHeaderValue(Db.getPseudo());
-                mf.getList2().repaint();
+                mf.getList2().getTableHeader().repaint();
+
 
 
 
