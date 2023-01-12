@@ -483,7 +483,7 @@ public class DatabaseManager {
 	   Db.createtablemessage();
 	   //System.out.println("Table message created successfully");
 	   Timestamp D = new Timestamp(System.currentTimeMillis());
-	   Db.insertuser("5.5.5.5", "xxRaveauxx");
+	   Db.insertuser("10.1.5.222", "xxRaveauxx");
 	   //Db.insertuser("6", "xxOsornioxx");
 	   Db.insertuser("7.7.7.7", "xxOsornio2xx");
 	   Db.insertuser("8.8.8.8", "xxOsornio3xx");
@@ -491,6 +491,6 @@ public class DatabaseManager {
 	   ArrayList<String> asAnnu = Db.getAnnuaireList();
 	   System.out.println(asAnnu);
 	   //System.out.println(Db.getConvOuvertes());
-	   Db.insertmessage(2, "5.5.5.5", Db.getownIP(), "Coucou premier message", D);
+	   Db.insertmessage(2, "10.1.5.222", Db.getownIP(), "Coucou premier message", D);
    }
 }
