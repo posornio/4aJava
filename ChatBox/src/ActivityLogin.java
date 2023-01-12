@@ -65,11 +65,12 @@ public class ActivityLogin extends JFrame {
                             JOptionPane.WARNING_MESSAGE);
                 }
                 else{
-                MainForm myForm = new MainForm();
+
                 //Db.insertuser("",usernameField.getText());
                 Db.setPseudo(usernameField.getText());}
                 ThreadEcouteConnexionsTCP threadEcouteConnexionsTCP = new ThreadEcouteConnexionsTCP();
                 threadEcouteConnexionsTCP.start();
+                MainForm myForm = new MainForm();
                 //ajout user dans DB
 
 

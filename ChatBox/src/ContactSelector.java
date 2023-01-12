@@ -90,7 +90,8 @@ public class ContactSelector extends JFrame {
                         tI.start();
                         tI.join();
                         setCm(tI.getcm());
-                        mf.getMapCM().put(contactChoisi,tI.getcm());/*
+                        mf.getMapCM().put(contactChoisi,tI.getcm());
+                        System.out.println("map 1" + mf.getMapCM().toString() );/*
                     if(!mf.getConvoModel().contains(contactChoisi)){
                         mf.getMapCM().put(contactChoisi,tI.getcm());
                         mf.getConvoModel().addElement(contactChoisi);
