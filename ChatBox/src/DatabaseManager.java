@@ -485,7 +485,7 @@ public class DatabaseManager {
 	   Timestamp D = new Timestamp(System.currentTimeMillis());
 	   Db.insertuser("10.1.5.222", "xxRaveauxx");
 	   //Db.insertuser("6", "xxOsornioxx");
-	   Db.insertuser("7.7.7.7", "xxOsornio2xx");
+	   Db.insertuser("10.1.5.231", "a");
 	   Db.insertuser("8.8.8.8", "xxOsornio3xx");
 
 	   ArrayList<String> asAnnu = Db.getAnnuaireList();

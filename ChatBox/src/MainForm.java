@@ -240,7 +240,7 @@ public class MainForm extends JFrame {
                         emptyMsg.date=ahwx.get(ahwx.size()-1).date;
                         Timestamp ts = new Timestamp(System.currentTimeMillis());
                         DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",ts);
-                        messageModel.addRow(new Object[]{ emptyMsg,ahwx.get(ahwx.size()-1), emptyMsg }) ;
+                        messageModel.addRow(new Object[]{ emptyMsg,emptyMsg,ahwx.get(ahwx.size()-1)}) ;
                         //MessageTableRenderer mtr = new MessageTableRenderer(selected,ahwx);
                         //messListM.addElement(ahwx.get(ahwx.size()-1));
                         textArea1.setText("");
