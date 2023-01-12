@@ -9,7 +9,7 @@ public class DatabaseManager {
 	//TODO : ID est finalement le string de l'adresse IP de InetAddress 
 	static final String url = "jdbc:sqlite:src/test.db";
    private Connection conn = null;
-   private String pseudo = "xxOsornioxx";
+   private String pseudo ;
 
 	public String getPseudo() {
 		return pseudo;

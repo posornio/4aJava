@@ -185,6 +185,7 @@ public class MainForm extends JFrame {
         ContactSelector contactSelector = new ContactSelector(this,Db);
         ActivityPseudo activityPseudo =new ActivityPseudo(this,Db);
         ActivityLogin activityLogin = new ActivityLogin();
+        activityLogin.setVisible(false);
         ConversationManager cm = new ConversationManager();
 
         HashMap<String, ConversationManager> mapCM = new HashMap<String, ConversationManager>();
@@ -235,7 +236,7 @@ public class MainForm extends JFrame {
                     try{ getMapCM().get(selected).sendmessage(messageAEnv);
                         int idM =Db.getMaxIdmessage()+1;
                         System.out.println(idM);
-                        Db.insertmessage(idM,Db.getPseudo(),selected,messageAEnv,new Timestamp(System.currentTimeMillis()));
+                        Db.insertmessage(idM,Db.getownIP(),Db.getIdbyLoginString(selected),messageAEnv,new Timestamp(System.currentTimeMillis()));
                         ArrayList<DatabaseManager.Message> ahwx = Db.ArrayHistorywithX(Db.getPseudo(),selected);
                         emptyMsg.date=ahwx.get(ahwx.size()-1).date;
                         Timestamp ts = new Timestamp(System.currentTimeMillis());

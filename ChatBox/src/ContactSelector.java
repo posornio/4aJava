@@ -91,6 +91,8 @@ public class ContactSelector extends JFrame {
                         tI.join();
                         setCm(tI.getcm());
                         mf.getMapCM().put(contactChoisi,tI.getcm());
+                        ThreadReceptionTCP trTCP = new ThreadReceptionTCP(tI.getcm(),mf);
+                        trTCP.start();
                         System.out.println("map 1" + mf.getMapCM().toString() );/*
                     if(!mf.getConvoModel().contains(contactChoisi)){
                         mf.getMapCM().put(contactChoisi,tI.getcm());
