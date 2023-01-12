@@ -15,6 +15,8 @@ import java.sql.Timestamp;
 import java.util.*;
 
 import static java.lang.Thread.sleep;
+import static javax.swing.text.StyleConstants.setBackground;
+import static javax.swing.text.StyleConstants.setForeground;
 
 public class MainForm extends JFrame {
     private JScrollPane ContactScroll;
@@ -105,6 +107,7 @@ public class MainForm extends JFrame {
     public void setDb(DatabaseManager db) {
         Db = db;
     }
+    public ArrayList<String> annuOuv;
 
     public DefaultTableModel getMessageModel() {
         return messageModel;
@@ -191,6 +194,7 @@ public class MainForm extends JFrame {
         System.out.println("Db est " + getDb().getAnnuaireList());
         HashMap<String, ConversationManager> mapCM = new HashMap<String, ConversationManager>();
         setMapCM(mapCM);
+        annuOuv= new ArrayList<String>();
         //contactSelector.visible(false);
         buttonEnvoyer = new JButton("Envoyer");
         boolean convOuverte = false;
@@ -303,8 +307,9 @@ public class MainForm extends JFrame {
                 buttonEnvoyer.setVisible(true);
                 textArea1.setVisible(true);
                 //selected = asAnnu.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
-                selected = (String) convoModel.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
-
+                Contact selectedC = (Contact) convoModel.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
+                selectedC.unread=false;
+                selected = selectedC.login;
                 setSelected(selected);
 
                 System.out.println(getSelected());
@@ -343,35 +348,7 @@ public class MainForm extends JFrame {
 
         });
 
-        list1.setCellRenderer(new DefaultListCellRenderer(){
-            public Component getListCellRendererComponent(JList list, Object value,int index,boolean isSelected, boolean cellHasFocus) {
-                if (value instanceof String){
-                    setBackground(Color.white);
-                    setForeground(Color.black);
-                    String contact = (String) value;
-                    ArrayList<DatabaseManager.Message> msgArr = getDb().ArrayHistorywithX(getDb().getownIP(),getDb().getIdbyLoginString(contact) );
-                    setText(contact);
-
-                    if (msgArr.size()>0){
-                        DatabaseManager.Message dernierMsg = msgArr.get(msgArr.size()-1);
-                        String msgCont = dernierMsg.contenu;
-                        String fleche="<-";
-                        if (dernierMsg.idSender.equals(getDb().getPseudo())){
-                            fleche="->";
-                        }
-                        fleche = contact + fleche +msgCont;
-                        setText(fleche);}
-
-                    if (isSelected){
-                        setBackground(Color.BLUE.brighter());
-                        setForeground(Color.WHITE);
-                    }
-
-                }
-                return this;
-            }
-
-        });
+        list1.setCellRenderer(new AnnuaireRenderer(getDb()));
         list2.getColumnModel().getColumn(0).setCellRenderer(new MessageTableRenderer(selected,Db));
         System.out.println("HEEEEY "+selected+getSelected());
         list2.getColumnModel().getColumn(1).setCellRenderer(new MessageTableRenderer(getSelected(),Db));
@@ -442,16 +419,21 @@ public class MainForm extends JFrame {
 
     public void handlerMR(String message,InetAddress addr){
         String idSender = getDb().getLoginbyIDString(addr.toString());
+        Contact contactC = new Contact(idSender,true);
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",ts);
         int idM = getDb().getMaxIdmessage()+1;
         getDb().insertmessage(idM,addr.toString(),getDb().getownIP(),message,ts);
         if (idSender.equals(getDb().getIdbyLoginString(getSelected()))){
-
+            System.out.println("Id "+ getDb().getIdbyLoginString(getSelected()));
+            System.out.println("Login "+ getSelected());
             messageModel.addRow(new Object[]{ message,emptyMsg,emptyMsg }) ;
         }
-        if(!getConvoModel().contains(idSender)){
-            getConvoModel().addElement(idSender);}
+        if(!annuOuv.contains(idSender)){
+            annuOuv.add(contactC.login);
+            getConvoModel().addElement(contactC);
+            
+        }
     }
     /**
      * @noinspection ALL
@@ -460,49 +442,59 @@ public class MainForm extends JFrame {
         return mainPanel;
     }
 
-}
-class MessageCellRenderer extends JLabel implements ListCellRenderer{
-    String selected;
-    // @Override
-    public MessageCellRenderer(String selected){
-        setPreferredSize((new Dimension(10,30)));
-        setOpaque(true);
 
-        this.selected=selected;
+static class Contact{
+        public String login;
+        public boolean unread;
+        //pubic String id; ??
+    public Contact(String login, boolean unread) {
+        this.login = login;
+        this.unread = unread;
     }
-    public Component getListCellRendererComponent(JList list, Object value,int index,boolean isSelected, boolean cellHasFocus){
-        if (value instanceof DatabaseManager.Message){
-            DatabaseManager.Message msg = (DatabaseManager.Message) value;
-            setText(msg.contenu);
+}
+}
+class AnnuaireRenderer extends DefaultListCellRenderer {
 
-            if (msg.idSender.equals(selected)){
-                setHorizontalAlignment(SwingConstants.LEFT);
-                setBackground(Color.gray);
+    public DatabaseManager DbR;
+  public AnnuaireRenderer(DatabaseManager DbR){
+      this.DbR=DbR;
+  }
+    public Component getListCellRendererComponent(JList list, Object value,int index,boolean isSelected, boolean cellHasFocus) {
+        if (value instanceof MainForm.Contact){
+            setBackground(Color.white);
+            setForeground(Color.black);
+            MainForm.Contact contactC = (MainForm.Contact) value;
+            String contact = contactC.login;
+            ArrayList<DatabaseManager.Message> msgArr = DbR.ArrayHistorywithX(DbR.getownIP(),DbR.getIdbyLoginString(contact) );
+            setText(contact);
+            if (contactC.unread){
+                setBackground(Color.green);
                 setForeground(Color.WHITE);
-
+            }else{
+                setBackground(Color.white);
+                setForeground(Color.black);
             }
-            else{
-                setHorizontalAlignment(SwingConstants.RIGHT);
-                setPreferredSize((new Dimension(10,30)));
+            if (msgArr.size()>0){
+                DatabaseManager.Message dernierMsg = msgArr.get(msgArr.size()-1);
+                String msgCont = dernierMsg.contenu;
+                String fleche="<-";
+                if (dernierMsg.idSender.equals(DbR.getPseudo())){
+                    fleche="->";
+                }
+                fleche = contact + fleche +msgCont;
+                setText(fleche);}
 
+            if (isSelected){
                 setBackground(Color.BLUE.brighter());
                 setForeground(Color.WHITE);
-
             }
-            if (isSelected) {
-                setBackground(getBackground().darker());
-                if (msg.idSender.equals(selected)){
-                    setText(msg.contenu + " " + msg.date.toString());
-                }else{
-                    setText(msg.date.toString() + " " +msg.contenu );
 
-                }
-
-            }
         }
         return this;
     }
 }
+
+
 
 class MessageTableRenderer extends JLabel implements TableCellRenderer {
     public String selected;

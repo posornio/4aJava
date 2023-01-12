@@ -83,8 +83,10 @@ public class ContactSelector extends JFrame {
                 setVisible(false);
                 //notifyAll();
                 mf.setSelectAnnu(contactChoisi);
-                if(!mf.getConvoModel().contains(contactChoisi)){
-                    mf.getConvoModel().addElement(contactChoisi);
+                MainForm.Contact contact = new MainForm.Contact(contactChoisi,false);
+                if(!mf.annuOuv.contains(contact.login)){
+                    mf.annuOuv.add(contact.login);
+                    mf.getConvoModel().addElement(contact);
                     try {
                         ThreadInitConnexionsTCP tI = new ThreadInitConnexionsTCP(InetAddress.getByName(Db.getIdbyLoginString(contactChoisi)));
                         tI.start();

@@ -27,6 +27,7 @@ public class ActivityLogin extends JFrame {
         setLocationRelativeTo(null);
         JPanel panel = new JPanel();
 
+
         add(panel);
 
         setLayout(new FlowLayout());
