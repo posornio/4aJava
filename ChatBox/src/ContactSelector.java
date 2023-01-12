@@ -86,7 +86,7 @@ public class ContactSelector extends JFrame {
                 if(!mf.getConvoModel().contains(contactChoisi)){
                     mf.getConvoModel().addElement(contactChoisi);
                     try {
-                        ThreadInitConnexionsTCP tI = new ThreadInitConnexionsTCP(InetAddress.getByName(contactChoisi));
+                        ThreadInitConnexionsTCP tI = new ThreadInitConnexionsTCP(InetAddress.getByName(Db.getIdbyLoginString(contactChoisi)));
                         tI.start();
                         tI.join();
                         setCm(tI.getcm());

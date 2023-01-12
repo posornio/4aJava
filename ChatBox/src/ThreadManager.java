@@ -146,17 +146,20 @@ class ThreadEnvoiTCP extends Thread {
 class ThreadReceptionTCP extends Thread {
 
     ConversationManager cm;
+    MainForm mf;
 
-    public ThreadReceptionTCP(ConversationManager c) {
+    public ThreadReceptionTCP(ConversationManager c, MainForm mf) {
         this.cm =c;
+        this.mf = mf;
     }
 
     public void run(){
+        String received="";
         while (true){
             if (cm.isClosed()) {
                 break;
             }
-            String received = cm.recvmessage();
+            received = cm.recvmessage();
             //ici on rajoute a la database le message reçu et on
             //print en frontend
             System.out.println("received : " + received);
@@ -166,9 +169,13 @@ class ThreadReceptionTCP extends Thread {
                 System.out.println("Connection Closed");
                 break;
             }
+            mf.handlerMR(received,cm.getaddr());
         }
         System.out.println("closing TR");
+
+
     }
+
 
     //public void handlerRecepMess(){    }
 

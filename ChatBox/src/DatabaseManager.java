@@ -1,5 +1,8 @@
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 public class DatabaseManager {
    //TODO : mettre un constructeur avec tous les attributs plutot que des var globales
@@ -160,7 +163,7 @@ public class DatabaseManager {
    }
    
    public void changerPseudo(String idUser, String newlogin){
-		String sql = "UPDATE users SET LOGIN = ? WHERE IDUSERS = ?";
+		String sql = "UPDATE users SET LOGIN = ? WHERE LOGIN = ?";
 		//, WHERE IDUSERS = ?
 		try ( PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -372,9 +375,57 @@ public class DatabaseManager {
           }
 
    }
-   
-   
-   public ArrayList<Message> ArrayHistorywithX(String myId, String theirID){
+	public String getLoginbyIDString(String addr) {
+		String sql = "SELECT LOGIN "
+				+ "FROM users WHERE IDUSERS = ?";
+
+		try ( PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+			// set the value
+			pstmt.setString(1,addr);
+			//
+			ResultSet rs  = pstmt.executeQuery();
+
+			// loop through the result set
+			while (rs.next()) {
+				return rs.getString("LOGIN");
+			}
+		} catch (SQLException e) {
+			return "";
+		}
+		return "";
+	}
+
+	public String getownIP() {
+		try {
+			Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
+			while(e.hasMoreElements())
+			{
+				NetworkInterface n = (NetworkInterface) e.nextElement();
+				Enumeration<InetAddress> ee = n.getInetAddresses();
+				int ii = 0;
+				while (ee.hasMoreElements())
+				{
+					if (ii==1) {
+						return ((InetAddress) ee.nextElement()).toString();
+					}
+					InetAddress i = (InetAddress) ee.nextElement();
+					ii++;
+				}
+			}
+		}
+		catch (Exception e )
+		{
+			return "Error with :" + e;
+		}
+		return "on a test";
+	}
+
+
+
+
+
+	public ArrayList<Message> ArrayHistorywithX(String myId, String theirID){
 		ArrayList<Message> result = new ArrayList<Message>();
 
 		String sql = "SELECT IDSENDER, IDRECV, CONTENU, DATEMESSAGE FROM message WHERE (IDSENDER = ? AND IDRECV = ?) OR (IDSENDER = ? AND IDRECV = ?)";
@@ -432,14 +483,14 @@ public class DatabaseManager {
 	   Db.createtablemessage();
 	   //System.out.println("Table message created successfully");
 	   Timestamp D = new Timestamp(System.currentTimeMillis());
-	   Db.insertuser("5", "xxRaveauxx");
+	   Db.insertuser("5.5.5.5", "xxRaveauxx");
 	   //Db.insertuser("6", "xxOsornioxx");
-	   Db.insertuser("7", "xxOsornio2xx");
-	   Db.insertuser("8", "xxOsornio3xx");
+	   Db.insertuser("7.7.7.7", "xxOsornio2xx");
+	   Db.insertuser("8.8.8.8", "xxOsornio3xx");
 
 	   ArrayList<String> asAnnu = Db.getAnnuaireList();
 	   System.out.println(asAnnu);
 	   //System.out.println(Db.getConvOuvertes());
-	   Db.insertmessage(1, "xxRaveauxx", "xxOsornioxx", "Coucou premier message", D);
+	   Db.insertmessage(2, "5.5.5.5", Db.getownIP(), "Coucou premier message", D);
    }
 }
