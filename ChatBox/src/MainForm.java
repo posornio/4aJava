@@ -237,8 +237,9 @@ public class MainForm extends JFrame {
                         int idM =Db.getMaxIdmessage()+1;
                         System.out.println(idM);
                         Db.insertmessage(idM,Db.getownIP(),Db.getIdbyLoginString(selected),messageAEnv,new Timestamp(System.currentTimeMillis()));
-                        ArrayList<DatabaseManager.Message> ahwx = Db.ArrayHistorywithX(Db.getPseudo(),selected);
+                        ArrayList<DatabaseManager.Message> ahwx = Db.ArrayHistorywithX(Db.getownIP(),Db.getIdbyLoginString(selected));
                         emptyMsg.date=ahwx.get(ahwx.size()-1).date;
+                        System.out.println(ahwx.get(ahwx.size()-1));
                         Timestamp ts = new Timestamp(System.currentTimeMillis());
                         DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",ts);
                         messageModel.addRow(new Object[]{ emptyMsg,emptyMsg,ahwx.get(ahwx.size()-1)}) ;

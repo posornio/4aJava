@@ -9,13 +9,15 @@ class ThreadInitConnexionsTCP extends Thread {
 
     ConversationManager cm = new ConversationManager();
     DatabaseManager dbm = new DatabaseManager();
+    MainForm mf;
     int portD = 0;
     InetAddress addr;
     private static int port_recv_TCP = 2000;
 
-    public ThreadInitConnexionsTCP (InetAddress a,int p) {
+    public ThreadInitConnexionsTCP (InetAddress a,int p,MainForm mf) {
         this.portD = p;
         this.addr = a;
+        this.mf = mf;
     }
 
     public ThreadInitConnexionsTCP (InetAddress a) {
@@ -75,6 +77,8 @@ class ThreadInitConnexionsTCP extends Thread {
             cm.initstreamin();
             cm.createconnectionserver(p);
             System.out.println("Connexion établie entre nous port " + po + " et entre " + this.addr + " sur le port " + portD);
+            ThreadReceptionTCP trTCP = new ThreadReceptionTCP(cm,mf);
+            trTCP.start();
             //cm.initstreamclient();
             //System.out.println("Streams créés");
 
@@ -155,6 +159,7 @@ class ThreadReceptionTCP extends Thread {
 
     public void run(){
         String received="";
+        System.out.println("TR Running" );
         while (true){
             if (cm.isClosed()) {
                 break;
@@ -188,9 +193,11 @@ class ThreadEcouteConnexionsTCP extends Thread {
 
     ConversationManager cm = new ConversationManager();
     DatabaseManager dbm = new DatabaseManager();
+    MainForm mf;
     private static int port_recv_TCP = 2000;
 
-    public ThreadEcouteConnexionsTCP() {
+    public ThreadEcouteConnexionsTCP(MainForm mf) {
+        this.mf = mf;
     }
 
     public void run(){
@@ -201,7 +208,7 @@ class ThreadEcouteConnexionsTCP extends Thread {
             System.out.println("Connexion ok");
             cm.initstreamclient();
             String port = cm.recvmessage();
-            ThreadInitConnexionsTCP T= new ThreadInitConnexionsTCP(cm.getaddr(),Integer.parseInt(port));
+            ThreadInitConnexionsTCP T= new ThreadInitConnexionsTCP(cm.getaddr(),Integer.parseInt(port),mf);
             cm.closeconnection();
             T.start();
         }
