@@ -13,7 +13,9 @@ import java.awt.event.*;
 import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 import static java.lang.Thread.sleep;
 
@@ -186,9 +188,76 @@ public class MainForm extends JFrame {
         ContactSelector contactSelector = new ContactSelector(this,Db);
         ActivityPseudo activityPseudo =new ActivityPseudo(this,Db);
         ActivityLogin activityLogin = new ActivityLogin();
-
-        //contactSelector.visible(false);
         ConversationManager cm = new ConversationManager();
+
+        Map<String, ConversationManager> mapCM = new Map<String, ConversationManager>() {
+            @Override
+            public int size() {
+                return 0;
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return false;
+            }
+
+            @Override
+            public boolean containsKey(Object key) {
+                return false;
+            }
+
+            @Override
+            public boolean containsValue(Object value) {
+                return false;
+            }
+
+            @Override
+            public ConversationManager get(Object key) {
+                return null;
+            }
+
+            @Override
+            public ConversationManager put(String key, ConversationManager value) {
+                return null;
+            }
+
+            @Override
+            public ConversationManager remove(Object key) {
+                return null;
+            }
+
+            @Override
+            public void putAll(Map<? extends String, ? extends ConversationManager> m) {
+
+            }
+
+            @Override
+            public void clear() {
+
+            }
+
+            @Override
+            public Set<String> keySet() {
+                return null;
+            }
+
+            @Override
+            public Collection<ConversationManager> values() {
+                return null;
+            }
+
+            @Override
+            public Set<Entry<String, ConversationManager>> entrySet() {
+                return null;
+            }
+
+            @Override
+            public ConversationManager getOrDefault(Object key, ConversationManager defaultValue) {
+                return Map.super.getOrDefault(key, defaultValue);
+            }
+        };
+        setMapCM(mapCM);
+        //contactSelector.visible(false);
         buttonEnvoyer = new JButton("Envoyer");
         boolean convOuverte = false;
         buttonEnvoyer.setVisible(false);
@@ -229,24 +298,7 @@ public class MainForm extends JFrame {
                 if (!messageAEnv.isEmpty() && !messageAEnv.matches("[\n]+")) {
                     System.out.println(selected);
 
-                    int idM =getDb().getMaxIdmessage()+1;
-                    System.out.println(idM);
-                    getDb().insertmessage(idM,getDb().getownIP(),getDb().getIdbyLoginString(selected),messageAEnv,new Timestamp(System.currentTimeMillis()));
-                    ArrayList<DatabaseManager.Message> ahwx = Db.ArrayHistorywithX(Db.getownIP(),Db.getIdbyLoginString(selected));
-                    emptyMsg.date=ahwx.get(ahwx.size()-1).date;
-                    Timestamp ts = new Timestamp(System.currentTimeMillis());
-                    DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",ts);
-                    messageModel.addRow(new Object[]{ emptyMsg,emptyMsg,ahwx.get(ahwx.size()-1) }) ;
-                    //messListM.addElement(ahwx.get(ahwx.size()-1));
-                    textArea1.setText("");
 
-                    list2.setModel(messageModel);
-
-
-
-
-
-                    /*
                     try{ getMapCM().get(selected).sendmessage(messageAEnv);
                         int idM =Db.getMaxIdmessage()+1;
                         System.out.println(idM);
@@ -264,7 +316,7 @@ public class MainForm extends JFrame {
                     catch (Exception e1){}
 
 
-                     */
+
 
                     //list2.setDefaultRenderer(String.class,new MessageTableRenderer(selected,ahwx));
                     ;;}
