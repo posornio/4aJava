@@ -68,7 +68,7 @@ public class ActivityLogin extends JFrame {
 
                 //Db.insertuser("",usernameField.getText());
                 Db.setPseudo(usernameField.getText());}
-                MainForm myForm = new MainForm();
+                MainForm myForm = new MainForm(Db);
                 ThreadEcouteConnexionsTCP threadEcouteConnexionsTCP = new ThreadEcouteConnexionsTCP(myForm);
                 threadEcouteConnexionsTCP.start();
 

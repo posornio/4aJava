@@ -114,19 +114,20 @@ public class MainForm extends JFrame {
     public void setMessageModel(DefaultTableModel messageModel) {
         this.messageModel = messageModel;
     }
-    public MainForm() {
-
+    public MainForm() {}
+    public MainForm(DatabaseManager DbIn) {
+        this.Db=DbIn;
         $$$setupUI$$$();
         setContentPane(mainPanel);
         setTitle("ChatApp");
 
-        DatabaseManager Db = new DatabaseManager();
-        String header[]= new String[]{selected,"",Db.getPseudo()};
-        //Connection connection = Db.conn;
-        Db.dbinit();
-        setDb(Db);
-        ArrayList<String> asAnnu = Db.getAnnuaireList();
-        ArrayList<String> ConvOpen = Db.getConvOuvertes();
+        //DatabaseManager Db = new DatabaseManager();
+        String header[]= new String[]{selected,"",getDb().getPseudo()};
+        //Connection connection = getDb().conn;
+        getDb().dbinit();
+        //setDb(Db);
+        ArrayList<String> asAnnu = getDb().getAnnuaireList();
+        ArrayList<String> ConvOpen = getDb().getConvOuvertes();
         System.out.println(ConvOpen);
         setSize(800, 600);
         DefaultTableModel messageModel = getMessageModel();
@@ -179,15 +180,15 @@ public class MainForm extends JFrame {
     }
 
     private void createUIComponents() {
-        DatabaseManager Db = new DatabaseManager();
-        Db.dbinit();
-        setDb(Db);
-        ContactSelector contactSelector = new ContactSelector(this,Db);
-        ActivityPseudo activityPseudo =new ActivityPseudo(this,Db);
+        //DatabaseManager Db = new DatabaseManager();
+        //getDb().dbinit();
+        //setDb(Db);
+        ContactSelector contactSelector = new ContactSelector(this,getDb());
+        ActivityPseudo activityPseudo =new ActivityPseudo(this,getDb());
         ActivityLogin activityLogin = new ActivityLogin();
         activityLogin.setVisible(false);
         ConversationManager cm = new ConversationManager();
-
+        System.out.println("Db est " + getDb().getAnnuaireList());
         HashMap<String, ConversationManager> mapCM = new HashMap<String, ConversationManager>();
         setMapCM(mapCM);
         //contactSelector.visible(false);
@@ -197,7 +198,7 @@ public class MainForm extends JFrame {
         textArea1 = new JTextArea();
 
         textArea1.setVisible(false);
-        ArrayList<String> asAnnu = Db.getAnnuaireList();
+        ArrayList<String> asAnnu = getDb().getAnnuaireList();
         setSize(800, 600);
         //
         //
@@ -224,6 +225,8 @@ public class MainForm extends JFrame {
         buttonEnvoyer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                list2.getTableHeader().getColumnModel().getColumn(0).setHeaderValue("selected");
+                list2.getTableHeader().repaint();
                 String messageAEnv = textArea1.getText();
                 if(messageAEnv.matches("[\n]+")){
                     textArea1.setText("");
@@ -234,10 +237,10 @@ public class MainForm extends JFrame {
 
 
                     try{ getMapCM().get(selected).sendmessage(messageAEnv);
-                        int idM =Db.getMaxIdmessage()+1;
+                        int idM = getDb().getMaxIdmessage()+1;
                         System.out.println(idM);
-                        Db.insertmessage(idM,Db.getownIP(),Db.getIdbyLoginString(selected),messageAEnv,new Timestamp(System.currentTimeMillis()));
-                        ArrayList<DatabaseManager.Message> ahwx = Db.ArrayHistorywithX(Db.getownIP(),Db.getIdbyLoginString(selected));
+                        getDb().insertmessage(idM,getDb().getownIP(),getDb().getIdbyLoginString(selected),messageAEnv,new Timestamp(System.currentTimeMillis()));
+                        ArrayList<DatabaseManager.Message> ahwx = getDb().ArrayHistorywithX(getDb().getownIP(),getDb().getIdbyLoginString(selected));
                         emptyMsg.date=ahwx.get(ahwx.size()-1).date;
                         System.out.println(ahwx.get(ahwx.size()-1));
                         Timestamp ts = new Timestamp(System.currentTimeMillis());
@@ -305,10 +308,11 @@ public class MainForm extends JFrame {
                 setSelected(selected);
 
                 System.out.println(getSelected());
-                list2.getColumnModel().getColumn(0).setHeaderValue(selected);
-                list2.getTableHeader().resizeAndRepaint();
+                //list2.getColumnModel().getColumn(0).setHeaderValue(selected);
+                list2.getTableHeader().getColumnModel().getColumn(0).setHeaderValue(selected);
+                list2.getTableHeader().repaint();
 
-                ArrayList<DatabaseManager.Message> histWX = Db.ArrayHistorywithX(Db.getownIP(),Db.getIdbyLoginString(selected));
+                ArrayList<DatabaseManager.Message> histWX = getDb().ArrayHistorywithX(getDb().getownIP(),getDb().getIdbyLoginString(selected));
                 //messageModel = initLM(histWX);
                 //messageModel = new DefaultListModel();
                 messageModel.setRowCount(0);
@@ -318,7 +322,7 @@ public class MainForm extends JFrame {
                     //messageModel.addElement(message);
                     DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",message.date);
 
-                    if (message.idSender.equals(Db.getownIP())){
+                    if (message.idSender.equals(getDb().getownIP())){
 
                         messageModel.addRow(new Object[]{emptyMsg,emptyMsg,message});
                         //messListM.addElement(message);
@@ -345,14 +349,14 @@ public class MainForm extends JFrame {
                     setBackground(Color.white);
                     setForeground(Color.black);
                     String contact = (String) value;
-                    ArrayList<DatabaseManager.Message> msgArr = Db.ArrayHistorywithX(Db.getownIP(),Db.getIdbyLoginString(contact) );
+                    ArrayList<DatabaseManager.Message> msgArr = getDb().ArrayHistorywithX(getDb().getownIP(),getDb().getIdbyLoginString(contact) );
                     setText(contact);
 
                     if (msgArr.size()>0){
                         DatabaseManager.Message dernierMsg = msgArr.get(msgArr.size()-1);
                         String msgCont = dernierMsg.contenu;
                         String fleche="<-";
-                        if (dernierMsg.idSender.equals(Db.getPseudo())){
+                        if (dernierMsg.idSender.equals(getDb().getPseudo())){
                             fleche="->";
                         }
                         fleche = contact + fleche +msgCont;
@@ -373,10 +377,10 @@ public class MainForm extends JFrame {
         list2.getColumnModel().getColumn(1).setCellRenderer(new MessageTableRenderer(getSelected(),Db));
 
         list2.getColumnModel().getColumn(2).setCellRenderer(new MessageTableRenderer(getSelected(),Db));
-        //messageModel.setColumnIdentifiers(new Object[] { selected, " Date ", Db.getPseudo() });
+        //messageModel.setColumnIdentifiers(new Object[] { selected, " Date ", getDb().getPseudo() });
         //list2.getColumnModel().getColumn(0).setHeaderValue(getSelected());
         list2.getColumnModel().getColumn(1).setHeaderValue("Date");
-        list2.getColumnModel().getColumn(2).setHeaderValue(Db.getPseudo());
+        list2.getColumnModel().getColumn(2).setHeaderValue(getDb().getPseudo());
 
 
 
@@ -437,12 +441,12 @@ public class MainForm extends JFrame {
     }
 
     public void handlerMR(String message,InetAddress addr){
-        String idSender = Db.getLoginbyIDString(addr.toString());
+        String idSender = getDb().getLoginbyIDString(addr.toString());
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",ts);
         int idM = getDb().getMaxIdmessage()+1;
         getDb().insertmessage(idM,addr.toString(),getDb().getownIP(),message,ts);
-        if (idSender.equals(Db.getIdbyLoginString(getSelected()))){
+        if (idSender.equals(getDb().getIdbyLoginString(getSelected()))){
 
             messageModel.addRow(new Object[]{ message,emptyMsg,emptyMsg }) ;
         }
