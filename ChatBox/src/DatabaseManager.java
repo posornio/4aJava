@@ -483,14 +483,14 @@ public class DatabaseManager {
 	   Db.createtablemessage();
 	   //System.out.println("Table message created successfully");
 	   Timestamp D = new Timestamp(System.currentTimeMillis());
-	   Db.insertuser("10.1.5.222", "xxRaveauxx");
+	   Db.insertuser("/10.1.5.222", "b");
 	   //Db.insertuser("6", "xxOsornioxx");
-	   Db.insertuser("10.1.5.231", "a");
-	   Db.insertuser("8.8.8.8", "xxOsornio3xx");
+	   //Db.insertuser("10.1.5.231", "a");
+	   //Db.insertuser("8.8.8.8", "xxOsornio3xx");
 
 	   ArrayList<String> asAnnu = Db.getAnnuaireList();
 	   System.out.println(asAnnu);
 	   //System.out.println(Db.getConvOuvertes());
-	   Db.insertmessage(2, "10.1.5.222", Db.getownIP(), "Coucou premier message", D);
+	   //Db.insertmessage(2, "10.1.5.222", Db.getownIP(), "Coucou premier message", D);
    }
 }
