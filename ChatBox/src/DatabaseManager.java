@@ -104,7 +104,7 @@ public class DatabaseManager {
 	}*/
    
    
-   
+   /*
 	public int insertport() {
 		String getmaxportSql ="SELECT MAX(PORTUTILISEE) as max_ports\n" +
 				"FROM ports;";
@@ -131,6 +131,7 @@ public class DatabaseManager {
 			System.out.println(e.getMessage());
 		}
 	return ret;}
+	*/
    
    public void insertuser( String idUser,String login) {
 		String sql = "INSERT INTO users VALUES(?,?)";
@@ -454,14 +455,15 @@ public class DatabaseManager {
 	   Db.createtablemessage();
 	   //System.out.println("Table message created successfully");
 	   Timestamp D = new Timestamp(System.currentTimeMillis());
-	   Db.insertuser("5", "xxRaveauxx");
+	   /*Db.insertuser("5.5.5.5", "xxRaveauxx");
 	   //Db.insertuser("6", "xxOsornioxx");
 	   Db.insertuser("7", "xxOsornio2xx");
-	   Db.insertuser("8", "xxOsornio3xx");
+	   Db.insertuser("8", "xxOsornio3xx");*/
 
 	   ArrayList<String> asAnnu = Db.getAnnuaireList();
 	   System.out.println(asAnnu);
 	   //System.out.println(Db.getConvOuvertes());
-	   Db.insertmessage(1, "xxRaveauxx", "xxOsornioxx", "Coucou premier message", D);
+	   Db.insertmessage(8, "5.5.5.5", "7", "Coucou premier message", D);
+	   Db.selectHistorywithX("5.5.5.5","7");
    }
 }
