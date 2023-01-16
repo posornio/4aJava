@@ -240,7 +240,7 @@ public class MainForm extends JFrame {
                     System.out.println(getMapCM());
 
 
-                    try{ getMapCM().get(selected).sendmessage(messageAEnv);
+                    try{ getMapCM().get(Db.getIdbyLoginString(selected)).sendmessage(messageAEnv);
                         int idM = getDb().getMaxIdmessage()+1;
                         System.out.println(idM);
                         getDb().insertmessage(idM,getDb().getownIP(),getDb().getIdbyLoginString(selected),messageAEnv,new Timestamp(System.currentTimeMillis()));
@@ -279,7 +279,7 @@ public class MainForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
                 activityPseudo.setVisible(true);
-                activityPseudo.usernameField.setText("Nouveau psuedo: ");
+                activityPseudo.usernameField.setText("Nouveau pseudo: ");
 
 
 
@@ -308,6 +308,10 @@ public class MainForm extends JFrame {
         this.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent e){
                 //todo fermer threads
+                for (Map.Entry<String,ConversationManager> element : getMapCM().entrySet()){
+                    element.getValue().closeconnection();
+                }
+                cm.closeconnection();
                 System.exit(0);//cierra aplicacion
             }
         });

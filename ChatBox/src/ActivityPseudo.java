@@ -76,7 +76,12 @@ public class ActivityPseudo extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                while(!accountManager.seconnecter(Db.getIdbyLoginString(usernameField.getText()),usernameField.getText())){}
+                if(!accountManager.seconnecter(Db.getIdbyLoginString(usernameField.getText()),usernameField.getText())){
+                    JOptionPane.showMessageDialog(null,
+                            "Le pseudo est deja pris",
+                            "Alert",
+                            JOptionPane.WARNING_MESSAGE);
+                }else{
 
                 setVisible(false);
                 //Db.changerPseudo(usernameField.getText());
@@ -90,6 +95,8 @@ public class ActivityPseudo extends JFrame {
                 mf.getChangerPseudoButt().setText(Db.getPseudo());
                 mf.getList2().getColumn(2).setHeaderValue(Db.getPseudo());
                 mf.getList2().getTableHeader().repaint();
+                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire(usernameField.getText());
+                envoiAnnuaire.start();}
 
 
 

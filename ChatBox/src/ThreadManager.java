@@ -79,7 +79,7 @@ class ThreadInitConnexionsTCP extends Thread {
             System.out.println("Connexion établie entre nous port " + po + " et entre " + this.addr.getHostAddress() + " sur le port " + portD);
             ThreadReceptionTCP trTCP = new ThreadReceptionTCP(cm,mf);
             trTCP.start();
-            mf.getMapCM().put(dbm.getLoginbyIDString(this.addr.getHostAddress()),cm);
+            mf.getMapCM().put(this.addr.getHostAddress(),cm);
             //cm.initstreamclient();
             //System.out.println("Streams créés");
 
