@@ -10,6 +10,7 @@ import javax.swing.event.ListSelectionListener;
 public class ContactSelector extends JFrame {
     private JList<Object> contactList;
     private String contactChoisi = "" ;
+    private DatabaseManager Db;
 
     public ArrayList<String> getAsAnnu() {
         return asAnnu;
@@ -27,7 +28,7 @@ public class ContactSelector extends JFrame {
         this.contactChoisi = contactChoisi;
     }
 
-    public DefaultListModel<String> getListModel() {
+    public DefaultListModel getListModel() {
         return listModel;
     }
 
@@ -50,29 +51,49 @@ public class ContactSelector extends JFrame {
     private MainForm mf;
     private ConversationManager cm;
     private ArrayList<String> asAnnu;
+    private JList liste;
+
+    public DatabaseManager getDb() {
+        return Db;
+    }
+
+    public void setDb(DatabaseManager db) {
+        Db = db;
+    }
+
+    public JList<Object> getContactList() {
+        return contactList;
+    }
+
+    public void setContactList(JList<Object> contactList) {
+        this.contactList = contactList;
+    }
 
     public void setListModel(DefaultListModel<String> listModel) {
         this.listModel = listModel;
     }
 
-    private DefaultListModel<String> listModel;
+    private DefaultListModel<String> listModel = new DefaultListModel();
 
     public ContactSelector(){}
     public ContactSelector(MainForm mainForm,DatabaseManager Db, ArrayList<String> asAnnu) {
         mf=mainForm;
+        setDb(Db);
         asAnnu= asAnnu;
+        //DatabaseManager db2 = new DatabaseManager();
+        //db2.dbinit();
         setVisible(false);
         setTitle("Annuaire");
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         setLayout(new GridLayout(1, 1));
 
         //ArrayList<String> asAnnu = Db.getAnnuaireList();
-        System.out.println(asAnnu);
+        System.out.println(getAsAnnu());
         setSize(800, 600);
-        DefaultListModel messageModel = new DefaultListModel();
 
 
-        contactList = new JList<>(asAnnu.toArray());
+        contactList = new JList();
+        contactList.setModel(getListModel());
 
         add(new JScrollPane(contactList), BorderLayout.CENTER);
         //JButton loginButton = new JButton("Selectionner Contact");
@@ -87,7 +108,7 @@ public class ContactSelector extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 //ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-                contactChoisi = getAsAnnu().get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
+                contactChoisi = (String) getListModel().get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
                 setContactChoisi(contactChoisi);
                 setVisible(false);
                 //notifyAll();

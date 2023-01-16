@@ -290,10 +290,17 @@ public class MainForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 contactSelector.setVisible(true);
                contactSelector.setContactChoisi("");
-               contactSelector.setAsAnnu(Db.getAnnuaireList());
 
+               for(String element: getDb().getAnnuaireList()){
+                    if (!contactSelector.getListModel().contains(element)){
+                        contactSelector.getListModel().addElement(element);
+                        //contactSelector.getContactList().add(element);
+                    }
+               }
 
                 System.out.println("+"+contactSelector.getContactChoisi());
+                System.out.println("**"+Db.getAnnuaireList());
+
 
             }
         });
