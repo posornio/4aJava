@@ -438,14 +438,19 @@ public class MainForm extends JFrame {
         Contact contactC = new Contact(idSender,true);
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",ts);
+        DatabaseManager.Message nvMsg = new DatabaseManager.Message(message,Db.getIdbyLoginString(idSender),getDb().getownIP(),ts);
+
         int idM = getDb().getMaxIdmessage()+1;
         getDb().insertmessage(idM,addr.getHostAddress(),getDb().getownIP(),message,ts);
+        System.out.println("message***- "+ message);
         System.out.println("ideSender --- "+ idSender);
+        System.out.println("getselected --- "+ getDb().getIdbyLoginString(getSelected()));
 
-        if (idSender.equals(getDb().getIdbyLoginString(getSelected()))){
+
+        if (idSender.equals(getSelected())){
             System.out.println("Id "+ getDb().getIdbyLoginString(getSelected()));
             System.out.println("Login "+ getSelected());
-            messageModel.addRow(new Object[]{ message,emptyMsg,emptyMsg }) ;
+            messageModel.addRow(new Object[]{ nvMsg,emptyMsg,emptyMsg }) ;
         }
         if(!annuOuv.contains(idSender)){
             annuOuv.add(contactC.login);
