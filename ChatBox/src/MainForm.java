@@ -304,6 +304,14 @@ public class MainForm extends JFrame {
 
             }
         });
+
+        this.addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent e){
+                //todo fermer threads
+                System.exit(0);//cierra aplicacion
+            }
+        });
+
         list2.setModel(messageModel);
 
 
@@ -426,7 +434,7 @@ public class MainForm extends JFrame {
     }
 
     public void handlerMR(String message,InetAddress addr){
-        String idSender = getDb().getLoginbyIDString(addr.toString());
+        String idSender = getDb().getLoginbyIDString(addr.getHostAddress());
         Contact contactC = new Contact(idSender,true);
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",ts);
