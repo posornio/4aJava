@@ -127,7 +127,8 @@ public class ContactSelector extends JFrame {
                         mf.getMapCM().put(Db.getIdbyLoginString(contactChoisi),tI.getcm());
                         ThreadReceptionTCP trTCP = new ThreadReceptionTCP(tI.getcm(),mf);
                         trTCP.start();
-                        System.out.println("map 1" + mf.getMapCM().toString() );/*
+                        System.out.println("map 1" + mf.getMapCM().toString() );
+                        dispose();/*
                     if(!mf.getConvoModel().contains(contactChoisi)){
                         mf.getMapCM().put(contactChoisi,tI.getcm());
                         mf.getConvoModel().addElement(contactChoisi);

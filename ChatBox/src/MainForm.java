@@ -195,7 +195,6 @@ public class MainForm extends JFrame {
         //DatabaseManager Db = new DatabaseManager();
         //getDb().dbinit();
         //setDb(Db);
-        ContactSelector contactSelector = new ContactSelector(this,getDb(),Db.getAnnuaireList());
         ActivityPseudo activityPseudo =new ActivityPseudo(this,getDb());
         ActivityLogin activityLogin = new ActivityLogin();
         activityLogin.setVisible(false);
@@ -204,6 +203,7 @@ public class MainForm extends JFrame {
         System.out.println("Db est " + getDb().getAnnuaireList());
         HashMap<String, ConversationManager> mapCM = new HashMap<String, ConversationManager>();
         setMapCM(mapCM);
+        MainForm mf= this;
         annuOuv= new ArrayList<String>();
         //contactSelector.visible(false);
         buttonEnvoyer = new JButton("Envoyer");
@@ -315,12 +315,15 @@ public class MainForm extends JFrame {
         AffAnnButt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                ContactSelector contactSelector = new ContactSelector(mf,getDb(),Db.getAnnuaireList());
                 contactSelector.setVisible(true);
                contactSelector.setContactChoisi("");
-               contactSelector.getListModel().removeAllElements();
+               System.out.println("Annu ds CS"+ getDb().getAnnuaireList());
+               //contactSelector.getListModel().removeAllElements();
                for(String element: getDb().getAnnuaireList()){
-                    if (!contactSelector.getListModel().contains(element) && !element.equals(Db.getPseudo())){
+                    if ((!contactSelector.getListModel().contains(element)) && (!element.equals(Db.getPseudo()))){
                         contactSelector.getListModel().addElement(element);
+                        System.out.println("on ajoute un élément : " + element);
                         //contactSelector.getContactList().add(element);
                     }
                }
@@ -647,6 +650,7 @@ class MessageTableRenderer extends JLabel implements TableCellRenderer {
 
                     }
                 else if (col!=1){
+
                     setBackground(Color.WHITE);
                     setForeground(Color.WHITE);
                 }
