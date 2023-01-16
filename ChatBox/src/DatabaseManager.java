@@ -420,7 +420,15 @@ public class DatabaseManager {
 		}
 		return "on a test";
 	}
+	public void dropTable(){
 
+		String sql = "DROP TABLE users";
+		try ( Statement pstmt  = conn.createStatement()){
+			pstmt.executeUpdate(sql);
+	} catch (SQLException e) {
+		e.printStackTrace();
+
+	}}
 
 
 

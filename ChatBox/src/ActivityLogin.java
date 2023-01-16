@@ -13,6 +13,7 @@ public class ActivityLogin extends JFrame {
 
 
     public ActivityLogin(){
+        //UIManager.setLookAndFeel(com.intellij.uiDesigner.core.);
         DatabaseManager Db =new DatabaseManager();
         // Create a new JFrame with the title "Login Page"
 
@@ -68,12 +69,18 @@ public class ActivityLogin extends JFrame {
                 else{
 
                 //Db.insertuser("",usernameField.getText());
-                Db.setPseudo(usernameField.getText());}
+                Db.dropTable();
+                Db.setPseudo(usernameField.getText());
                 MainForm myForm = new MainForm(Db);
                 ThreadEcouteConnexionsTCP threadEcouteConnexionsTCP = new ThreadEcouteConnexionsTCP(myForm);
                 threadEcouteConnexionsTCP.start();
-
+                ThreadEcouteConnexionsUDP ecouteConnexionsUDP = new ThreadEcouteConnexionsUDP();
+                ecouteConnexionsUDP.start();
+                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire(usernameField.getText());
+                envoiAnnuaire.start();
                 setVisible(false);
+                }
+
                 //ajout user dans DB
 
 
