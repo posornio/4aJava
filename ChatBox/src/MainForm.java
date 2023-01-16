@@ -609,16 +609,14 @@ class MessageTableRenderer extends JLabel implements TableCellRenderer {
                 //this.setOpaque(true);
 
                 DatabaseManager.Message msg = (DatabaseManager.Message) value;
-                if (col==2)
-                list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(dbM.getPseudo());
-                else if (col==0)
-                    list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(selected);
+
 
                 setText(msg.contenu);
 
                 if (!msg.contenu.equals("")){
                 //DatabaseManager.Message msg = (DatabaseManager.Message) messAt;
                     if (col==2) {
+                        list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(dbM.getPseudo());
 
                         //c.setHorizontalAlignment(SwingConstants.LEFT);
                         setHorizontalAlignment(SwingConstants.RIGHT);
@@ -628,14 +626,16 @@ class MessageTableRenderer extends JLabel implements TableCellRenderer {
 
                     }
                     else if(col==0) {
+                        list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(selected);
+
                         setBackground(Color.GRAY);
                         setForeground(Color.WHITE);
                         setHorizontalAlignment(SwingConstants.LEFT);}
 
                     }
                 else if (col!=1){
-                    setBackground(getBackground());
-                    setForeground(getBackground());
+                    setBackground(Color.WHITE);
+                    setForeground(Color.WHITE);
                 }
                 else{
                     setBackground(Color.WHITE);
