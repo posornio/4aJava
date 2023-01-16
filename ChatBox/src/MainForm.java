@@ -186,7 +186,7 @@ public class MainForm extends JFrame {
         //DatabaseManager Db = new DatabaseManager();
         //getDb().dbinit();
         //setDb(Db);
-        ContactSelector contactSelector = new ContactSelector(this,getDb());
+        ContactSelector contactSelector = new ContactSelector(this,getDb(),Db.getAnnuaireList());
         ActivityPseudo activityPseudo =new ActivityPseudo(this,getDb());
         ActivityLogin activityLogin = new ActivityLogin();
         activityLogin.setVisible(false);
@@ -290,6 +290,7 @@ public class MainForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 contactSelector.setVisible(true);
                contactSelector.setContactChoisi("");
+               contactSelector.setAsAnnu(Db.getAnnuaireList());
 
 
                 System.out.println("+"+contactSelector.getContactChoisi());

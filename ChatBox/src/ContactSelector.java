@@ -11,6 +11,14 @@ public class ContactSelector extends JFrame {
     private JList<Object> contactList;
     private String contactChoisi = "" ;
 
+    public ArrayList<String> getAsAnnu() {
+        return asAnnu;
+    }
+
+    public void setAsAnnu(ArrayList<String> asAnnu) {
+        this.asAnnu = asAnnu;
+    }
+
     public String getContactChoisi() {
         return contactChoisi;
     }
@@ -41,6 +49,7 @@ public class ContactSelector extends JFrame {
 
     private MainForm mf;
     private ConversationManager cm;
+    private ArrayList<String> asAnnu;
 
     public void setListModel(DefaultListModel<String> listModel) {
         this.listModel = listModel;
@@ -49,15 +58,15 @@ public class ContactSelector extends JFrame {
     private DefaultListModel<String> listModel;
 
     public ContactSelector(){}
-    public ContactSelector(MainForm mainForm,DatabaseManager Db) {
+    public ContactSelector(MainForm mainForm,DatabaseManager Db, ArrayList<String> asAnnu) {
         mf=mainForm;
-
+        asAnnu= asAnnu;
         setVisible(false);
         setTitle("Annuaire");
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         setLayout(new GridLayout(1, 1));
 
-        ArrayList<String> asAnnu = Db.getAnnuaireList();
+        //ArrayList<String> asAnnu = Db.getAnnuaireList();
         System.out.println(asAnnu);
         setSize(800, 600);
         DefaultListModel messageModel = new DefaultListModel();
@@ -78,7 +87,7 @@ public class ContactSelector extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 //ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-                contactChoisi = asAnnu.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
+                contactChoisi = getAsAnnu().get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
                 setContactChoisi(contactChoisi);
                 setVisible(false);
                 //notifyAll();
