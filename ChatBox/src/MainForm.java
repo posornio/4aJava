@@ -426,12 +426,12 @@ public class MainForm extends JFrame {
 
         });
 
-        list1.setCellRenderer(new AnnuaireRenderer(getDb()));
-        list2.getColumnModel().getColumn(0).setCellRenderer(new MessageTableRenderer(selected,Db));
+        list1.setCellRenderer(new AnnuaireRenderer(getDb(),theme));
+        list2.getColumnModel().getColumn(0).setCellRenderer(new MessageTableRenderer(selected,Db,theme));
         System.out.println("HEEEEY "+selected+getSelected());
-        list2.getColumnModel().getColumn(1).setCellRenderer(new MessageTableRenderer(getSelected(),Db));
+        list2.getColumnModel().getColumn(1).setCellRenderer(new MessageTableRenderer(getSelected(),Db,theme));
 
-        list2.getColumnModel().getColumn(2).setCellRenderer(new MessageTableRenderer(getSelected(),Db));
+        list2.getColumnModel().getColumn(2).setCellRenderer(new MessageTableRenderer(getSelected(),Db,theme));
         //messageModel.setColumnIdentifiers(new Object[] { selected, " Date ", getDb().getPseudo() });
         //list2.getColumnModel().getColumn(0).setHeaderValue(getSelected());
         list2.getColumnModel().getColumn(1).setHeaderValue("Date");
@@ -566,23 +566,36 @@ static class Contact{
 class AnnuaireRenderer extends DefaultListCellRenderer {
 
     public DatabaseManager DbR;
-  public AnnuaireRenderer(DatabaseManager DbR){
+    public int theme;
+  public AnnuaireRenderer(DatabaseManager DbR,int theme){
       this.DbR=DbR;
+      this.theme=theme;
   }
     public Component getListCellRendererComponent(JList list, Object value,int index,boolean isSelected, boolean cellHasFocus) {
+
         if (value instanceof MainForm.Contact){
+            if (theme%2==0){
             setBackground(Color.white);
-            setForeground(Color.black);
+            setForeground(Color.black);}
+            else{
+                setBackground(Color.decode("#1E1E1E"));
+                setForeground(Color.WHITE);
+            }
             MainForm.Contact contactC = (MainForm.Contact) value;
             String contact = contactC.login;
             ArrayList<DatabaseManager.Message> msgArr = DbR.ArrayHistorywithX(DbR.getownIP(),DbR.getIdbyLoginString(contact) );
             setText(contact);
             if (contactC.unread){
-                setBackground(Color.green);
+                setBackground(Color.green.darker());
                 setForeground(Color.WHITE);
             }else{
-                setBackground(Color.white);
-                setForeground(Color.black);
+                if (theme%2==0){
+                    setBackground(Color.white);
+                    setForeground(Color.black);}
+                else{
+                    setBackground(Color.decode("#1E1E1E"));
+                    setForeground(Color.WHITE);
+                }
             }
             if (msgArr.size()>0){
                 DatabaseManager.Message dernierMsg = msgArr.get(msgArr.size()-1);
@@ -609,8 +622,9 @@ class AnnuaireRenderer extends DefaultListCellRenderer {
 class MessageTableRenderer extends JLabel implements TableCellRenderer {
     public String selected;
     DatabaseManager dbM;
+    public int theme;
 
-    public MessageTableRenderer(String selected,DatabaseManager dbM){
+    public MessageTableRenderer(String selected,DatabaseManager dbM,int theme){
         setOpaque(true);
 
         this.selected=selected;
@@ -631,37 +645,71 @@ class MessageTableRenderer extends JLabel implements TableCellRenderer {
 
 
                 setText(msg.contenu);
+                if(theme%2==0){
+                    if (!msg.contenu.equals("")){
+                    //DatabaseManager.Message msg = (DatabaseManager.Message) messAt;
+                        if (col==2) {
+                            list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(dbM.getPseudo());
 
-                if (!msg.contenu.equals("")){
-                //DatabaseManager.Message msg = (DatabaseManager.Message) messAt;
-                    if (col==2) {
-                        list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(dbM.getPseudo());
+                            //c.setHorizontalAlignment(SwingConstants.LEFT);
+                            setHorizontalAlignment(SwingConstants.RIGHT);
+                            setBackground(Color.BLUE.brighter());
+                            // setPreferredSize((new Dimension(10,30)));
+                            setForeground(Color.WHITE);
 
-                        //c.setHorizontalAlignment(SwingConstants.LEFT);
-                        setHorizontalAlignment(SwingConstants.RIGHT);
-                        setBackground(Color.BLUE.brighter());
-                        // setPreferredSize((new Dimension(10,30)));
+                        }
+                        else if(col==0) {
+                            //list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(selected);
+
+                            setBackground(Color.GRAY);
+                            setForeground(Color.WHITE);
+                            setHorizontalAlignment(SwingConstants.LEFT);}
+
+                        }
+                    else if (col!=1){
+
+                        setBackground(Color.WHITE);
+                        //dark Color.decode(#1e1e1e)
                         setForeground(Color.WHITE);
-
                     }
-                    else if(col==0) {
-                        //list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(selected);
+                    else{
+                        setBackground(Color.WHITE);
+                        setForeground(Color.black);
+                        setText(msg.date.toString().substring(0, 16));
+                    }}
 
-                        setBackground(Color.GRAY);
-                        setForeground(Color.WHITE);
-                        setHorizontalAlignment(SwingConstants.LEFT);}
-
-                    }
-                else if (col!=1){
-
-                    setBackground(Color.WHITE);
-                    setForeground(Color.WHITE);
-                }
                 else{
-                    setBackground(Color.WHITE);
-                    setForeground(Color.black);
-                    setText(msg.date.toString().substring(0, 16));
-                }
+                    if (!msg.contenu.equals("")){
+                        if (col==2) {
+                            list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(dbM.getPseudo());
+
+                            //c.setHorizontalAlignment(SwingConstants.LEFT);
+                            setHorizontalAlignment(SwingConstants.RIGHT);
+                            setBackground(Color.BLUE.brighter());
+                            // setPreferredSize((new Dimension(10,30)));
+                            setForeground(Color.WHITE);
+
+                        }
+                        else if(col==0) {
+                            //list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(selected);
+
+                            setBackground(Color.GRAY);
+                            setForeground(Color.WHITE);
+                            setHorizontalAlignment(SwingConstants.LEFT);}
+
+                    } else if (col!=1){
+
+                        setBackground(Color.decode("#1E1E1E"));
+                        //dark Color.decode(#1e1e1e)
+                        setForeground(Color.decode("#1E1E1E"));
+                    }
+                    else{
+                        setBackground(Color.decode("#1E1E1E"));
+                        setForeground(Color.WHITE);
+                        setText(msg.date.toString().substring(0, 16));
+                    }}
+                    }
+
 
                 if (isSelected) {
                     setBackground(getBackground().darker());/*
@@ -671,6 +719,6 @@ class MessageTableRenderer extends JLabel implements TableCellRenderer {
 */
                 }
 
-            }
+
             return this;
 }}
