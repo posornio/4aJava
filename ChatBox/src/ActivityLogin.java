@@ -22,6 +22,7 @@ public class ActivityLogin extends JFrame {
 
         ConversationManager cm = new ConversationManager();
         Db.dbinit();
+        Db.dropTable();
         AccountManager accountManager = new AccountManager();
 
         JFrame frame = new JFrame("Login Page");
@@ -72,7 +73,7 @@ public class ActivityLogin extends JFrame {
                 else{
 
                 //Db.insertuser("",usernameField.getText());
-                Db.dropTable();
+
                 Db.setPseudo(usernameField.getText());
                 MainForm myForm = new MainForm(Db);
                 ThreadEcouteConnexionsTCP threadEcouteConnexionsTCP = new ThreadEcouteConnexionsTCP(myForm);

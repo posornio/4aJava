@@ -1,4 +1,5 @@
 import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -52,7 +53,7 @@ public class MainForm extends JFrame {
 
     private JScrollPane paneContact;
     private JScrollPane paneMessages;
-    private JTable list2;
+    public JTable list2;
     private JButton buttonEnvoyer;
     private JTextArea textArea1;
 
@@ -77,6 +78,7 @@ public class MainForm extends JFrame {
     }
 
     private String selected="";
+    private int theme=0;
 
     public String getSelected() {
         return selected;
@@ -215,7 +217,7 @@ public class MainForm extends JFrame {
         //
         //
         //convoModel.removeAllElements();
-
+        nameLabel = new JLabel();
         list1 = new JList(convoModel);
         list2 = new JTable(messageModel);
         list2.setShowGrid(false);
@@ -295,8 +297,17 @@ public class MainForm extends JFrame {
                 }
                 cm.closeconnection();
                 setVisible(false);
-                activityLogin.setVisible(true);
-
+                activityLogin.dispose();
+                dispose();
+                contactSelector.dispose();
+                activityPseudo.dispose();
+                //activityLogin.setVisible(tr
+                Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+                for(Thread t:threadSet){
+                    t.interrupt();
+                }
+                ActivityLogin al2 = new ActivityLogin();
+                al2.setVisible(true);
 
             }
         });
@@ -329,6 +340,26 @@ public class MainForm extends JFrame {
                 System.out.println("**"+Db.getAnnuaireList());
 
 
+            }
+        });
+        nameLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                theme++;
+                if (theme%2==1){
+                try{
+                    UIManager.setLookAndFeel(new FlatMacDarkLaf());
+                } catch (UnsupportedLookAndFeelException ex) {
+                    ex.printStackTrace();
+                }}
+                else {
+                    try{
+                        UIManager.setLookAndFeel(new FlatMacLightLaf());
+                    } catch (UnsupportedLookAndFeelException ex) {
+                        ex.printStackTrace();
+                    }
+
+                }
             }
         });
 
@@ -453,7 +484,7 @@ public class MainForm extends JFrame {
         PaneHead = new JPanel();
         PaneHead.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.add(PaneHead, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, 1, null, null, null, 0, false));
-        nameLabel = new JLabel();
+
         nameLabel.setText("ChatApp");
         PaneHead.add(nameLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         AffAnnButt.setText("Afficher Annuaire");
@@ -570,6 +601,7 @@ class MessageTableRenderer extends JLabel implements TableCellRenderer {
             //Component c = super.getTableCellRendererComponent(list,value,isSelected,cellHasFocus,row,col);
 
             if (value instanceof DatabaseManager.Message ) {
+
                 //ArrayList<DatabaseManager.Message> ahwx = dbM.ArrayHistorywithX(dbM.getPseudo(), "xxRaveauxx");
                 //Object messAt = list.getModel().getValueAt(row, col);
                 //DatabaseManager.Message msg = (DatabaseManager.Message) messAt;
@@ -577,6 +609,11 @@ class MessageTableRenderer extends JLabel implements TableCellRenderer {
                 //this.setOpaque(true);
 
                 DatabaseManager.Message msg = (DatabaseManager.Message) value;
+                if (col==2)
+                list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(dbM.getPseudo());
+                else if (col==0)
+                    list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(selected);
+
                 setText(msg.contenu);
 
                 if (!msg.contenu.equals("")){
@@ -597,8 +634,8 @@ class MessageTableRenderer extends JLabel implements TableCellRenderer {
 
                     }
                 else if (col!=1){
-                    setBackground(Color.WHITE);
-                    setForeground(Color.WHITE);
+                    setBackground(getBackground());
+                    setForeground(getBackground());
                 }
                 else{
                     setBackground(Color.WHITE);
