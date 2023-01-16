@@ -163,7 +163,7 @@ public class DatabaseManager {
    }
    
    public void changerPseudo(String idUser, String newlogin){
-		String sql = "UPDATE users SET LOGIN = ? WHERE LOGIN = ?";
+		String sql = "UPDATE users SET LOGIN = ? WHERE IDUSERS = ?";
 		//, WHERE IDUSERS = ?
 		try ( PreparedStatement pstmt = conn.prepareStatement(sql)) {
 

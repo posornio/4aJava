@@ -1,3 +1,5 @@
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
@@ -170,6 +172,11 @@ public class MainForm extends JFrame {
 
     public static void main(String[] args) {
         MainForm myForm = new MainForm();
+        try{
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
         //myForm.getRootPane()
 
     }
@@ -334,7 +341,7 @@ public class MainForm extends JFrame {
 
                 System.out.println(getSelected());
                 //list2.getColumnModel().getColumn(0).setHeaderValue(selected);
-                list2.getTableHeader().getColumnModel().getColumn(0).setHeaderValue(selected);
+                list2.getTableHeader().getColumnModel().getColumn(0).setHeaderValue(selectedC.login);
                 list2.getTableHeader().repaint();
 
                 ArrayList<DatabaseManager.Message> histWX = getDb().ArrayHistorywithX(getDb().getownIP(),getDb().getIdbyLoginString(selected));

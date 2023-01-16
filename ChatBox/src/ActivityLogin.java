@@ -1,3 +1,5 @@
+import com.formdev.flatlaf.FlatDarkLaf;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -92,6 +94,11 @@ public class ActivityLogin extends JFrame {
 
         public static void main(String[] args) {
             ActivityLogin activityLogin = new ActivityLogin();
+            try{
+                UIManager.setLookAndFeel(new FlatDarkLaf());
+            } catch (UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
+            }
             //activityLogin.setVisible(true);
         }
     }

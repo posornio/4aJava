@@ -93,7 +93,7 @@ public class ActivityPseudo extends JFrame {
                 currentPseudo.setText ("Pseudo actuel :"+ Db.getPseudo());
 
                 mf.getChangerPseudoButt().setText(Db.getPseudo());
-                mf.getList2().getColumn(2).setHeaderValue(Db.getPseudo());
+                mf.getList2().getTableHeader().getColumnModel().getColumn(2).setHeaderValue(Db.getPseudo());
                 mf.getList2().getTableHeader().repaint();
                 ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire(usernameField.getText());
                 envoiAnnuaire.start();}
