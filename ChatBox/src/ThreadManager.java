@@ -171,7 +171,7 @@ class ThreadReceptionTCP extends Thread {
             System.out.println("received : " + received);
             if(received.equals("**ExitClavardage**"))
             {
-                cm.closeconnection();
+                cm.closeconnectionreception();
                 System.out.println("Connection Closed");
                 break;
             }

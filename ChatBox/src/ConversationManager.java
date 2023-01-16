@@ -148,7 +148,17 @@ public class ConversationManager{
 	public boolean isClosed() {
 		return this.Sock.isClosed();
 		}
-	
+
+		public void closeconnectionreception(){
+			try {
+				this.in.close();
+				this.servSocket.close();
+			}
+			catch(Exception e) {
+				System.out.println ("Error closing connection : " + e);
+			}
+		}
+
 	public void closeconnection() {
 		try {
 			 this.in.close();
