@@ -57,7 +57,7 @@ public class ActivityPseudo extends JFrame {
         usernameField = new JTextField("Nouveau psuedo: ");
 
         JButton loginButton = new JButton("Changer de pseudonyme");
-
+        JButton themeButton = new JButton("Changer de theme");
         box.add(currentPseudo);
         currentPseudo.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -66,11 +66,13 @@ public class ActivityPseudo extends JFrame {
         box.add(usernameField);
         usernameField.setSize(new Dimension(900,2));
         box.add(loginButton);
+        box.add(themeButton);
         box.setAlignmentX(5);
         box.setAlignmentY(5);
 
         add(box);
         loginButton.setSize(new Dimension(100,50));
+        themeButton.setSize(new Dimension(100,50));
         getRootPane().setDefaultButton(loginButton);
 
 
@@ -105,6 +107,14 @@ public class ActivityPseudo extends JFrame {
 
 
 
+            }
+        });
+        themeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mf.changerTheme();
+                mf.setVisible(true);
+                setVisible(false);
             }
         });
 

@@ -389,6 +389,7 @@ public class MainForm extends JFrame {
                 //list2.getColumnModel().getColumn(0).setHeaderValue(selected);
                 list2.getTableHeader().getColumnModel().getColumn(0).setHeaderValue(selected);
                 list2.getTableHeader().repaint();
+                list2.scrollRectToVisible(list2.getCellRect(list2.getRowCount()-1,0,true));
 
                 ArrayList<DatabaseManager.Message> histWX = getDb().ArrayHistorywithX(getDb().getownIP(),getDb().getIdbyLoginString(selected));
                 //messageModel = initLM(histWX);
@@ -518,6 +519,29 @@ public class MainForm extends JFrame {
     /**
      * @noinspection ALL
      */
+    public void changerTheme(){
+
+        theme++;
+        System.out.println(theme);
+        if (theme%2==1){
+            try{
+                UIManager.setLookAndFeel(new FlatMacDarkLaf());
+                SwingUtilities.updateComponentTreeUI(this);
+                pack();
+            } catch (UnsupportedLookAndFeelException ex) {
+                ex.printStackTrace();
+            }}
+        else {
+            try{
+                UIManager.setLookAndFeel(new FlatMacLightLaf());
+            } catch (UnsupportedLookAndFeelException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+
+    }
+
     public JComponent $$$getRootComponent$$$() {
         return mainPanel;
     }
