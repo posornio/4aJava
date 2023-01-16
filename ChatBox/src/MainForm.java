@@ -333,7 +333,7 @@ public class MainForm extends JFrame {
 
 
             }
-        });
+        });/*
         nameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -341,6 +341,7 @@ public class MainForm extends JFrame {
                 if (theme%2==1){
                 try{
                     UIManager.setLookAndFeel(new FlatMacDarkLaf());
+
                 } catch (UnsupportedLookAndFeelException ex) {
                     ex.printStackTrace();
                 }}
@@ -353,7 +354,7 @@ public class MainForm extends JFrame {
 
                 }
             }
-        });
+        });*/
 
         this.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent e){
@@ -537,6 +538,8 @@ public class MainForm extends JFrame {
         else {
             try{
                 UIManager.setLookAndFeel(new FlatMacLightLaf());
+                SwingUtilities.updateComponentTreeUI(this);
+                pack();
             } catch (UnsupportedLookAndFeelException ex) {
                 ex.printStackTrace();
             }
