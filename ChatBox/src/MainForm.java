@@ -296,18 +296,7 @@ public class MainForm extends JFrame {
                     element.getValue().closeconnection();
                 }
                 cm.closeconnection();
-                setVisible(false);
-                activityLogin.dispose();
-                dispose();
-                contactSelector.dispose();
-                activityPseudo.dispose();
-                //activityLogin.setVisible(tr
-                Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-                for(Thread t:threadSet){
-                    t.interrupt();
-                }
-                ActivityLogin al2 = new ActivityLogin();
-                al2.setVisible(true);
+                System.exit(0);
 
             }
         });
@@ -398,7 +387,7 @@ public class MainForm extends JFrame {
 
                 System.out.println(getSelected());
                 //list2.getColumnModel().getColumn(0).setHeaderValue(selected);
-                list2.getTableHeader().getColumnModel().getColumn(0).setHeaderValue(selectedC.login);
+                list2.getTableHeader().getColumnModel().getColumn(0).setHeaderValue(selected);
                 list2.getTableHeader().repaint();
 
                 ArrayList<DatabaseManager.Message> histWX = getDb().ArrayHistorywithX(getDb().getownIP(),getDb().getIdbyLoginString(selected));
@@ -626,7 +615,7 @@ class MessageTableRenderer extends JLabel implements TableCellRenderer {
 
                     }
                     else if(col==0) {
-                        list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(selected);
+                        //list.getTableHeader().getColumnModel().getColumn(col).setHeaderValue(selected);
 
                         setBackground(Color.GRAY);
                         setForeground(Color.WHITE);
