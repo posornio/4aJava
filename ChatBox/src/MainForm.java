@@ -284,6 +284,8 @@ public class MainForm extends JFrame {
         DeconnexionButt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("");
+                envoiAnnuaire.start();
                 for (Map.Entry<String,ConversationManager> element : getMapCM().entrySet()){
                     try{ element.getValue().sendmessage("**ExitClavardage**");}
                     catch(Exception excep){
@@ -292,8 +294,6 @@ public class MainForm extends JFrame {
                     element.getValue().closeconnection();
                 }
                 cm.closeconnection();
-                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("");
-                envoiAnnuaire.start();
                 setVisible(false);
                 activityLogin.setVisible(true);
 
@@ -335,6 +335,8 @@ public class MainForm extends JFrame {
         this.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent e){
                 //todo fermer threads
+                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("");
+                envoiAnnuaire.start();
                 for (Map.Entry<String,ConversationManager> element : getMapCM().entrySet()){
                     try{ element.getValue().sendmessage("**ExitClavardage**");}
                         catch(Exception excep){
@@ -343,8 +345,6 @@ public class MainForm extends JFrame {
                     element.getValue().closeconnection();
                 }
                 cm.closeconnection();
-                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("");
-                envoiAnnuaire.start();
                 System.exit(0);
             }
         });
