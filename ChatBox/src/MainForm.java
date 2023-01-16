@@ -198,6 +198,7 @@ public class MainForm extends JFrame {
         ActivityLogin activityLogin = new ActivityLogin();
         activityLogin.setVisible(false);
         ConversationManager cm = new ConversationManager();
+        AccountManager am = new AccountManager();
         System.out.println("Db est " + getDb().getAnnuaireList());
         HashMap<String, ConversationManager> mapCM = new HashMap<String, ConversationManager>();
         setMapCM(mapCM);
@@ -291,6 +292,8 @@ public class MainForm extends JFrame {
                     element.getValue().closeconnection();
                 }
                 cm.closeconnection();
+                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("");
+                envoiAnnuaire.start();
                 setVisible(false);
                 activityLogin.setVisible(true);
 
@@ -314,7 +317,7 @@ public class MainForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 contactSelector.setVisible(true);
                contactSelector.setContactChoisi("");
-
+               contactSelector.getListModel().removeAllElements();
                for(String element: getDb().getAnnuaireList()){
                     if (!contactSelector.getListModel().contains(element) && !element.equals(Db.getPseudo())){
                         contactSelector.getListModel().addElement(element);
@@ -340,6 +343,8 @@ public class MainForm extends JFrame {
                     element.getValue().closeconnection();
                 }
                 cm.closeconnection();
+                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("");
+                envoiAnnuaire.start();
                 System.exit(0);
             }
         });
