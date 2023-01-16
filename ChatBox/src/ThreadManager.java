@@ -50,7 +50,7 @@ class ThreadInitConnexionsTCP extends Thread {
             cm.createconnectionclient(this.addr);
             //cm.initstreamin();
             cm.sendmessage("Connexion établie pour moi le S");
-            System.out.println("Connexion établie entre nous port " + po + " et entre " + this.addr + " sur le port " + port);
+            System.out.println("Connexion établie entre nous port " + po + " et entre " + this.addr.getHostAddress() + " sur le port " + port);
             //TODO Il faut ajouter une table de conversations manager que peut utliser le GUI
 
 
@@ -76,9 +76,10 @@ class ThreadInitConnexionsTCP extends Thread {
             System.out.println("message sent");
             cm.initstreamin();
             cm.createconnectionserver(p);
-            System.out.println("Connexion établie entre nous port " + po + " et entre " + this.addr + " sur le port " + portD);
+            System.out.println("Connexion établie entre nous port " + po + " et entre " + this.addr.getHostAddress() + " sur le port " + portD);
             ThreadReceptionTCP trTCP = new ThreadReceptionTCP(cm,mf);
             trTCP.start();
+            mf.getMapCM().put(dbm.getLoginbyIDString(this.addr.getHostAddress()),cm);
             //cm.initstreamclient();
             //System.out.println("Streams créés");
 

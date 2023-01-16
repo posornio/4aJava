@@ -90,7 +90,7 @@ public class ConversationManager{
 	
 	public void createconnectionclient(InetAddress addr) {
 		try {
-			System.out.println("Trying to build socket with \n " + addr + " et de port " + this.port_c);
+			System.out.println("Trying to build socket with \n " + addr.getHostAddress() + " et de port " + this.port_c);
 	        this.Sock= new Socket (addr,this.port_c);
 		}
 		catch (Exception e) {

@@ -292,7 +292,7 @@ public class MainForm extends JFrame {
                contactSelector.setContactChoisi("");
 
                for(String element: getDb().getAnnuaireList()){
-                    if (!contactSelector.getListModel().contains(element)){
+                    if (!contactSelector.getListModel().contains(element) && !element.equals(Db.getPseudo())){
                         contactSelector.getListModel().addElement(element);
                         //contactSelector.getContactList().add(element);
                     }
@@ -426,12 +426,14 @@ public class MainForm extends JFrame {
     }
 
     public void handlerMR(String message,InetAddress addr){
-        String idSender = getDb().getLoginbyIDString(addr.getHostAddress());
+        String idSender = getDb().getLoginbyIDString(addr.toString());
         Contact contactC = new Contact(idSender,true);
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",ts);
         int idM = getDb().getMaxIdmessage()+1;
         getDb().insertmessage(idM,addr.getHostAddress(),getDb().getownIP(),message,ts);
+        System.out.println("ideSender --- "+ idSender);
+
         if (idSender.equals(getDb().getIdbyLoginString(getSelected()))){
             System.out.println("Id "+ getDb().getIdbyLoginString(getSelected()));
             System.out.println("Login "+ getSelected());
