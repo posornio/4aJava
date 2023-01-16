@@ -1,3 +1,5 @@
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -115,6 +117,16 @@ public class ActivityPseudo extends JFrame {
 
     public static void main(String[] args) {
         ActivityPseudo activityPseudo = new ActivityPseudo();
+
+        try{
+            UIManager.setLookAndFeel(new FlatMacLightLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+        //myForm.getRootPane()
+
+
+
     }
 }
 

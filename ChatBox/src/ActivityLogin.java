@@ -1,4 +1,5 @@
 import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,7 +96,7 @@ public class ActivityLogin extends JFrame {
         public static void main(String[] args) {
             ActivityLogin activityLogin = new ActivityLogin();
             try{
-                UIManager.setLookAndFeel(new FlatDarkLaf());
+                UIManager.setLookAndFeel(new FlatMacLightLaf());
             } catch (UnsupportedLookAndFeelException e) {
                 e.printStackTrace();
             }

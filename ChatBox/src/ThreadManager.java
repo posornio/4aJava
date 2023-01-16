@@ -125,7 +125,7 @@ class ThreadEnvoiTCP extends Thread {
             }
             System.out.println("Thread envoi ligne 1 ");
             if (i == 2) {
-                cm.sendmessage("ExitClavardage");
+                cm.sendmessage("**ExitClavardage**");
                 cm.closeconnection();
                 break;
             }
@@ -169,7 +169,7 @@ class ThreadReceptionTCP extends Thread {
             //ici on rajoute a la database le message reçu et on
             //print en frontend
             System.out.println("received : " + received);
-            if(received.equals("ExitClavardage"))
+            if(received.equals("**ExitClavardage**"))
             {
                 cm.closeconnection();
                 System.out.println("Connection Closed");

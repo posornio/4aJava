@@ -173,7 +173,7 @@ public class MainForm extends JFrame {
     public static void main(String[] args) {
         MainForm myForm = new MainForm();
         try{
-            UIManager.setLookAndFeel(new FlatDarkLaf());
+            UIManager.setLookAndFeel(new FlatMacLightLaf());
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
@@ -275,8 +275,17 @@ public class MainForm extends JFrame {
         DeconnexionButt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                for (Map.Entry<String,ConversationManager> element : getMapCM().entrySet()){
+                    try{ element.getValue().sendmessage("**ExitClavardage**");}
+                    catch(Exception excep){
+                        System.out.println("Error closing connection " + element.getKey() + "with " + excep);
+                    }
+                    element.getValue().closeconnection();
+                }
+                cm.closeconnection();
                 setVisible(false);
                 activityLogin.setVisible(true);
+
 
             }
         });
@@ -316,10 +325,14 @@ public class MainForm extends JFrame {
             public void windowClosing(WindowEvent e){
                 //todo fermer threads
                 for (Map.Entry<String,ConversationManager> element : getMapCM().entrySet()){
+                    try{ element.getValue().sendmessage("**ExitClavardage**");}
+                        catch(Exception excep){
+                        System.out.println("Error closing connection " + element.getKey() + "with " + excep);
+                        }
                     element.getValue().closeconnection();
                 }
                 cm.closeconnection();
-                System.exit(0);//cierra aplicacion
+                System.exit(0);
             }
         });
 

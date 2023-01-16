@@ -1,3 +1,5 @@
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+
 import java.awt.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -150,6 +152,14 @@ public class ContactSelector extends JFrame {
     public static void main(String[] args) {
 
         ContactSelector contactSelector = new ContactSelector() ;
+        try{
+            UIManager.setLookAndFeel(new FlatMacLightLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+        //myForm.getRootPane()
+
+
 
     }
 
