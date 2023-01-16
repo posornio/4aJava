@@ -51,7 +51,7 @@ public class ConversationUDP {
     //Process va mettre à jour son annuaire avec le login et ip reçu et va renvoyer un boolean 
     //qui dit si oui ou non l'update a fonctionné
     public boolean process(String log,InetAddress addr) {
-    	String addr_s = addr.toString();
+    	String addr_s = addr.getHostAddress();
  	   	DatabaseManager Db = new DatabaseManager();
  	   	Db.dbinit();
  	   	AccountManager Am = new AccountManager();
@@ -87,14 +87,14 @@ public class ConversationUDP {
         	// ici on écoute par convention tous sur 3456 et non pas sur le port d'envoi du packet 
             int port = packet.getPort();
     		System.out.println("on a receive");
-        	if (address.toString().equals(getownIP())) {
+        	if (address.getHostAddress().equals(getownIP())) {
         		System.out.println("c nou");
         		this.pseudo = new String(packet.getData(), 0, packet.getLength());
         		process(this.pseudo,address);
         	}
         	
         	else {
-        	System.out.println(getownIP() + " est différent de : " + address.toString());
+        	System.out.println(getownIP() + " est différent de : " + address.getHostAddress());
         	
             DatagramPacket packet_ack = new DatagramPacket(this.pseudo.getBytes(),this.pseudo.length() , address, port_recv_UDP);
             System.out.println("Longueur de getlength est : " + packet.getLength());
@@ -144,7 +144,7 @@ public class ConversationUDP {
         	    while (ee.hasMoreElements())
         	    {
         	    	if (ii==1) {
-        	    		return ((InetAddress) ee.nextElement()).toString();
+        	    		return ((InetAddress) ee.nextElement()).getHostAddress();
         	    	}
         	        InetAddress i = (InetAddress) ee.nextElement();
         	        ii++;

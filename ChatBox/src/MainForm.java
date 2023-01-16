@@ -426,12 +426,12 @@ public class MainForm extends JFrame {
     }
 
     public void handlerMR(String message,InetAddress addr){
-        String idSender = getDb().getLoginbyIDString(addr.toString());
+        String idSender = getDb().getLoginbyIDString(addr.getHostAddress());
         Contact contactC = new Contact(idSender,true);
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",ts);
         int idM = getDb().getMaxIdmessage()+1;
-        getDb().insertmessage(idM,addr.toString(),getDb().getownIP(),message,ts);
+        getDb().insertmessage(idM,addr.getHostAddress(),getDb().getownIP(),message,ts);
         if (idSender.equals(getDb().getIdbyLoginString(getSelected()))){
             System.out.println("Id "+ getDb().getIdbyLoginString(getSelected()));
             System.out.println("Login "+ getSelected());
