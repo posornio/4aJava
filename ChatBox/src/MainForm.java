@@ -247,7 +247,15 @@ public class MainForm extends JFrame {
                     System.out.println(getMapCM());
 
 
-                    try{ getMapCM().get(Db.getIdbyLoginString(selected)).sendmessage(messageAEnv);
+                    try{if (getMapCM().get(Db.getIdbyLoginString(selected)).isClosed()) {
+                        JOptionPane.showMessageDialog(null,
+                                "User disconnected",
+                                "Alert",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+
+                    else {
+                        getMapCM().get(Db.getIdbyLoginString(selected)).sendmessage(messageAEnv);
                         int idM = getDb().getMaxIdmessage()+1;
                         System.out.println(idM);
                         getDb().insertmessage(idM,getDb().getownIP(),getDb().getIdbyLoginString(selected),messageAEnv,new Timestamp(System.currentTimeMillis()));
@@ -261,7 +269,7 @@ public class MainForm extends JFrame {
                         //messListM.addElement(ahwx.get(ahwx.size()-1));
                         textArea1.setText("");
 
-                        list2.setModel(messageModel);}
+                        list2.setModel(messageModel);}}
                     catch (Exception e1){}
 
 
