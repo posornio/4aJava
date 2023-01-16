@@ -286,7 +286,7 @@ public class DatabaseManager {
 	}
 	public ArrayList<String> getAnnuaireList(){
 
-		String sql = "SELECT LOGIN FROM users WHERE LOGIN <> ''";
+		String sql = "SELECT LOGIN FROM users WHERE LOGIN <> \"\"";
 		ArrayList<String> result = new ArrayList<String>();
 		try (Statement stmt  = conn.createStatement();
 			 ResultSet rs    = stmt.executeQuery(sql)){
