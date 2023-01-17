@@ -64,10 +64,10 @@ public class ActivityLogin extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //setVisible(false);
-            	accountManager.seconnecter(Db.getownIP(),"");
+            	accountManager.seconnecter(Db.getownIP(),"**pseudoquepersonnenepeutprendresurtoutpaslesuserssvplaissezletranquille**");
             	ThreadEcouteConnexionsUDP ecouteConnexionsUDP = new ThreadEcouteConnexionsUDP();
                 ecouteConnexionsUDP.start();
-                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("");
+                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("**pseudoquepersonnenepeutprendresurtoutpaslesuserssvplaissezletranquille**");
                 envoiAnnuaire.start();	
                 if(!accountManager.seconnecter(Db.getIdbyLoginString(usernameField.getText()),usernameField.getText()))
                 {
