@@ -240,7 +240,8 @@ public class MainForm extends JFrame {
 
 
         if (buttonEnvoyer.getModel().isPressed()){
-            buttonIcon = ImageIO.read(getClass().getResource("/icons/send902.png"));
+            BufferedImage buttonIcon2 = ImageIO.read(getClass().getResource("/icons/send903.png"));
+            buttonEnvoyer = new JButton(new ImageIcon(buttonIcon2));
         }
 
 
@@ -268,6 +269,8 @@ public class MainForm extends JFrame {
                     }
 
                     else {
+                        BufferedImage buttonIcon4 = ImageIO.read(getClass().getResource("/icons/send902.png"));
+                        buttonEnvoyer = new JButton(new ImageIcon(buttonIcon4));
                         getMapCM().get(Db.getIdbyLoginString(selected)).sendmessage(messageAEnv);
                         int idM = getDb().getMaxIdmessage()+1;
                         System.out.println(idM);
@@ -393,6 +396,15 @@ public class MainForm extends JFrame {
                 boolean convOuverte = true;
                 buttonEnvoyer.setVisible(true);
                 textArea1.setVisible(true);
+                if (getMapCM().get(Db.getIdbyLoginString(selected)).isClosed()) {
+                    BufferedImage buttonIcon3;
+                    try {
+                        buttonIcon3 = ImageIO.read(getClass().getResource("/icons/send902.png"));
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    buttonEnvoyer = new JButton(new ImageIcon(buttonIcon3));
+                }
                 //selected = asAnnu.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
                 Contact selectedC = (Contact) convoModel.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
                 selectedC.unread=false;
