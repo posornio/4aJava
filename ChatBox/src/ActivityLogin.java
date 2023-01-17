@@ -12,7 +12,7 @@ import java.sql.Connection;
 
 public class ActivityLogin extends JFrame {
 
-
+	private boolean first_time = true;
 
 
 
@@ -64,10 +64,21 @@ public class ActivityLogin extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //setVisible(false);     
-            	ThreadEcouteConnexionsUDP ecouteConnexionsUDP = new ThreadEcouteConnexionsUDP();
-                ecouteConnexionsUDP.start();
+            	if (first_time) {
+            		ThreadEcouteConnexionsUDP ecouteConnexionsUDP = new ThreadEcouteConnexionsUDP();
+                    ecouteConnexionsUDP.start();
+                    first_time=false;
+            	}
                 ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("**pseudodelamortquituequepesonnen'aledroitdeprendreaunquelconquemoment**");
                 envoiAnnuaire.start();
+                try {
+					Thread.sleep(100);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+                System.out.println("\n\n\n\nL'adresse ip de patrick est censée etre : ");
+                Db.getIdByLogin("Username");
                 if(!accountManager.seconnecter(Db.getownIP(),usernameField.getText()))
                 {
                     JOptionPane.showMessageDialog(null,

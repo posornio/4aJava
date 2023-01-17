@@ -51,6 +51,8 @@ public class ConversationUDP {
     //Process va mettre à jour son annuaire avec le login et ip reçu et va renvoyer un boolean 
     //qui dit si oui ou non l'update a fonctionné
     public boolean process(String log,InetAddress addr) {
+    	if (!log.equals("**pseudodelamortquituequepesonnen'aledroitdeprendreaunquelconquemoment**")) {
+
     	String addr_s = addr.getHostAddress();
  	   	DatabaseManager Db = new DatabaseManager();
  	   	Db.dbinit();
@@ -75,6 +77,9 @@ public class ConversationUDP {
     	Db.getAnnuaire();
     	return false;
  	   	}
+    	}
+    	else
+    		return false;
     }
     public void receive_annuaire() {
     	DatabaseManager Db = new DatabaseManager();
