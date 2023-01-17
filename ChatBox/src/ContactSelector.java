@@ -124,7 +124,12 @@ public class ContactSelector extends JFrame {
                         tI.start();
                         tI.join();
                         setCm(tI.getcm());
-                        mf.getMapCM().put(Db.getIdbyLoginString(contactChoisi),tI.getcm());
+                        if(mf.getMapCM().containsKey(Db.getIdbyLoginString(contactChoisi))) {
+                        	mf.getMapCM().replace(Db.getIdbyLoginString(contactChoisi),tI.getcm());
+                        }
+                        else {
+                            mf.getMapCM().put(Db.getIdbyLoginString(contactChoisi),tI.getcm());
+                        }
                         ThreadReceptionTCP trTCP = new ThreadReceptionTCP(tI.getcm(),mf);
                         trTCP.start();
                         System.out.println("map 1" + mf.getMapCM().toString() );
