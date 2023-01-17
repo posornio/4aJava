@@ -49,7 +49,7 @@ class ThreadInitConnexionsTCP extends Thread {
             cm.setpc(portD);
             cm.createconnectionclient(this.addr);
             //cm.initstreamin();
-            cm.sendmessage("Connexion établie pour moi le S");
+            cm.sendmessage("");
             System.out.println("Connexion établie entre nous port " + po + " et entre " + this.addr.getHostAddress() + " sur le port " + port);
             //TODO Il faut ajouter une table de conversations manager que peut utliser le GUI
 

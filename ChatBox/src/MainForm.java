@@ -416,7 +416,12 @@ public class MainForm extends JFrame {
                 list2.getTableHeader().getColumnModel().getColumn(0).setHeaderValue(selected);
                 list2.getTableHeader().repaint();
                 list2.scrollRectToVisible(list2.getCellRect(list2.getRowCount()-1,0,true));
-
+                for (Object conv:convoModel.toArray()){
+                    Contact cont = (Contact) conv;
+                    if (getDb().ArrayHistorywithX(getDb().getownIP(),getDb().getIdbyLoginString(cont.login)).isEmpty()){
+                        convoModel.removeElement(cont);
+                    }
+                }
                 ArrayList<DatabaseManager.Message> histWX = getDb().ArrayHistorywithX(getDb().getownIP(),getDb().getIdbyLoginString(selected));
                 //messageModel = initLM(histWX);
                 //messageModel = new DefaultListModel();
@@ -660,7 +665,7 @@ class MessageTableRenderer extends JLabel implements TableCellRenderer {
 
     public MessageTableRenderer(String selected,DatabaseManager dbM,int theme){
         setOpaque(true);
-
+        this.theme=theme;
         this.selected=selected;
         this.dbM=dbM;
     }
