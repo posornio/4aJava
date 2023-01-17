@@ -252,6 +252,13 @@ public class MainForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 list2.getTableHeader().getColumnModel().getColumn(0).setHeaderValue("selected");
                 list2.getTableHeader().repaint();
+                if (!Db.id_login_exists(Db.getIdbyLoginString(selected),selected)) {
+                	JOptionPane.showMessageDialog(null,
+                            "User changed login",
+                            "Alert",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else {
                 String messageAEnv = textArea1.getText();
                 if(messageAEnv.matches("[\n]+")){
                     textArea1.setText("");
@@ -293,6 +300,7 @@ public class MainForm extends JFrame {
 
                     //list2.setDefaultRenderer(String.class,new MessageTableRenderer(selected,ahwx));
                     ;;}
+            }
             }
         });
 
