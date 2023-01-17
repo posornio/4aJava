@@ -396,15 +396,7 @@ public class MainForm extends JFrame {
                 boolean convOuverte = true;
                 buttonEnvoyer.setVisible(true);
                 textArea1.setVisible(true);
-                if (getMapCM().get(Db.getIdbyLoginString(selected)).isClosed()) {
-                    BufferedImage buttonIcon3;
-                    try {
-                        buttonIcon3 = ImageIO.read(getClass().getResource("/icons/send902.png"));
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    buttonEnvoyer = new JButton(new ImageIcon(buttonIcon3));
-                }
+
                 //selected = asAnnu.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
                 Contact selectedC = (Contact) convoModel.get(((ListSelectionModel) e.getSource()).getSelectedIndices()[0]);
                 selectedC.unread=false;
