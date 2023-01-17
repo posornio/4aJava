@@ -63,12 +63,7 @@ public class ActivityLogin extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //setVisible(false);
-            	accountManager.seconnecter(Db.getownIP(),"");
-            	ThreadEcouteConnexionsUDP ecouteConnexionsUDP = new ThreadEcouteConnexionsUDP();
-                ecouteConnexionsUDP.start();
-                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("");
-                envoiAnnuaire.start();	
+                //setVisible(false);      	
                 if(!accountManager.seconnecter(Db.getIdbyLoginString(usernameField.getText()),usernameField.getText()))
                 {
                     JOptionPane.showMessageDialog(null,
@@ -89,7 +84,8 @@ public class ActivityLogin extends JFrame {
                     }
                     ThreadEcouteConnexionsTCP threadEcouteConnexionsTCP = new ThreadEcouteConnexionsTCP(myForm);
                 threadEcouteConnexionsTCP.start();
-                
+                ThreadEcouteConnexionsUDP ecouteConnexionsUDP = new ThreadEcouteConnexionsUDP();
+                ecouteConnexionsUDP.start();
                 ThreadEnvoiAnnuaire envoiAnnuaire2 = new ThreadEnvoiAnnuaire(usernameField.getText());
                 envoiAnnuaire2.start();
                 setVisible(false);
