@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteRepositoriesConfiguration">
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Central Repository" />
+      <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="e504f8e8-526b-4e1e-873e-c7187bd4ae10" />
+      <option name="name" value="e504f8e8-526b-4e1e-873e-c7187bd4ae10" />
+      <option name="url" value="https://mvnrepository.com/artifact/com.intellij/forms_rt" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Maven Central repository" />
+      <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss.community" />
+      <option name="name" value="JBoss Community repository" />
+      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="ca52ac84-4a36-4a2e-82bc-b7be7bc6f3c7" />
+      <option name="name" value="ca52ac84-4a36-4a2e-82bc-b7be7bc6f3c7" />
+      <option name="url" value="https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc" />
+    </remote-repository>
+  </component>
+</project>
