@@ -554,6 +554,7 @@ public class MainForm extends JFrame {
                 UIManager.setLookAndFeel(new FlatMacDarkLaf());
                 SwingUtilities.updateComponentTreeUI(this);
                 pack();
+                list2.repaint();
             } catch (UnsupportedLookAndFeelException ex) {
                 ex.printStackTrace();
             }}
@@ -562,6 +563,8 @@ public class MainForm extends JFrame {
                 UIManager.setLookAndFeel(new FlatMacLightLaf());
                 SwingUtilities.updateComponentTreeUI(this);
                 pack();
+                list2.repaint();
+
             } catch (UnsupportedLookAndFeelException ex) {
                 ex.printStackTrace();
             }
