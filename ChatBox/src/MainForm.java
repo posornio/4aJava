@@ -210,7 +210,7 @@ public class MainForm extends JFrame {
         MainForm mf= this;
         annuOuv= new ArrayList<String>();
         //contactSelector.visible(false);
-        BufferedImage buttonIcon = ImageIO.read(getClass().getResource("/icons/send1.png"));
+        BufferedImage buttonIcon = ImageIO.read(getClass().getResource("/icons/send901.png"));
         buttonEnvoyer = new JButton(new ImageIcon(buttonIcon));
         buttonEnvoyer.setBorder(BorderFactory.createEmptyBorder());
         buttonEnvoyer.setContentAreaFilled(false);
@@ -240,7 +240,7 @@ public class MainForm extends JFrame {
 
 
         if (buttonEnvoyer.getModel().isPressed()){
-            buttonIcon = ImageIO.read(getClass().getResource("/icons/send2.png"));
+            buttonIcon = ImageIO.read(getClass().getResource("/icons/send902.png"));
         }
 
 
