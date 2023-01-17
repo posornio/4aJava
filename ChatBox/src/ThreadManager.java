@@ -33,7 +33,7 @@ class ThreadInitConnexionsTCP extends Thread {
             System.out.println("Socket ok");
             cm.initstreamclient();
             System.out.println("Streams ok ");
-            int p = cm.scanports();
+            int p = cm.scanports(); 
             System.out.println("Scanports ok with " + p);
             String po = Integer.toString(p);
             System.out.println("Sending message");
@@ -242,7 +242,7 @@ class ThreadEnvoiAnnuaire extends Thread {
     }
 
     public void run(){
-        dbm.dbinit();
+        System.out.println("sending annuaire with login : " + login);
         cu.send_annuaire(login);
     }
 }

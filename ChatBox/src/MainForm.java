@@ -309,6 +309,7 @@ public class MainForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("");
                 envoiAnnuaire.start();
+                System.out.println("envoi annuaire lancé");
                 for (Map.Entry<String,ConversationManager> element : getMapCM().entrySet()){
                     try{ element.getValue().sendmessage("**ExitClavardage**");}
                     catch(Exception excep){
@@ -317,7 +318,7 @@ public class MainForm extends JFrame {
                     element.getValue().closeconnection();
                 }
                 cm.closeconnection();
-                System.exit(0);
+                System.exit(0); 
 
             }
         });

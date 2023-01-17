@@ -64,6 +64,7 @@ public class ActivityLogin extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //setVisible(false);
+            	accountManager.seconnecter(Db.getownIP(),"");
                 if(!accountManager.seconnecter(Db.getIdbyLoginString(usernameField.getText()),usernameField.getText()))
                 {
                     JOptionPane.showMessageDialog(null,
