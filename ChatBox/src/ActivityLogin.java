@@ -66,7 +66,7 @@ public class ActivityLogin extends JFrame {
                 //setVisible(false);     
             	ThreadEcouteConnexionsUDP ecouteConnexionsUDP = new ThreadEcouteConnexionsUDP();
                 ecouteConnexionsUDP.start();
-                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("");
+                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("**pseudodelamortquituequepesonnen'aledroitdeprendreaunquelconquemoment**");
                 envoiAnnuaire.start();
                 if(!accountManager.seconnecter(Db.getownIP(),usernameField.getText()))
                 {
