@@ -63,8 +63,12 @@ public class ActivityLogin extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //setVisible(false);      	
-                if(!accountManager.seconnecter(Db.getIdbyLoginString(usernameField.getText()),usernameField.getText()))
+                //setVisible(false);     
+            	ThreadEcouteConnexionsUDP ecouteConnexionsUDP = new ThreadEcouteConnexionsUDP();
+                ecouteConnexionsUDP.start();
+                ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire("");
+                envoiAnnuaire.start();
+                if(!accountManager.seconnecter(Db.getownIP(),usernameField.getText()))
                 {
                     JOptionPane.showMessageDialog(null,
                             "Le pseudo est deja pris",
@@ -84,8 +88,7 @@ public class ActivityLogin extends JFrame {
                     }
                     ThreadEcouteConnexionsTCP threadEcouteConnexionsTCP = new ThreadEcouteConnexionsTCP(myForm);
                 threadEcouteConnexionsTCP.start();
-                ThreadEcouteConnexionsUDP ecouteConnexionsUDP = new ThreadEcouteConnexionsUDP();
-                ecouteConnexionsUDP.start();
+                
                 ThreadEnvoiAnnuaire envoiAnnuaire2 = new ThreadEnvoiAnnuaire(usernameField.getText());
                 envoiAnnuaire2.start();
                 setVisible(false);

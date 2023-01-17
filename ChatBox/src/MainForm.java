@@ -254,7 +254,7 @@ public class MainForm extends JFrame {
                 list2.getTableHeader().repaint();
                 if (!Db.id_login_exists(Db.getIdbyLoginString(selected),selected)) {
                 	JOptionPane.showMessageDialog(null,
-                            "User changed login",
+                            "User changed login or disconnected",
                             "Alert",
                             JOptionPane.WARNING_MESSAGE);
                 }
