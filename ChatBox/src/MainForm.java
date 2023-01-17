@@ -413,8 +413,12 @@ public class MainForm extends JFrame {
 
                 System.out.println(getSelected());
                 //list2.getColumnModel().getColumn(0).setHeaderValue(selected);
-                list2.getTableHeader().getColumnModel().getColumn(0).setHeaderValue(selected);
+                list2.getColumnModel().getColumn(0).setCellRenderer(new MessageTableRenderer(selected,Db,theme));
+                list2.getColumnModel().getColumn(1).setCellRenderer(new MessageTableRenderer(getSelected(),Db,theme));
+
+                list2.getColumnModel().getColumn(2).setCellRenderer(new MessageTableRenderer(getSelected(),Db,theme));
                 list2.getTableHeader().repaint();
+                list2.repaint();
                 list2.scrollRectToVisible(list2.getCellRect(list2.getRowCount()-1,0,true));
                 for (Object conv:convoModel.toArray()){
                     Contact cont = (Contact) conv;
