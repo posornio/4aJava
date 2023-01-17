@@ -75,7 +75,7 @@ public class ActivityLogin extends JFrame {
 
                 //Db.insertuser("",usernameField.getText());
 
-                Db.setPseudo(usernameField.getText());
+                Db.setPseudo(usernameField.getText()); 
                     MainForm myForm = null;
                     try {
                         myForm = new MainForm(Db);

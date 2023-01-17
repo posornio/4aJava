@@ -441,8 +441,9 @@ public class MainForm extends JFrame {
         });
 
         list1.setCellRenderer(new AnnuaireRenderer(getDb(),theme));
-        list2.getColumnModel().getColumn(0).setCellRenderer(new MessageTableRenderer(selected,Db,theme));
+        
         System.out.println("HEEEEY "+selected+getSelected());
+        list2.getColumnModel().getColumn(0).setCellRenderer(new MessageTableRenderer(selected,Db,theme));
         list2.getColumnModel().getColumn(1).setCellRenderer(new MessageTableRenderer(getSelected(),Db,theme));
 
         list2.getColumnModel().getColumn(2).setCellRenderer(new MessageTableRenderer(getSelected(),Db,theme));
@@ -547,6 +548,10 @@ public class MainForm extends JFrame {
                 SwingUtilities.updateComponentTreeUI(this);
                 pack();
                 list2.repaint();
+                list2.getColumnModel().getColumn(0).setCellRenderer(new MessageTableRenderer(selected,Db,theme));
+                list2.getColumnModel().getColumn(1).setCellRenderer(new MessageTableRenderer(getSelected(),Db,theme));
+
+                list2.getColumnModel().getColumn(2).setCellRenderer(new MessageTableRenderer(getSelected(),Db,theme));
             } catch (UnsupportedLookAndFeelException ex) {
                 ex.printStackTrace();
             }}
@@ -556,6 +561,10 @@ public class MainForm extends JFrame {
                 SwingUtilities.updateComponentTreeUI(this);
                 pack();
                 list2.repaint();
+                list2.getColumnModel().getColumn(0).setCellRenderer(new MessageTableRenderer(selected,Db,theme));
+                list2.getColumnModel().getColumn(1).setCellRenderer(new MessageTableRenderer(getSelected(),Db,theme));
+
+                list2.getColumnModel().getColumn(2).setCellRenderer(new MessageTableRenderer(getSelected(),Db,theme));
 
             } catch (UnsupportedLookAndFeelException ex) {
                 ex.printStackTrace();

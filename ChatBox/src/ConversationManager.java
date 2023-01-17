@@ -158,6 +158,16 @@ public class ConversationManager{
 				System.out.println ("Error closing connection : " + e);
 			}
 		}
+		
+	public void closeconnectionenvoi() {
+		try {
+			this.out.close();
+			this.Sock.close();
+		}
+		catch(Exception e) {
+			System.out.println ("Error closing connection : " + e);
+		}
+	}
 
 	public void closeconnection() {
 		try {
