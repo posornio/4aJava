@@ -4,6 +4,7 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -13,6 +14,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.util.*;
@@ -122,7 +126,7 @@ public class MainForm extends JFrame {
         this.messageModel = messageModel;
     }
     public MainForm() {}
-    public MainForm(DatabaseManager DbIn) {
+    public MainForm(DatabaseManager DbIn) throws IOException {
         this.Db=DbIn;
         $$$setupUI$$$();
         setContentPane(mainPanel);
@@ -191,7 +195,7 @@ public class MainForm extends JFrame {
         ChangerPseudoButt = changerPseudoButt;
     }
 
-    private void createUIComponents() {
+    private void createUIComponents() throws IOException {
         //DatabaseManager Db = new DatabaseManager();
         //getDb().dbinit();
         //setDb(Db);
@@ -206,7 +210,11 @@ public class MainForm extends JFrame {
         MainForm mf= this;
         annuOuv= new ArrayList<String>();
         //contactSelector.visible(false);
-        buttonEnvoyer = new JButton("Envoyer");
+        BufferedImage buttonIcon = ImageIO.read(getClass().getResource("/icons/send1.png"));
+        buttonEnvoyer = new JButton(new ImageIcon(buttonIcon));
+        buttonEnvoyer.setBorder(BorderFactory.createEmptyBorder());
+        buttonEnvoyer.setContentAreaFilled(false);
+
         boolean convOuverte = false;
         buttonEnvoyer.setVisible(false);
         textArea1 = new JTextArea();
@@ -231,7 +239,9 @@ public class MainForm extends JFrame {
         DatabaseManager.Message emptyMsg = new DatabaseManager.Message("","","",ts);
 
 
-
+        if (buttonEnvoyer.getModel().isPressed()){
+            buttonIcon = ImageIO.read(getClass().getResource("/icons/send2.png"));
+        }
 
 
 
@@ -453,7 +463,7 @@ public class MainForm extends JFrame {
      *
      * @noinspection ALL
      */
-    private void $$$setupUI$$$() {
+    private void $$$setupUI$$$() throws IOException {
         createUIComponents();
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));

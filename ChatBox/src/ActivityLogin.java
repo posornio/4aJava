@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -75,8 +76,13 @@ public class ActivityLogin extends JFrame {
                 //Db.insertuser("",usernameField.getText());
 
                 Db.setPseudo(usernameField.getText());
-                MainForm myForm = new MainForm(Db);
-                ThreadEcouteConnexionsTCP threadEcouteConnexionsTCP = new ThreadEcouteConnexionsTCP(myForm);
+                    MainForm myForm = null;
+                    try {
+                        myForm = new MainForm(Db);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    ThreadEcouteConnexionsTCP threadEcouteConnexionsTCP = new ThreadEcouteConnexionsTCP(myForm);
                 threadEcouteConnexionsTCP.start();
                 ThreadEcouteConnexionsUDP ecouteConnexionsUDP = new ThreadEcouteConnexionsUDP();
                 ecouteConnexionsUDP.start();
