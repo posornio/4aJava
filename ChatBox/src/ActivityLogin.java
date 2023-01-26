@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -42,6 +44,24 @@ public class ActivityLogin extends JFrame {
 
 
         JTextField usernameField = new JTextField("Username");
+        usernameField.setForeground(Color.GRAY);
+        usernameField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (usernameField.getText().equals("Username")) {
+                    usernameField.setText("");
+                    usernameField.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (usernameField.getText().isEmpty()) {
+                    usernameField.setForeground(Color.GRAY);
+                    usernameField.setText("Username");
+                }
+            }
+        });
+
 
         JButton loginButton = new JButton("Login");
 
@@ -56,7 +76,7 @@ public class ActivityLogin extends JFrame {
         loginButton.setMaximumSize(new Dimension(100,1));
         getRootPane().setDefaultButton(loginButton);
         setVisible(true);
-
+        getContentPane().requestFocusInWindow();
 
 
 
