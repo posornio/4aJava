@@ -45,7 +45,7 @@ public class DatabaseManager {
 		   Statement stmt = null;
 		   stmt = conn.createStatement();
 		   String sql = "CREATE TABLE IF NOT EXISTS message" +
-                   "(\n	IDMESSAGE integer PRIMARY KEY,\n" +
+                   "(\n	IDMESSAGE integer,\n" +
                    " 	IDSENDER text NOT NULL,\n" + 
                    " 	IDRECV text NOT NULL,\n" + 
                    " 	CONTENU  text,\n" + 
