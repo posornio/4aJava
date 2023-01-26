@@ -6,9 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="4aJava" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="4aJava" target="11" />
       <module name="ChatBox" target="11" />
     </bytecodeTargetLevel>
   </component>

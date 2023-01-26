@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Map;
 
 public class ActivityPseudo extends JFrame {
     private String pseudo;
@@ -101,7 +102,13 @@ public class ActivityPseudo extends JFrame {
                 mf.getList2().getTableHeader().repaint();
                 ThreadEnvoiAnnuaire envoiAnnuaire = new ThreadEnvoiAnnuaire(usernameField.getText());
                 envoiAnnuaire.start();}
-
+                for (Map.Entry<String,ConversationManager> element : mf.getMapCM().entrySet()){
+                    try{ element.getValue().sendmessage("**ExitClavardage**");}
+                    catch(Exception excep){
+                        System.out.println("Error closing connection " + element.getKey() + "with " + excep);
+                    }
+                    element.getValue().closeconnection();
+                }
 
 
 
