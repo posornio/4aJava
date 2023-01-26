@@ -423,6 +423,9 @@ public class MainForm extends JFrame {
                 list2.scrollRectToVisible(list2.getCellRect(list2.getRowCount()-1,0,true));
                 for (Object conv:convoModel.toArray()){
                     Contact cont = (Contact) conv;
+                    if (!Db.getAnnuaireList().contains(cont.login)) {
+                        convoModel.removeElement(cont);                    	
+                    }
                     if (getDb().ArrayHistorywithX(getDb().getownIP(),getDb().getIdbyLoginString(cont.login)).isEmpty() && getMapCM().get(Db.getIdbyLoginString(selected)).isClosed()){
                         convoModel.removeElement(cont);
                     }
